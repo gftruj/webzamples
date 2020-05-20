@@ -1,0 +1,106 @@
+<html>
+
+<head>
+    <script src="https://kit.fontawesome.com/c9500776a0.js" crossorigin="anonymous"></script>
+    <script src="misc/codeBtn.js"></script>
+    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+    <style>
+    .toggle-wrapper {
+        z-index: 9999;
+        position: fixed;
+        left: 40px;
+        top: 25px;
+        width: 10%;
+        height: 10%;
+        text-align: center;
+    }
+    </style>
+    <script>
+    // create the "show code" button
+    setCodeBtnUrl("aframe/aerial_camera.html");
+
+    // aframe 'view' manager - the component needs to be registered before the scene is up!
+    AFRAME.registerComponent("view-manager", {
+        init: function() {
+            // icon classes
+            const aerialIcon = "fa-dove"
+            const streetIcon = "fa-street-view"
+
+            // to keep the positions
+            var currentPos = new THREE.Vector3()
+            var targetPos = new THREE.Vector3()
+
+            // grab the btn reference
+            let toggleBtn = document.querySelector("#toggleIcon")
+
+            // helper flags - one to make sure we are not interrupting an animation, the other keeps track of the current state
+            var isAnimating = false
+            var flying = false;
+            toggleBtn.parentNode.addEventListener("click", e => {
+                if (isAnimating) return;
+                isAnimating = true
+                
+                // toggle the 'flying' flag
+                flying = !flying
+
+                // grab positions for the the animation component
+                currentPos.copy(this.el.getAttribute('position'))
+                targetPos.copy(currentPos)
+                targetPos.y = flying ? 4 : 1.6 // if we're flying - take us to the up and vice versa
+
+                // take care of the icons
+                let oldIcon = flying ? streetIcon : aerialIcon
+                let newIcon = flying ? aerialIcon : streetIcon
+                toggleBtn.classList.remove(oldIcon)
+                toggleBtn.classList.add(newIcon)
+
+                // update the wasd-controls
+                this.el.setAttribute("wasd-controls", {
+                    // disable the controls while the animation is ongoing
+                    enabled: false,
+                    // fly if we're not currently flying
+                    fly: flying,
+                    // faster flying, 
+                    acceleration: flying ? "85" : "65"
+                })
+
+                // update the animation component and start the animation
+                this.el.setAttribute("animation", {
+                    from: AFRAME.utils.coordinates.stringify(currentPos),
+                    to: AFRAME.utils.coordinates.stringify(targetPos)
+                })
+                this.el.emit("toggle")
+            })
+
+            // when the animation is finished - enable the wasd controls
+            this.el.addEventListener("animationcomplete", e => {
+                this.el.setAttribute("wasd-controls", "enabled", "true");
+                isAnimating = false;
+            })
+        }
+    })
+    </script>
+</head>
+
+<body>
+    <!-- Toggle view btn -->
+    <div class="toggle-wrapper">
+        <i id="toggleIcon" class="fas fa-street-view fa-lg"></i>
+        <br>
+        Toggle aerial view
+    </div>
+    <!-- Basic scene -->
+    <a-scene>
+        <a-box position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
+        <a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E"></a-sphere>
+        <a-cylinder position="1 0.75 -3" radius="0.5" height="1.5" color="#FFC65D"></a-cylinder>
+        <a-plane position="0 0 -4" rotation="-90 0 0" width="10" height="10" color="#7BC8A4"></a-plane>
+        <a-sky color="#ECECEC"></a-sky>
+        <!-- Camera Entity contained within a rig -->
+        <a-entity position="0 1.6 3" wasd-controls look-controls view-manager
+                  animation="property: position; dur: 500; startEvents: toggle; easing: easeInSine">
+            <a-entity camera></a-entity>
+        </a-entity>
+    </a-scene>
+</body>
+</html>
