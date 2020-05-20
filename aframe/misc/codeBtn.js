@@ -1,4 +1,4 @@
-var baseURL = "https://github.com/gftruj/webzamples/"
+var baseURL = "https://github.com/gftruj/webzamples/tree/master/"
 codeBtnUrl = null
 
 window.onload = addCodeBtn
