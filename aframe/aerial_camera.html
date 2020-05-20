@@ -6,20 +6,10 @@
     <link rel="stylesheet" type="text/css" href="misc/styles.css">
     <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
     <style>
-    .toggle-wrapper {
-        z-index: 9999;
-        position: fixed;
-        left: 40px;
-        top: 25px;
-        width: 10%;
-        height: 10%;
-        text-align: center;
-    }
-
     #toggleIcon {
-      position: relative;
-      top: 4px;
-      left: 2px;
+        position: relative;
+        top: 4px;
+        left: 2px;
     }
     </style>
     <script>
@@ -46,7 +36,7 @@
             toggleBtn.parentNode.addEventListener("click", e => {
                 if (isAnimating) return;
                 isAnimating = true
-                
+
                 // toggle the 'flying' flag
                 flying = !flying
 
@@ -102,10 +92,10 @@
         <a-plane position="0 0 -4" rotation="-90 0 0" width="10" height="10" color="#7BC8A4"></a-plane>
         <a-sky color="#ECECEC"></a-sky>
         <!-- Camera Entity contained within a rig -->
-        <a-entity position="0 1.6 3" wasd-controls look-controls view-manager
-                  animation="property: position; dur: 500; startEvents: toggle; easing: easeInSine">
+        <a-entity position="0 1.6 3" wasd-controls look-controls view-manager animation="property: position; dur: 500; startEvents: toggle; easing: easeInSine">
             <a-entity camera></a-entity>
         </a-entity>
     </a-scene>
 </body>
+
 </html>
