@@ -3,6 +3,7 @@
 <head>
     <script src="https://kit.fontawesome.com/c9500776a0.js" crossorigin="anonymous"></script>
     <script src="misc/codeBtn.js"></script>
+    <link rel="stylesheet" type="text/css" href="misc/styles.css">
     <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
     <style>
     .toggle-wrapper {
@@ -13,6 +14,12 @@
         width: 10%;
         height: 10%;
         text-align: center;
+    }
+
+    #toggleIcon {
+      position: relative;
+      top: 4px;
+      left: 2px;
     }
     </style>
     <script>
@@ -84,10 +91,8 @@
 
 <body>
     <!-- Toggle view btn -->
-    <div class="toggle-wrapper">
+    <div class="circle-overlay" style="margin: 25px;">
         <i id="toggleIcon" class="fas fa-street-view fa-lg"></i>
-        <br>
-        Toggle aerial view
     </div>
     <!-- Basic scene -->
     <a-scene>
