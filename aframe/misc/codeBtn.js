@@ -1,4 +1,4 @@
-var baseURL = "https://github.com/gftruj/webzamples"
+var baseURL = "https://github.com/gftruj/webzamples/"
 codeBtnUrl = null
 
 window.onload = addCodeBtn
@@ -28,6 +28,6 @@ function addCodeBtn() {
 
 
     span.addEventListener("click", e => {
-      window.open("https://" + codeBtnUrl)
+      window.open(baseURL + codeBtnUrl)
     })
 }
