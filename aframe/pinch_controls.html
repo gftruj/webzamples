@@ -57,16 +57,24 @@
             // bind the methods that use the scope variables
             this.moveCamera.bind(this);
 
+            // use this to keep track whether the user is moving forward or backwards
             this.distance = 0;
+            // store the camera direction here
             this.direction = new THREE.Vector3();
+            // camera entity reference
             this.camera = document.querySelector("[camera]");
 
             document.body.addEventListener('touchstart', event => {
+                // react only on two finger pinches
+                if (event.touches.length != 2) return 0;
+
                 this.distance = this.calculatePinchDistance(event);
+                // prevent the look controls to rotate the camera while pinching
                 this.el.setAttribute('look-controls', 'touchEnabled', false);
             }, false);
 
             document.body.addEventListener('touchend', event => {
+                // restore the look-controls
                 if (event.touches.length != 1) this.el.setAttribute('look-controls', 'touchEnabled', true)
             }, false);
             document.body.addEventListener('wheel', e => {
@@ -74,17 +82,18 @@
             })
             document.body.addEventListener('touchmove', event => {
                 // we're interested only in pinching
+                if (event.touches.length != 2) return 0;
+
+                // calculate the pinch difference and move the camera
                 var distance = this.calculatePinchDistance(event);
                 let multiplier = (distance < this.distance) ? -0.2 : 0.2;;
-                this.moveCamera(multipler);
+                if (!isNaN(multiplier)) this.moveCamera(multiplier);
 
                 // for later use
                 this.distance = distance;
             }, false);
         },
         calculatePinchDistance: function(mouseEvent) {
-            if (event.touches.length != 2) return 0;
-
             var dx = event.touches[0].pageX - event.touches[1].pageX;
             var dy = event.touches[0].pageY - event.touches[1].pageY;
             return Math.sqrt(dx * dx + dy * dy);
