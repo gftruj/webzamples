@@ -70,8 +70,7 @@
                 if (event.touches.length != 1) this.el.setAttribute('look-controls', 'touchEnabled', true)
             }, false);
             document.body.addEventListener('wheel', e => {
-            	var speed = e.deltaY < 0 ? -0.2 : 0.2;
-                this.moveCamera(speed)
+                this.moveCamera(e.deltaY < 0 ? -0.2 : 0.2);
             })
             document.body.addEventListener('touchmove', event => {
                 // we're interested only in pinching
@@ -84,11 +83,11 @@
             }, false);
         },
         calculatePinchDistance: function(mouseEvent) {
-            if (event.touches.length != 2) return null;
+            if (event.touches.length != 2) return 0;
 
             var dx = event.touches[0].pageX - event.touches[1].pageX;
             var dy = event.touches[0].pageY - event.touches[1].pageY;
-            return = Math.sqrt(dx * dx + dy * dy);
+            return Math.sqrt(dx * dx + dy * dy);
         },
         moveCamera: function(speed) {
             this.el.sceneEl.camera.getWorldDirection(this.direction);
