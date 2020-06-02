@@ -1,21 +1,13 @@
-#codeIcon {
-  z-index: 1000;
-  position: fixed;
-  width: 25px;
-  height: 25px;
-  top: 0;
-  right: 0;
-  margin: 25px;
-  background-color: rgba(255, 255, 255, 0.8);
-  border-radius: 25px;
+.showCode {
+    z-index: 1000;
+    position: fixed;
+    font-size: 3em;
+    color: rgb(128, 0, 128);
+    top: 0;
+    right: 0;
+    margin: 25px;
 }
 
-#codeIcon:hover {
-  background-color: rgba(100, 100, 255, 0.6);
-}
-
-#codeIcon .center {
-  position: relative;
-  top: 4px;
-  left: 2px;
+.showCode:hover {
+        color: rgba(128, 0, 128, 0.6);
 }

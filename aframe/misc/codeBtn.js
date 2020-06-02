@@ -18,16 +18,11 @@ function addCodeBtn() {
     link.media = 'all';
     head.appendChild(link);
 
-    let span = document.createElement("span")
-    span.id = "codeIcon"
-
     let icon = document.createElement("i")
-    icon.classList.add("center", "fas", "fa-code")
-    span.appendChild(icon)
-    document.body.append(span)
+    icon.classList.add("showCode", "fas", "fa-lg", "fa-code")
+    document.body.append(icon)
 
-
-    span.addEventListener("click", e => {
+    icon.addEventListener("click", e => {
       window.open(baseURL + codeBtnUrl)
     })
 }
