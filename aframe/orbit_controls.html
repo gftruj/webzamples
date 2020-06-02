@@ -1,0 +1,77 @@
+<head>
+    <title>Orbit Controls</title>
+    <script src="https://kit.fontawesome.com/c9500776a0.js" crossorigin="anonymous"></script>
+    <script src="misc/codeBtn.js"></script>
+    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-orbit-controls@1.2.0/dist/aframe-orbit-controls.min.js"></script>
+    <script src="https://unpkg.com/aframe-supercraft-loader@1.1.3/dist/aframe-supercraft-loader.js"></script>
+    <style>
+    #toggleBtn {
+        position: fixed;
+        z-index: 9999;
+        margin: 25px;
+        font-size: 3em;
+        color: rgb(128, 0, 128);
+        cursor: pointer;
+    }
+
+    #toggleBtn:hover {
+        color: rgba(128, 0, 128, 0.6);
+    }
+    </style>
+    <script>
+    AFRAME.registerComponent('content-manager', {
+    	init: function() {
+    		const btn = document.querySelector("#toggleBtn")
+    		const castle = document.querySelector("#castle")
+    		const fish = document.querySelector("#fish")
+
+    		btn.addEventListener("click", e => {
+    			if (castle.getAttribute("visible")) {
+    				castle.emit("fadeOut")
+    				btn.classList.remove("fa-fish")
+    				btn.classList.add("fa-landmark")
+    			} else {
+    				fish.emit("fadeOut")
+    				btn.classList.remove("fa-landmark")
+    				btn.classList.add("fa-fish")
+    			}
+    		})
+    		fish.addEventListener('animationcomplete__fadeout', e => {
+    			fish.setAttribute("visible", "false")
+    			castle.setAttribute("visible", "true")
+    			castle.emit("fadeIn")
+    		})
+    		castle.addEventListener('animationcomplete__fadeout', e => {
+    			castle.setAttribute("visible", "false")
+    			fish.setAttribute("visible", "true")
+    			fish.emit("fadeIn")
+    		})
+    	}
+    })
+    </script>
+</head>
+
+<body>
+	<!-- Toggle view btn -->
+    <i id="toggleBtn" class="fas fa-fish fa-lg"></i>
+    <a-scene content-manager>
+        <a-assets>
+            <a-asset-item id="goldfish" src="assets/models/goldfish/goldfish.gltf"></a-asset-item>
+            <a-asset-item id="sandcastle" src="assets/models/sandcastle/SandCastle.gltf"></a-asset-item>
+        </a-assets>
+        
+        <a-entity id="fish" gltf-model="#goldfish" scale="0.001 0.001 0.001" visible=false
+        animation__fadeIn="property: scale;from: 0.001 0.001 0.001; to:0.025 0.025 0.025; dur: 150; easing: easeInQuad; startEvents: fadeIn"
+        animation__fadeOut="property: scale;from: 0.025 0.025 0.025; to:0.0001 0.0001 0.0001; dur: 150; easing: easeInQuad; startEvents: fadeOut"></a-entity>
+        <a-entity id="castle" gltf-model="#sandcastle"
+        animation__fadeIn="property: scale; dur: 150; from: 0.001 0.001 0.001; to: 1 1 1; easing: easeInQuad; startEvents: fadeIn"
+        animation__fadeOut="property: scale; dur: 150; from: 1 1 1; to: 0.001 0.001 0.001; easing: easeInQuad; startEvents: fadeOut"></a-entity>
+
+        <a-entity camera look-controls orbit-controls="target: 0 1.6 -0.5; minDistance: 0.5; maxDistance: 180; initialPosition: 0 5 15"></a-entity>
+    </a-scene>
+    <script>
+    // create the "show code" button
+    setCodeBtnUrl("aframe/orbit_controls.html");
+    </script>
+</body>
