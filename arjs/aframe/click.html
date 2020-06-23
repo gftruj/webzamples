@@ -1,0 +1,102 @@
+<html>
+
+<head>
+	<script src="https://kit.fontawesome.com/c9500776a0.js" crossorigin="anonymous"></script>
+    <script src="misc/codeBtn.js"></script>
+    <script src="lib/aframe-v1.0.4.js"></script>
+    <script src="lib/aframe-ar.3.1.0.js"></script>
+    <script>
+    AFRAME.registerComponent('ar-session-notifier', {
+        init: function() {
+        	var scene = this.el.sceneEl
+            var arSession = null
+            // wait until the arSession is ready
+            var idx = setInterval(function() {
+                arSession = scene.systems["arjs"]._arSession
+                if (!arSession) return;
+                scene.emit("arSessionReady")
+                clearInterval(idx)
+            })
+        }
+    })
+
+    AFRAME.registerComponent('foo', {
+        init: function() {
+            // the clicks may fire prematurely for some reason ¯\_(ツ)_/¯
+            this.el.sceneEl.addEventListener("arSessionReady", this.addListeners.call(this));
+        },
+        addListeners: function() {
+            let toggle = false
+            this.el.addEventListener("click", e => {
+                if (toggle)
+                    this.el.setAttribute('material', 'color', 'blue')
+                else
+                    this.el.setAttribute('material', 'color', 'red')
+                toggle = !toggle
+            })
+        }
+    })
+
+    AFRAME.registerComponent('cursor-hack', {
+        init: function() {
+            var scene = this.el
+
+            // wait until the arSession is ready
+            scene.addEventListener("arSessionReady", function() {
+                var arSession = scene.systems["arjs"]._arSession
+                // helpers
+                var raycaster = new THREE.Raycaster();
+                var mouse = new THREE.Vector2();
+                // useful references
+                var cursorElement = document.querySelector("[cursor]")
+                var arToolkitContext = arSession.arContext
+                var camera = scene.camera
+
+                function mousedown(event) {
+                    // core of this 'hack' - using the arToolkitContext projection matrix
+                    camera.projectionMatrix.copy(arToolkitContext.getProjectionMatrix());
+                    camera.projectionMatrixInverse.getInverse(camera.projectionMatrix);
+
+                    var point
+                    if (event.type === "touchmove" || event.type === "touchstart") {
+                        // Track the first touch for simplicity.
+                        point = event.touches.item(0);
+                    } else {
+                        point = event;
+                    }
+                    // Calculate mouse position based on the canvas element
+                    var rect = scene.renderer.domElement.getBoundingClientRect();
+                    mouse.x = ((point.clientX - rect.left) / rect.width) * 2 - 1
+                    mouse.y = -((point.clientY - rect.top) / rect.height) * 2 + 1
+                    raycaster.setFromCamera(mouse, camera);
+                    // if there are any intersections - send the clicks
+                    var intersects = raycaster.intersectObjects(scene.object3D.children, true);
+                    if (intersects.length > 0) {
+                        // this click is stripped of any info it should have
+                        intersects[0].object.el.emit("click")
+                    }
+                    event.stopPropagation();
+                }
+                window.addEventListener('mousedown', mousedown, false);
+                //window.addEventListener('touchstart', mousedown, false);
+            })
+        }
+    })
+    </script>
+</head>
+
+<body style="margin : 0px; overflow: hidden;">
+    <a-scene embedded arjs='sourceType: webcam;' ar-session-notifier cursor-hack>
+        <a-marker preset="hiro">
+            <a-box position="0 0.5 0" scale="0.5 0.5 0.5" rotation="0 0 0" material="color: blue; opacity: 0.5" foo></a-box>
+            <a-plane width="0.5" height="0.5" position="0 1.5 0" rotation="-45 0 0" material="color: blue; opacity: 0.5" foo></a-plane>
+        </a-marker>
+        <a-entity camera></a-entity>
+    </a-scene>
+
+    <script>
+    // create the "show code" button
+    setCodeBtnUrl("arjs/aframe/click.html");
+    </script>
+</body>
+</html>
