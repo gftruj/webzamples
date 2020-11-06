@@ -1,0 +1,113 @@
+<!--
+    This is super duper hacky. I grab the <area> based on an idea from:
+    https://stackoverflow.com/questions/22428484/get-element-from-point-when-you-have-overlapping-elements
+-->
+<!DOCTYPE html>
+<html>
+<head>
+<title>a-frame meets <map></title>
+<script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+<script src="https://kit.fontawesome.com/c9500776a0.js" crossorigin="anonymous"></script>
+<script src="misc/codeBtn.js"></script>
+<!-- place the scene above the images, which are not displayed by default-->
+<style>
+    a-scene {
+        display: block;
+        z-index: 1;
+    }
+    .mapimage {
+        display: none;
+        position: fixed;
+        top: 0px;
+        left: 0px;
+        z-index: 0;
+    }
+</style>
+</head>
+<body>
+    <script>
+        AFRAME.registerComponent("press-map", {
+            schema: {
+                mapImage: {}
+            },
+            init: function() {
+                this.click = this.click.bind(this)
+                this.img = document.querySelector(this.data.mapImage)
+                this.el.addEventListener("click", evt => {
+                    // get the point on the UV
+                    let uvPoint = evt.detail.intersection.uv                   
+                    // map the UV point to a point on the image
+                    this.click(uvPoint.x * this.img.width, this.img.height - uvPoint.y * this.img.height)
+                })
+            }, 
+            click: function(x, y) {
+                var ev = document.createEvent("MouseEvent");
+                // these bits are hacky - hide the scene, grab the <area> element, show the scene
+                this.el.sceneEl.style.display = "none";
+                this.img.style.display = "block";
+                var el = document.elementFromPoint(x, y);
+                this.el.sceneEl.style.display="block"
+                this.img.style.display="none"
+
+                if (!el) {
+                    console.log("invalid element", el)
+                    return
+                }
+                // simulate a mousepress on the <area> element
+                ev.initMouseEvent(
+                "click",
+                true /* bubble */, false /* cancelable */,
+                window, null,
+                x, y, 0, 0, /* coordinates */
+                false, false, false, false, /* modifier keys */
+                0 /*left*/, null
+                );
+                el.dispatchEvent(ev);
+            }
+        })
+    </script>
+    <!-- A simple and basic scene -->
+    <a-scene background="color: white" cursor="rayOrigin: mouse" raycaster="objects: .clickable">
+        <a-assets>
+            <img id="showcase" src="assets/images/aframe-showcase.jpg"/>
+            <img id="pano" src="assets/images/pano.jpg"/>
+        </a-assets>
+        <a-text position="-2 3 -3" color="black" value="Press any showcase tile,\n and find the blue trail marker"></a-text>
+        <!-- SHOWCASE TEXT + PLANE -->
+        <a-text id="showcase-text" position="-0.75 1.75 -2" value="hello" color="black"></a-text>
+        <a-plane class="clickable" position="-0.25 1 -2" rotation="0 0 0" width=2 material="src: #showcase" press-map="mapImage: #showcaseImg"></a-plane>
+
+        <!-- CYLINDER -->
+        <a-cylinder class="clickable" scale="-1 1 1" material="src: #pano; side: back" height="5" radius="5" 
+        open-ended="true" theta-start="45" theta-length="270" press-map="mapImage: #panoImg"></a-cylinder>
+      </a-scene>
+
+<!-- Underlying showcase map -->
+<img id="showcaseImg" class="mapimage" src="assets/images/aframe-showcase.jpg" usemap="#showcase-map" width="512" height="256">
+<map name="showcase-map">
+  <area shape="rect" coords="0,0,170,128" alt="superframe" href="javascript:tilePressed('superframe')">
+  <area shape="rect" coords="173,0,344,128" alt="superframe" href="javascript:tilePressed('a-painter')">
+  <area shape="rect" coords="347,0,509,128" alt="superframe" href="javascript:tilePressed('supermedium')">
+
+  <area shape="rect" coords="0,130,168,255" alt="superframe" href="javascript:tilePressed('a-blast')">
+  <area shape="rect" coords="173,130,344,255" alt="superframe" href="javascript:tilePressed('a-saturday-night')">
+  <area shape="rect" coords="347,130,509,255" alt="superframe" href="javascript:tilePressed('musical-forest')">
+</map>
+
+<!-- Underlying pano map -->
+<img id="panoImg" class="mapimage" src="assets/images/pano.jpg" usemap="#pano-map" width="2048" height="512">
+<map name="pano-map">
+  <area shape="rect" coords="280, 150, 315, 180 " alt="tag" 
+  href="https://www.google.pl/maps/place/Polana+pod+Wo%C5%82oszynem/@49.2487508,20.0905469,15.5z/data=!4m8!1m2!3m1!2sPolana+pod+Wo%C5%82oszynem!3m4!1s0x4715f4d4e66bd933:0x1a268f1a1b1edb82!8m2!3d49.2458976!4d20.0825411">
+</map>
+</body>
+
+<script>
+function tilePressed(tile) {
+    document.querySelector("#showcase-text").setAttribute("value", tile)
+}
+
+// create the "show code" button
+setCodeBtnUrl("aframe/map_tag.html");
+</script>
+</html>
