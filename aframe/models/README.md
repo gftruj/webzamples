@@ -7,7 +7,7 @@
 
 [Animating a models opacity](https://gftruj.github.io/webzamples/aframe/models/model_opacity.html)
 
-[Waiting for <a-gltf-model> children](https://gftruj.github.io/webzamples/aframe/models/child_models.html)
+[Waiting for a-gltf-model children](https://gftruj.github.io/webzamples/aframe/models/child_models.html)
 
 
 ## Credits
