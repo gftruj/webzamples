@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Child models</title>
+    <meta name="description" content="Bounding boxes" />
+    <!-- 
+    AFRAME MASTER
+<script src="https://rawcdn.githack.com/aframevr/aframe/227dcc35623be66a7867577ce462e7a3ac96f9ac/dist/aframe-master.js"></script>
+    
+      ALL MODELS CREDITS, AND LICENSES ARE AT THEIR LOCATIONS
+    -->
+    <script src="/webzamples/libs/aframe.1.0.4.js"></script>
+    <script src="https://kit.fontawesome.com/c9500776a0.js" crossorigin="anonymous"></script>
+    <script src="misc/codeBtn.js"></script>
+    <script>
+        AFRAME.registerComponent("model-manager", {
+            init: function() {
+               this.childLoaded = this.childLoaded.bind(this)
+               this.childrenReady = this.childrenReady.bind(this)
+                for (let child of this.el.children) {
+                    child.addEventListener("model-loaded", this.childLoaded)
+                }
+             },
+             childrenReady: function() {
+                var colors = [0xff0000, 0x00ff00, 0x0000ff]
+                for (let idx = 0; idx < this.el.children.length; idx++) {
+                    let mesh = this.el.children[idx].getObject3D("mesh");
+                    mesh.traverse(node => {
+                        if (node.material) {
+                            node.material.color.setHex(colors[idx])
+                        }
+                    })
+                }
+             },
+             childLoaded: (function() {
+                var counter = 0
+                return function() {
+                    counter++
+                    if (counter >= this.el.children.length) {
+                        this.childrenReady()
+                    }
+                }
+             })()
+        })
+
+    </script>
+</head>
+
+<body>
+    <a-scene background="color: #fafafa">
+        <a-assets>
+            <a-asset-item id="dude-model" src="../assets/models/human/AnimatedHuman.gltf" crossorigin="anonymous">
+            </a-asset-item>
+        </a-assets>
+
+        <a-entity model-manager>
+            <a-gltf-model src="#dude-model" position="-2 0 -6" rotation="0 90 0" scale="0.5 0.5 0.5"></a-gltf-model>
+            <a-gltf-model src="#dude-model" position="0 0 -6" rotation="0 90 0" scale="0.5 0.5 0.5"></a-gltf-model>
+            <a-gltf-model src="#dude-model" position="2 0 -6" rotation="0 90 0" scale="0.5 0.5 0.5"></a-gltf-model>
+        </a-entity>
+    </a-scene>
+    <script>
+        // show-code button
+        setCodeBtnUrl("aframe/models/child_models.html");
+    </script>
+</body>
+
+</html>
