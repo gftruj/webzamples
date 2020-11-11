@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Box above head</title>
+    <meta name="description" content="Box above head"/>
+    <!-- 
+    AFRAME MASTER
+<script src="https://rawcdn.githack.com/aframevr/aframe/227dcc35623be66a7867577ce462e7a3ac96f9ac/dist/aframe-master.js"></script>
+    -->
+    <script src="/webzamples/libs/aframe.1.0.4.js"></script>
+    <script src="/webzamples/libs/aframe-extras.loaders.6.1.1.js"></script>
+    <script src="/webzamples/libs/Three.ColladaLoader.js"></script>
+    <script src="https://gftruj.github.io/unnecessary.components/dist/unnecessary-components.js"></script>
+    <script src="https://kit.fontawesome.com/c9500776a0.js" crossorigin="anonymous"></script>
+    <script src="misc/codeBtn.js"></script>
+    <script>
+      AFRAME.registerComponent("box-above", {
+        schema: {
+          element: {value: 12}
+          },
+          init: function() {
+          // create box
+          var geo = new THREE.BoxGeometry(0.5, 0.1, 0.1)
+          var material = new THREE.MeshBasicMaterial({color: "#00ff00"})
+          this.box = new THREE.Mesh(geo, material)
+          this.el.sceneEl.object3D.add(this.box)
+          console.log(this.box)
+          this.box3 = new THREE.Box3()
+          this.node = null
+
+          this.el.addEventListener("model-loaded", e => {
+            let mesh = this.el.getObject3D("mesh");
+            var i = 0
+            mesh.traverse(node => {
+              node.frustumCulled = false; // not necessary for the bbox
+              if (node.isSkinnedMesh && i++ == this.data.element) {
+                this.node = node
+              }
+            });
+          });
+        },
+        tick: function() {
+          if (!this.node) return;
+          
+          THREE.Box3Utils.fromSkinnedMesh(this.node, this.box3);
+          this.box.position.copy(this.el.object3D.position)
+          this.box.position.y = this.box3.max.y
+        }
+      });
+
+    </script>
+  </head>
+  <body>
+    <a-scene background="color: #fafafa">
+      <a-assets>
+        <a-asset-item
+          id="articuno-model"
+          src="../assets/models/articuno/scene.gltf"
+          crossorigin="anonymous"
+        ></a-asset-item>
+      </a-assets>
+
+      <a-gltf-model
+        src="#articuno-model"
+        position="5 0 -6"
+        scale="0.025 0.025 0.025"
+        rotation="0 0 0"
+        animation-mixer="clip: *;"
+        box-above="element: 12"
+      ></a-gltf-model>
+      <a-gltf-model
+        src="#articuno-model"
+        position="-5 0 -6"
+        scale="0.025 0.025 0.025"
+        rotation="0 0 0"
+        animation-mixer="clip: *;"
+        box-above="element: 13"
+      ></a-gltf-model>
+
+    </a-scene>
+    <script>
+      // show-code button
+      setCodeBtnUrl("aframe/models/above_head.html");
+    </script>
+  </body>
+</html>

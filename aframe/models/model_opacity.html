@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>model opacityu</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- import the webpage's stylesheet -->
+    <link rel="stylesheet" href="/style.css">
+    <script src="/webzamples/libs/aframe.1.0.4.js"></script>
+    <!-- import the webpage's javascript file -->
+    <script src="https://gftruj.github.io/unnecessary.components/dist/unnecessary-components.js"></script>
+    <script src="https://kit.fontawesome.com/c9500776a0.js" crossorigin="anonymous"></script>
+    <script src="misc/codeBtn.js"></script>
+    <script>
+        /*
+        Straightforward opacity change
+         */
+        AFRAME.registerComponent('model-opacity', {
+            schema: { opacity: { default: 0.5 } },
+            update: function () {
+                var mesh = this.el.getObject3D('mesh');
+                var data = this.data;
+                if (!mesh) { return; }
+                mesh.traverse(function (node) {
+                    if (node.isMesh) {
+                        node.material.opacity = data.opacity;
+                        node.material.transparent = data.opacity < 1.0;
+                        node.material.needsUpdate = true;
+                    }
+                });
+            }
+        });
+    </script>
+</head>
+
+<body>
+    <a-scene>
+        <a-assets>
+            <a-asset-item id="window" src="../assets/models/window/scene.gltf"></a-asset-item>
+        </a-assets>
+        <a-box position="0 1 -5" color="red" width='5'></a-box>
+        <a-text color='black' scale='0.5 0.5 0.5' position="-1.5 1.8 -2" value='Original Model'></a-text>
+        <a-entity scale="0.0025 0.0025 0.0025" position="-0.5 1 -2" gltf-model="#window"></a-entity>
+
+        <a-text color='black' scale='0.5 0.5 0.5' position="-0.5 1.8 -2" value='Animating opacity'></a-text>
+        <a-entity scale="0.0025 0.0025 0.0025" position="0.5 1 -2" gltf-model="#window" model-opacity
+            animation='property: model-opacity.opacity;from: 1; to: 0; dur: 2500;loop: true; dir: alternate; startEvents: model-loaded'>
+        </a-entity>
+
+        <a-text color='black' scale='0.5 0.5 0.5' position="0.5 1.8 -2" value='Animating relative opacity'></a-text>
+        <a-entity scale="0.0025 0.0025 0.0025" position="1.5 1 -2" gltf-model="#window" model-relative-opacity
+            animation='property: model-relative-opacity.opacityFactor;from: 1; to: 0; dur: 2500;loop: true; dir: alternate; startEvents: model-loaded'>
+        </a-entity>
+    </a-scene>
+
+    <script>
+        // show-code button
+        setCodeBtnUrl("aframe/models/model_opacity.html");
+      </script>
+</body>
+
+</html>
