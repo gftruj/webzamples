@@ -7,115 +7,15 @@
   <head>
     <title>a-frame meets `map`</title>
     <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+    <script src="https://gftruj.github.io/unnecessary.components/dist/unnecessary-components.js"></script>
     <script
       src="https://kit.fontawesome.com/c9500776a0.js"
       crossorigin="anonymous"
     ></script>
     <script src="misc/codeBtn.js"></script>
-    <!-- place the scene above the images, which are not displayed by default-->
-    <style>
-      a-scene {
-        display: block;
-        z-index: 1;
-      }
-      .mapimage {
-        display: none;
-        position: fixed;
-        top: 0px;
-        left: 0px;
-        z-index: 0;
-      }
-      area {
-        pointer-events: inherit;
-      }
-    </style>
+
   </head>
-  <body>
-    <script>
-      function inside(point, vs) {
-        // ray-casting algorithm based on
-        // https://wrf.ecse.rpi.edu/Research/Short_Notes/pnpoly.html/pnpoly.html
-
-        var x = point[0],
-          y = point[1];
-
-        var inside = false;
-        for (var i = 0, j = vs.length - 1; i < vs.length; j = i++) {
-          var xi = vs[i][0],
-            yi = vs[i][1];
-          var xj = vs[j][0],
-            yj = vs[j][1];
-
-          var intersect =
-            yi > y != yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi;
-          if (intersect) inside = !inside;
-        }
-
-        return inside;
-      }
-
-      AFRAME.registerComponent("fakeareas", {
-        schema: {
-          map: { value: "" },
-          imageWidth: {value: 0},
-          imageHeight: {value: 0}
-        },
-        init: function() {
-          this.polygons = [];
-          let imageWidth;
-          let imageHeight;
-          
-          let mesh = this.el.getObject3D("mesh");
-          var idx = setInterval(e => {
-            if (!mesh.material.map) return;
-            clearInterval(idx);
-            let image = mesh.material.map.image;
-
-            // set the w / h if not provided
-            imageWidth = this.data.imageWidth ? this.data.imageWidth : image.width
-            imageHeight = this.data.imageHeight ? this.data.imageHeight : image.height
-            
-            // CREATE areas
-            var mapEl = document.querySelector(this.data.map);
-            var areas = mapEl.children;
-
-            for (let area of areas) {
-              var shape = area.getAttribute("shape");
-              var coords = area
-                .getAttribute("coords")
-                .trim()
-                .split(",")
-                .map(x => parseInt(x));
-
-              let poly = [];
-              if (shape === "rect") {
-                poly = [[coords[0], coords[1]], [coords[0], coords[3]], [coords[2], coords[3]], [coords[2], coords[1]]]
-              } else {
-                for (let i = 0; i < coords.length; i += 2) {
-                  poly.push([coords[i], parseInt(coords[i + 1])]);
-                }
-              }
-                this.polygons.push({
-                  area: poly,
-                  action: area.getAttribute("href")
-                });
-            }
-            
-            this.el.addEventListener("click", evt => {
-              var uvPoint = evt.detail.intersection.uv;
-              var x = uvPoint.x * imageWidth
-              var y = imageHeight - uvPoint.y * imageHeight
-
-              for (var i = 0; i < this.polygons.length; i++) {    
-                if (inside([x,y], this.polygons[i].area)) {
-                 window.location = this.polygons[i].action
-                }
-              }
-            })
-          }, 50);
-        }
-      });
-    </script>
+  <body>  
     <!-- A simple and basic scene -->
     <a-scene
       background="color: white"
@@ -150,7 +50,7 @@
         rotation="0 0 0"
         width="2"
         material="src: #showcase"
-        fakeareas="map: #showcase-map; imageWidth: 512; imageHeight: 256"
+        asourcemap="map: #showcase-map; imageWidth: 512; imageHeight: 256"
       ></a-plane>
 
       <!-- CYLINDER -->
@@ -163,7 +63,7 @@
         open-ended="true"
         theta-start="45"
         theta-length="270"
-        fakeareas="map: #pano-map"
+        asourcemap="map: #pano-map"
       ></a-cylinder>
     </a-scene>
 
