@@ -6,14 +6,23 @@
 <html>
   <head>
     <title>a-frame meets `map`</title>
-    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
-    <script src="https://gftruj.github.io/unnecessary.components/dist/unnecessary-components.js"></script>
+    <script src="/webzamples/libs/aframe.1.0.4.js"></script>
+    <script src="/../unnecessary.components/dist/unnecessary-components.js"></script>
     <script
       src="https://kit.fontawesome.com/c9500776a0.js"
       crossorigin="anonymous"
     ></script>
     <script src="misc/codeBtn.js"></script>
+    <script>
+      AFRAME.registerComponent("map-events", {
+        init: function() {
+          this.el.addEventListener("area-clicked", e => {
+            console.log(e.detail.area, "clicked!")
+          })
+        }
+      })
 
+    </script>
   </head>
   <body>  
     <!-- A simple and basic scene -->
@@ -25,11 +34,11 @@
       <a-assets>
         <img
           id="showcase"
-          src="https://rawcdn.githack.com/gftruj/webzamples/ee4ca5f48132b7fde88f941d66bc2a78dc09f7e2/aframe/assets/images/aframe-showcase.jpg"
+          src="..//aframe/assets/images/aframe-showcase.jpg"
         />
         <img
           id="pano"
-          src="https://rawcdn.githack.com/gftruj/webzamples/ee4ca5f48132b7fde88f941d66bc2a78dc09f7e2/aframe/assets/images/pano.jpg"
+          src="../aframe/assets/images/pano.jpg"
         />
       </a-assets>
       <a-text
@@ -51,6 +60,7 @@
         width="2"
         material="src: #showcase"
         asourcemap="map: #showcase-map; imageWidth: 512; imageHeight: 256"
+        map-events
       ></a-plane>
 
       <!-- CYLINDER -->
@@ -73,37 +83,37 @@
         shape="poly"
         coords="0, 0, 0, 128, 170, 128, 170, 0"
         alt="superframe"
-        href="javascript:tilePressed('superframe');console.log('superframe')"
+        href="javascript:tilePressed('superframe')"
       />
       <area
         shape="poly"
         coords="173,0, 173, 128, 344,128, 344, 0"
-        alt="superframe"
-        href="javascript:tilePressed('a-painter'); console.log('a-painter')"
+        alt="a-painter"
+        href="javascript:tilePressed('a-painter')"
       />
       <area
         shape="rect"
-        coords="347, 0, 509, 347"
-        alt="superframe"
+        coords="347, 0, 509, 128"
+        alt="supermedium"
         href="javascript:tilePressed('supermedium')"
       />
 
       <area
         shape="rect"
         coords="0,130,168,255"
-        alt="superframe"
+        alt="a-blast"
         href="javascript:tilePressed('a-blast')"
       />
       <area
         shape="rect"
         coords="173,130,344,255"
-        alt="superframe"
+        alt="a-saturday-night"
         href="javascript:tilePressed('a-saturday-night')"
       />
       <area
         shape="rect"
         coords="347,130,509,255"
-        alt="superframe"
+        alt="musical-forest"
         href="javascript:tilePressed('musical-forest')"
       />
     </map>
