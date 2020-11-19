@@ -20,7 +20,7 @@
                     let mesh = this.el.getObject3D("mesh")
                     mesh.traverse(node => {
                         if (!node.material) return;
-                        node.material.metalness = 0.7
+                        node.material.metalness = 0.5
                         node.material.roughness = 0
                     })
                 })
@@ -31,19 +31,20 @@
 </head>
 
 <body>
-    <div style="position: fixed; width: 100%;margin: 0 auto; text-align: center; z-index: 9999; top: 5%;">
-        <p>Goldfish poly by google (https://poly.google.com/view/0bOZGc8ONrx)</p>
+    <div style="position: fixed; width: 100%;margin: 0 auto; text-align: center; z-index: 9999; top: 1%;">
+        <p>Goldfish poly by google <a href="https://poly.google.com/view/0bOZGc8ONrx">(https://poly.google.com/view/0bOZGc8ONrx)</a><br>
+            PISA maps from <a href="https://github.com/mrdoob/three.js/tree/dev/examples/textures/cube/pisa"></a></p>
     </div>
     <a-scene>
         <a-assets>
-            <a-asset-item id="saldat" src="assets/models/goldfish/goldfish.gltf"></a-asset-item>
+            <a-asset-item id="goldfish" src="assets/models/goldfish/goldfish.gltf"></a-asset-item>
         </a-assets>
-        <a-text position="-3 3 0" color="black" value="metalness 0.7 \n roughness:0"></a-text>
-        <a-entity position="-3 0.5 0" scale="0.01 0.01 0.01" gltf-model="#saldat" cube-env-map="path: assets/images/map/;
+        <a-text position="-3 3 0" color="black" value="metalness 0.5 \n roughness:0"></a-text>
+        <a-entity position="-3 0.5 0" scale="0.01 0.01 0.01" gltf-model="#goldfish" cube-env-map="path: assets/images/map/;
                         extension: png;
                         reflectivity: 0.5;" set-metalness-roughness></a-entity>
         <a-text position="2.75 3 0" color="black" value="Original unmodified model"></a-text>
-        <a-entity position="3 0.5 0" scale="0.01 0.01 0.01" gltf-model="#saldat" cube-env-map="path: assets/images/map/;
+        <a-entity position="3 0.5 0" scale="0.01 0.01 0.01" gltf-model="#goldfish" cube-env-map="path: assets/images/map/;
                         extension: png;
                         reflectivity: 0.5;"></a-entity>
         <a-sky color="#ECECEC"></a-sky>
