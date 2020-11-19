@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Environment map</title>
+
+    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-orbit-controls@1.3.0/dist/aframe-orbit-controls.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.min.js"></script>
+    <script src="https://kit.fontawesome.com/c9500776a0.js" crossorigin="anonymous"></script>
+    <script src="misc/codeBtn.js"></script>
+    <script>
+        AFRAME.registerComponent("set-metalness-roughness", {
+            init: function() {
+                this.el.addEventListener("model-loaded", e => {
+                    let mesh = this.el.getObject3D("mesh")
+                    mesh.traverse(node => {
+                        if (!node.material) return;
+                        node.material.metalness = 0.7
+                        node.material.roughness = 0
+                    })
+                })
+            }
+        })
+
+    </script>
+</head>
+
+<body>
+    <div style="position: fixed; width: 100%;margin: 0 auto; text-align: center; z-index: 9999; top: 5%;">
+        <p>Goldfish poly by google (https://poly.google.com/view/0bOZGc8ONrx)</p>
+    </div>
+    <a-scene>
+        <a-assets>
+            <a-asset-item id="saldat" src="assets/models/goldfish/goldfish.gltf"></a-asset-item>
+        </a-assets>
+        <a-text position="-3 3 0" color="black" value="metalness 0.7 \n roughness:0"></a-text>
+        <a-entity position="-3 0.5 0" scale="0.01 0.01 0.01" gltf-model="#saldat" cube-env-map="path: assets/images/map/;
+                        extension: png;
+                        reflectivity: 0.5;" set-metalness-roughness></a-entity>
+        <a-text position="2.75 3 0" color="black" value="Original unmodified model"></a-text>
+        <a-entity position="3 0.5 0" scale="0.01 0.01 0.01" gltf-model="#saldat" cube-env-map="path: assets/images/map/;
+                        extension: png;
+                        reflectivity: 0.5;"></a-entity>
+        <a-sky color="#ECECEC"></a-sky>
+        <a-entity camera look-controls
+            orbit-controls="target: 0 0.5 0; minDistance: 0.5; maxDistance: 180; initialPosition: 0 5 15"></a-entity>
+
+    </a-scene>
+
+   <script>
+    // create the "show code" button
+    setCodeBtnUrl("aframe/env_cubemap_component_wrong_model.html");
+   </script>
+</body>
+
+</html>
