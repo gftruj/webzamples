@@ -1,0 +1,37 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Custom cannon materials</title>
+    <script src="../../libs/aframe.1.0.4.js"></script>
+    <script src="../../libs/aframe-extras.loaders.6.1.1.js"></script>
+    <script src="../../libs/aframe-physics.4.0.1.js"></script>
+    <script src="https://gftruj.github.io/unnecessary.components/dist/unnecessary-components.js"></script>
+
+    <script src="https://kit.fontawesome.com/c9500776a0.js" crossorigin="anonymous"></script>
+    <script src="misc/codeBtn.js"></script>
+</head>
+
+<body>
+    <a-scene physics="debug: true">
+        <a-text position="-0.5 0.15 -2" color="black" value="default material"></a-text>
+        <a-box id="cannon" dynamic-body position="0 3 -3" color="#33AA33"></a-box>
+
+        <a-text position="-3.5 0.15 -2" color="black" value="restitution: 0.7"></a-text>
+        <a-box id="nonbounce" dynamic-body position="-3 3 -3" color="#AA3333" cannon-material="restitution: 0.7">
+        </a-box>
+
+        <a-text position="2.5 0.15 -2" color="black" value="restitution: 0.1"></a-text>
+        <a-box id="nonbounce" dynamic-body position="3 3 -3" color="#AA3333" cannon-material="restitution: 0.1"></a-box>
+
+        <a-box scale="8 0.1 5" static-body position="0 0 -3"></a-box>
+    </a-scene>
+
+    <script>
+        // create the "show code" button
+        setCodeBtnUrl("aframe/physics/custom_materials.html");
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,203 @@
+<html>
+
+<head>
+    <script
+        src="https://cdn.jsdelivr.net/gh/aframevr/aframe@559bbd00797f6d8b521244057f7dfb4b657e6516/dist/aframe-master.min.js"></script>
+    <script src="../../libs/aframe-extras.loaders.6.1.1.js"></script>
+    <script src="../../libs/aframe-physics.4.0.1.js"></script>
+    <script src="https://gftruj.github.io/unnecessary.components/dist/unnecessary-components.js"></script>
+    <script src="https://kit.fontawesome.com/c9500776a0.js" crossorigin="anonymous"></script>
+    <script src="misc/codeBtn.js"></script>
+
+    <script>
+        /*
+            Load the model. Not so relevant. 
+            */
+        AFRAME.registerComponent("collada-storm-trooper", {
+            init: function () {
+                var loader = new THREE.ColladaLoader();
+                this.mixer = null;
+                loader.load(
+                    "../assets/models/stormtrooper/stormtrooper.dae",
+                    collada => {
+                        var animations = collada.animations;
+                        var root = collada.scene;
+                        var clip = animations[0];
+                        this.skinnedMesh = root.getObjectByName("Stormtrooper");
+                        this.skinnedMesh.userData.root = root;
+                        root.traverse(function (node) {
+                            if (node.isSkinnedMesh) {
+                                node.frustumCulled = false;
+                            }
+                        });
+                        this.mixer = new THREE.AnimationMixer(root);
+                        var action = this.mixer.clipAction(clip).play();
+                        this.el.object3D.add(root);
+                        this.el.emit("model-loaded")
+                    }
+                );
+            },
+            tick: function (t, dt) {
+                if (!this.mixer) return;
+                this.mixer.update(dt / 1000);
+            }
+        });
+
+        AFRAME.registerComponent("skinned-mesh-body", {
+            schema: {
+                animated: { default: true }
+            },
+            init: function () {
+                this.meshes = [];
+                this.box = new THREE.Box3();
+                let getBoundingBox = this.getBoundingBox;
+                this.system = this.el.sceneEl.systems.physics
+                this.el.setAttribute("static-body", "shape", "none");
+
+                // wait until the model is ready
+                let self = this;
+                this.el.addEventListener("model-loaded", function modelReady() {
+                    // one model is enough for now
+                    self.el.removeEventListener("model-loaded", modelReady);
+
+                    // grab all skinned meshes
+                    self.el.object3D.traverse(node => {
+                        if (node.isSkinnedMesh) self.meshes.push(node);
+                    })
+
+                    // wait until the box is valid (not sure why need to wait)
+                    let idx = setInterval(e => {
+                        getBoundingBox(self.el.object3D, self.meshes, self.box);
+                        if (isNaN(self.box.min.x)) return; // check each prop?
+                        clearInterval(idx);
+
+                        // apply dummy
+                        self.el.setAttribute("shape__skinned", {
+                            "shape": "box",
+                            "halfExtents": { x: 0.1, y: 0.1, z: 0.1 }
+                        });
+
+                        self.setShapeData(self.el.body, self.box);
+                        self.bodyComp = self.el.components["static-body"]
+                        self.el.body.updateMassProperties()
+                        if (self.system.debug) self.bodyComp.shouldUpdateWireframe = true
+                        self.ready = true
+                    }, 10);
+                })
+            },
+            getBoundingBox: function (root, meshes, box) {
+                let skinnedMesh = meshes[0]
+                let skinnedRoot = skinnedMesh.userData.root
+                let modelParent = skinnedRoot.parent;
+
+                // reparent and update matrices
+                modelParent.remove(skinnedRoot)
+                skinnedRoot.updateMatrixWorld(true);
+
+                THREE.Box3Utils.fromSkinnedMesh(skinnedMesh, box);
+
+                modelParent.add(skinnedRoot)
+                skinnedRoot.updateMatrixWorld(true)
+
+                // reapply scale
+                box.min.multiplyScalar(root.scale.x)
+                box.max.multiplyScalar(root.scale.x)
+            },
+            // half-extents, and offsets
+            setShapeData: (function () {
+                let halfExtents = new THREE.Vector3();
+
+                return function (body, box) {
+                    // get the halfExtends
+                    box.getSize(halfExtents).multiplyScalar(1 / 2);
+                    let shape = body.shapes[0];
+                    shape.halfExtents.copy(halfExtents)
+
+                    // remove the shape, and add anew https://github.com/schteppe/cannon.js/issues/270
+                    body.shapes.length = 0;
+                    body.addShape(shape)
+
+                    // set the offset
+                    var offsets = {
+                        x: (box.max.x + box.min.x) / 2,
+                        y: (box.max.y + box.min.y) / 2,
+                        z: (box.max.z + box.min.z) / 2,
+                    };
+                    let offset = body.shapeOffsets[0];
+                    if (!offset) {
+                        body.shapeOffsets.push(offsets)
+                    } else {
+                        offset.copy(offsets);
+                    }
+                }
+            })(),
+            play: function () {
+                this.paused = false;
+            },
+            update: function () { },
+            pause: function () {
+                this.paused = true;
+            },
+            tick: function () {
+                if (this.paused || !this.data.animated) return;
+                if (!this.ready) return;
+
+                this.getBoundingBox(this.el.object3D, this.meshes, this.box);
+                this.setShapeData(this.el.body, this.box);
+                if (this.system.debug) this.bodyComp.shouldUpdateWireframe = true
+            }
+        })
+
+        AFRAME.registerComponent("anchor-line-to", {
+            schema: {
+                target: {},
+            },
+            init: function () {
+                this.anchor = document.querySelector(this.data.target)
+            },
+            tick: function () {
+                if (!this.anchor) return;
+                this.el.setAttribute("line", {
+                    "end": AFRAME.utils.coordinates.stringify(this.anchor.object3D.position)
+                })
+            }
+        })
+    </script>
+</head>
+
+<body>
+    <a-scene physics="debug: true">
+        <!-- Bone collider stuff -->
+        <a-text color="black" position="-2.5 2.5 -2.35" value="bone-colliders"></a-text>
+        <a-box id="left-anchor" position="-2 2 -2.35" color="blue" scale="0.2 0.2 0.2" static-body></a-box>
+        <a-entity line="start: -2, 2, -2.35; end: 0 0 0; color: black" anchor-line-to="target: #left-sphere"></a-entity>
+        <a-sphere id="left-sphere" radius="0.15" position="-2 1 -2.35" color="#FA8320"
+            constraint="target: #left-anchor; type: distance;distance: 0.9;" dynamic-body>
+        </a-sphere>
+        <!-- model -->
+        <a-entity scale='0.25 0.25 0.25' rotation="0 180 0" position="-2 0 -3" collada-storm-trooper
+            bone-collider__righthand="bone: RightHandMiddle1; halfExtents: 0.15 0.15 0.15"
+            bone-collider__lefthand="bone: LeftHandMiddle1; shape: sphere; radius: 0.15"></a-entity>
+
+        <!-- dynamic collider stuff -->
+        <a-text color="black" position="1 2.5 -2.35" value="skinned mesh with a \ndynamic box collider"></a-text>
+        <a-box id="right-anchor" position="2 2 -2.35" color="blue" scale="0.2 0.2 0.2" static-body></a-box>
+        <a-entity line="start: 2, 2, -2.35; end: 0 0 0; color: black" anchor-line-to="target: #right-sphere"></a-entity>
+        <a-sphere id="right-sphere" radius="0.15" position="2 1 -2.35" color="#FA8320"
+            constraint="target: #right-anchor; type: distance;distance: 0.9;" dynamic-body></a-sphere>
+        <!-- model -->
+        <a-entity scale='0.25 0.25 0.25' rotation="0 160 0" position="2 0 -3" collada-storm-trooper skinned-mesh-body>
+        </a-entity>
+    </a-scene>
+    
+    <div style="position: fixed; top: 5%; z-index: 10; text-align: center; width: 100%">
+        <p>Stormtrooper by <a href="https://sketchfab.com/strykerdoesgames">strykerdoesgames</a>
+            <a href="https://creativecommons.org/licenses/by/4.0/">(license)</a></p>
+    </div>
+    <script>
+        // create the "show code" button
+        setCodeBtnUrl("aframe/physics/animated_models.html");
+    </script>
+</body>
+
+</html>
