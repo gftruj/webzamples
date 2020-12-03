@@ -1,12 +1,10 @@
 <html>
-
 <head>
     <title>Bone collider</title>
     <script
         src="https://cdn.jsdelivr.net/gh/aframevr/aframe@559bbd00797f6d8b521244057f7dfb4b657e6516/dist/aframe-master.min.js"></script>
     <script
         src="https://unpkg.com/aframe-environment-component@1.1.0/dist/aframe-environment-component.min.js"></script>
-
     <script src="../../libs/aframe-extras.loaders.6.1.1.js"></script>
     <script src="../../libs/aframe-physics.4.0.1.js"></script>
     <script src="https://gftruj.github.io/unnecessary.components/dist/unnecessary-components.js"></script>
@@ -63,7 +61,6 @@
         <!-- boxes and spheres -->
         <a-box id="left-anchor" position="-2 2 -2.35" color="blue" material="opacity: 0.25" scale="0.1 0.1 0.1" static-body
         anchor-line__top="target: #left-top-sphere" anchor-line__bottom="target: #left-bottom-sphere"></a-box>
-
         <a-sphere id="left-top-sphere" radius="0.15" position="-2 1.25 -2.35" material="color: #fa8320; opacity: 0.75"
             constraint="target: #left-anchor; type: distance;distance: 0.75;" dynamic-body></a-sphere>
         <a-sphere id="left-bottom-sphere" radius="0.15" position="-2 0.5 -2.35" material="color: #fa8320; opacity: 0.75"
