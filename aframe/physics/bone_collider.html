@@ -1,0 +1,91 @@
+<html>
+
+<head>
+    <script
+        src="https://cdn.jsdelivr.net/gh/aframevr/aframe@559bbd00797f6d8b521244057f7dfb4b657e6516/dist/aframe-master.min.js"></script>
+    <script
+        src="https://unpkg.com/aframe-environment-component@1.1.0/dist/aframe-environment-component.min.js"></script>
+
+    <script src="../../libs/aframe-extras.loaders.6.1.1.js"></script>
+    <script src="../../libs/aframe-physics.4.0.1.js"></script>
+    <script src="../../../unnecessary.components/dist/unnecessary-components.js"></script>
+    <script src="https://kit.fontawesome.com/c9500776a0.js" crossorigin="anonymous"></script>
+    <script src="misc/codeBtn.js"></script>
+
+    <script>
+        AFRAME.registerComponent("anchor-line", {
+            multiple: true,
+            schema: {
+                target: {},
+            },
+            init: function () {
+                this.el.setAttribute("line__" + this.id, {
+                    "start": "0, 0, 0",
+                    "color": "black"
+                })
+                this.anchor = document.querySelector(this.data.target)
+                this.targetPos = new THREE.Vector3();
+            },
+            tick: function () {
+                if (!this.anchor) return;
+                this.targetPos.copy(this.anchor.object3D.position)
+                this.el.object3D.worldToLocal(this.targetPos)
+                this.el.setAttribute("line__" + this.id, {
+                    "end": AFRAME.utils.coordinates.stringify(this.targetPos)
+                })
+            }
+        })
+    </script>
+</head>
+
+<body>
+    <a-scene physics="debug: true" environment="preset: yavapai">
+        <a-assets>
+            <a-asset-item id="skeleton" src="../assets/models/SkeletonPikeman/scene.gltf"></a-asset-item>
+            <a-asset-item id="poringu" src="../assets/models/poringu/scene.gltf"></a-asset-item>
+        </a-assets>
+        <a-light type="point" position="0 5 0"></a-light>
+
+        <!-- Models  -->
+        <a-text color="black" position="-.5 2 -3" value="bone-colliders"></a-text>
+        <!-- collider + half extents-->
+        <a-entity scale='0.04 0.04 0.04' position="-2 0 -3" gltf-model="#skeleton" animation-mixer="clip: *"
+            bone-collider__spear="debug: true; bone: joint25; halfExtents: 0.5 0.5 25; offset: -1.5 0.75 -13">
+        </a-entity>
+
+        <!-- collider + half extents + offset -->
+        <a-entity scale='0.075 0.075 0.075' position="2 0 -3" gltf-model="#poringu" animation-mixer="clip: *;"
+            bone-collider__wand="bone: joint17; rotation: -10 12 0; halfExtents: 0.5 0.5 8; offset: 0.5 0.5 -5"
+            bone-collider__head="bone: joint8; shape: sphere; radius: 7; offset: 7 0 0">
+        </a-entity>
+
+        <!-- boxes and spheres -->
+        <a-box id="left-anchor" position="-2 2 -2.35" color="blue" material="opacity: 0.25" scale="0.1 0.1 0.1" static-body
+        anchor-line__top="target: #left-top-sphere" anchor-line__bottom="target: #left-bottom-sphere"></a-box>
+
+        <a-sphere id="left-top-sphere" radius="0.15" position="-2 1.25 -2.35" material="color: #fa8320; opacity: 0.75"
+            constraint="target: #left-anchor; type: distance;distance: 0.75;" dynamic-body></a-sphere>
+        <a-sphere id="left-bottom-sphere" radius="0.15" position="-2 0.5 -2.35" material="color: #fa8320; opacity: 0.75"
+            constraint="target: #left-anchor; type: distance;distance: 1.5;" dynamic-body>
+        </a-sphere>
+
+        <a-box id="right-anchor" position="2 2 -2.35" color="blue" material="opacity: 0.25" scale="0.1 0.1 0.1" static-body
+        anchor-line__top="target: #right-top-sphere" anchor-line__bottom="target: #right-bottom-sphere"></a-box>
+        <a-sphere id="right-top-sphere" radius="0.15" position="2 1.25 -2.35" material="color: #fa8320; opacity: 0.75"
+            constraint="target: #right-anchor; type: distance;distance: 0.75;" dynamic-body></a-sphere>
+        <a-sphere id="right-bottom-sphere" radius="0.15" position="2 0.5 -2.35" material="color: #fa8320; opacity: 0.75"
+            constraint="target: #right-anchor; type: distance;distance: 1.5;" dynamic-body>
+        </a-sphere>
+    </a-scene>
+
+    <div style="position: fixed; top: 5%; z-index: 10; text-align: center; width: 100%">
+        <p>Skeleton spearman and Poringu by <a href="https://sketchfab.com/jbnotjeebe">jbnotjeebe</a>
+            <a href="https://creativecommons.org/licenses/by/4.0/">(license)</a></p>
+    </div>
+    <script>
+        // create the "show code" button
+        setCodeBtnUrl("aframe/physics/animated_rotating_gltf.html");
+    </script>
+</body>
+
+</html>
