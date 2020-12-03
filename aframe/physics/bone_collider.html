@@ -1,6 +1,7 @@
 <html>
 
 <head>
+    <title>Bone collider</title>
     <script
         src="https://cdn.jsdelivr.net/gh/aframevr/aframe@559bbd00797f6d8b521244057f7dfb4b657e6516/dist/aframe-master.min.js"></script>
     <script
@@ -8,7 +9,7 @@
 
     <script src="../../libs/aframe-extras.loaders.6.1.1.js"></script>
     <script src="../../libs/aframe-physics.4.0.1.js"></script>
-    <script src="../../../unnecessary.components/dist/unnecessary-components.js"></script>
+    <script src="https://gftruj.github.io/unnecessary.components/dist/unnecessary-components.js"></script>
     <script src="https://kit.fontawesome.com/c9500776a0.js" crossorigin="anonymous"></script>
     <script src="misc/codeBtn.js"></script>
 
@@ -42,7 +43,7 @@
     <a-scene physics="debug: true" environment="preset: yavapai">
         <a-assets>
             <a-asset-item id="skeleton" src="../assets/models/SkeletonPikeman/scene.gltf"></a-asset-item>
-            <a-asset-item id="poringu" src="../assets/models/poringu/scene.gltf"></a-asset-item>
+            <a-asset-item id="poringu" src="../assets/models/Poringu/scene.gltf"></a-asset-item>
         </a-assets>
         <a-light type="point" position="0 5 0"></a-light>
 
@@ -84,7 +85,7 @@
     </div>
     <script>
         // create the "show code" button
-        setCodeBtnUrl("aframe/physics/animated_rotating_gltf.html");
+        setCodeBtnUrl("aframe/physics/bone_collider.html");
     </script>
 </body>
 
