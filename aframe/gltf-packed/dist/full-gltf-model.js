@@ -27,17 +27,20 @@ module.exports.component = AFRAME.registerComponent("full-gltf-model", {
       return;
     }
 
-    this.remove(); // Load a glTF resource
+    this.remove();
+    console.log(src); // Load a glTF resource
 
     this.loader.load( // resource URL
     src, // called when the resource is loaded
     function gltfLoaded(gltfModel) {
       self.model = gltfModel.scene || gltfModel.scenes[0];
       self.model.animations = gltfModel.animations;
-      el.setObject3D('mesh', self.model);
+      let rootItem = new THREE.Object3D();
+      rootItem.add(self.model);
+      el.setObject3D('mesh', rootItem);
       el.emit('model-loaded', {
         format: 'gltf',
-        model: self.model
+        model: rootItem
       });
     }, undefined
     /* onProgress */
