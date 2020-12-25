@@ -3,7 +3,7 @@ import { KTX2Loader } from './node_modules/three/examples/jsm/loaders/KTX2Loader
 import { DRACOLoader } from './node_modules/three/examples/jsm/loaders/DRACOLoader.js';
 
 module.exports.component = AFRAME.registerComponent("full-gltf-model", {
-    schema: {type: 'model'},
+    schema: { type: 'model' },
     init: function () {
         const renderer = this.el.sceneEl.renderer
         // Instantiate a loader
@@ -20,6 +20,7 @@ module.exports.component = AFRAME.registerComponent("full-gltf-model", {
 
         if (!src) { return; }
         this.remove();
+        console.log(src)
         // Load a glTF resource
         this.loader.load(
             // resource URL
@@ -28,8 +29,11 @@ module.exports.component = AFRAME.registerComponent("full-gltf-model", {
             function gltfLoaded(gltfModel) {
                 self.model = gltfModel.scene || gltfModel.scenes[0];
                 self.model.animations = gltfModel.animations;
-                el.setObject3D('mesh', self.model);
-                el.emit('model-loaded', { format: 'gltf', model: self.model });
+                // setObject3D is needs an object3D, and the model is a group?
+                let rootItem = new THREE.Object3D();
+                rootItem.add(self.model)
+                el.setObject3D('mesh', rootItem);
+                el.emit('model-loaded', { format: 'gltf', model: rootItem });
             }, undefined /* onProgress */,
             function gltfFailed(error) {
                 var message = (error && error.message) ? error.message : 'Failed to load glTF model';

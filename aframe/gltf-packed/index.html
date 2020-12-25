@@ -6,6 +6,7 @@
     <meta name="description" content="Hello, WebVR! • A-Frame" />
     <script src="https://kit.fontawesome.com/c9500776a0.js" crossorigin="anonymous"></script>
     <script src="misc/codeBtn.js"></script>
+    
     <script src="https://aframe.io/releases/1.1.0/aframe.min.js"></script>
     <script src="wasm/msc_basis_transcoder.js"></script>
     <script src="dist/full-gltf-model.js"></script>
@@ -15,20 +16,22 @@
         Models by <a href="https://stackoverflow.com/users/4133847/chekeichan">chekeichan</a></p>
     <a-scene background="color: #FAFAFA">
         <a-assets>
-            <a-asset-item id="model" crossorigin="anonymous" src="https://cdn.glitch.com/268cfae4-25b8-4be0-acd0-6d9d6c666ab4%2Fmegaladapis.glb"></a-asset-item>
-            <a-asset-item id="model-packed" crossorigin="anonymous" src="https://cdn.glitch.com/268cfae4-25b8-4be0-acd0-6d9d6c666ab4%2Fmegaladapis-new.glb"></a-asset-item>
+            <a-asset-item id="model" src="https://cdn.glitch.com/268cfae4-25b8-4be0-acd0-6d9d6c666ab4%2Fmegaladapis.glb"></a-asset-item>
+            <a-asset-item id="model-packed" src="https://cdn.glitch.com/268cfae4-25b8-4be0-acd0-6d9d6c666ab4%2Fmegaladapis-new.glb"></a-asset-item>
         </a-assets>
       <a-entity position="-3 0 -3">
+        <a-text position="-1 3 0" color="black" value="megaladapis"></a-text>
         <a-entity
           rotation="0 180 0"
-          full-gltf-model="src: #model"
+          full-gltf-model="#model"
           shadow="cast: false; receive: false"
         ></a-entity>
       </a-entity>
       <a-entity position="3 0 -4">
+        <a-text position="-1 3 0" color="black" value="megaladapis-new (packed)"></a-text>
         <a-entity
           rotation="0 180 0"
-          full-gltf-model="src: #model-packed"
+          full-gltf-model="#model-packed"
           shadow="cast: false; receive: false"
         ></a-entity>
       </a-entity>
