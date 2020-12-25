@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Hello, WebVR! • A-Frame</title>
+    <meta name="description" content="Hello, WebVR! • A-Frame" />
+    <script src="https://kit.fontawesome.com/c9500776a0.js" crossorigin="anonymous"></script>
+    <script src="misc/codeBtn.js"></script>
+    <script src="https://aframe.io/releases/1.1.0/aframe.min.js"></script>
+    <script src="wasm/msc_basis_transcoder.js"></script>
+    <script src="dist/full-gltf-model.js"></script>
+  </head>
+  <body>
+    <a-scene background="color: #FAFAFA">
+        <a-assets>
+            <a-asset-item id="model" crossorigin="anonymous" src="https://cdn.glitch.com/268cfae4-25b8-4be0-acd0-6d9d6c666ab4%2Fmegaladapis.glb"></a-asset-item>
+            <a-asset-item id="model-packed" crossorigin="anonymous" src="https://cdn.glitch.com/268cfae4-25b8-4be0-acd0-6d9d6c666ab4%2Fmegaladapis-new.glb"></a-asset-item>
+        </a-assets>
+      <a-entity position="-3 0 -3">
+        <a-entity
+          rotation="0 180 0"
+          full-gltf-model="src: #model"
+          shadow="cast: false; receive: false"
+        ></a-entity>
+      </a-entity>
+      <a-entity position="3 0 -4">
+        <a-entity
+          rotation="0 180 0"
+          full-gltf-model="src: #model-packed"
+          shadow="cast: false; receive: false"
+        ></a-entity>
+      </a-entity>
+    </a-scene>
+    <script>
+        // create the "show code" button
+        setCodeBtnUrl("aframe/gltf-packed/index.html");
+    </script>
+  </body>
+</html>
