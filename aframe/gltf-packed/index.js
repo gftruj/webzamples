@@ -20,7 +20,6 @@ module.exports.component = AFRAME.registerComponent("full-gltf-model", {
 
         if (!src) { return; }
         this.remove();
-        console.log(src)
         // Load a glTF resource
         this.loader.load(
             // resource URL

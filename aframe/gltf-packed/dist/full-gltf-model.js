@@ -27,14 +27,14 @@ module.exports.component = AFRAME.registerComponent("full-gltf-model", {
       return;
     }
 
-    this.remove();
-    console.log(src); // Load a glTF resource
+    this.remove(); // Load a glTF resource
 
     this.loader.load( // resource URL
     src, // called when the resource is loaded
     function gltfLoaded(gltfModel) {
       self.model = gltfModel.scene || gltfModel.scenes[0];
-      self.model.animations = gltfModel.animations;
+      self.model.animations = gltfModel.animations; // setObject3D is needs an object3D, and the model is a group?
+
       let rootItem = new THREE.Object3D();
       rootItem.add(self.model);
       el.setObject3D('mesh', rootItem);
