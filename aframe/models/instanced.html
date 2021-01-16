@@ -1,0 +1,77 @@
+<html>
+<head>
+    <script src="https://aframe.io/releases/1.1.0/aframe.min.js"></script>
+    <script src="https://kit.fontawesome.com/c9500776a0.js" crossorigin="anonymous"></script>
+    <script src="misc/codeBtn.js"></script>
+    <script>
+        AFRAME.registerComponent("instanced", {
+            init: function () {
+
+                var el = this.el;
+                var root = this.el.object3D;
+                var loader = new THREE.GLTFLoader();
+                mtx = new THREE.Matrix4();
+
+                loader.load("../assets/models/arrow/CHAHIN_ARROW.gltf", function (scene) {
+                    let arrow = scene.scene.children[0];
+                    let geometry;
+                    let material;
+                    // This model has one geometry and material
+                    arrow.traverse(node => {
+                        if (node.geometry && node.material) {
+                            geometry = node.geometry;
+                            material = node.material;
+                        }
+                    })
+                    // !! No idea what causes issues here, but I have to replicate the material.
+                    let mat = new THREE.MeshStandardMaterial({
+                        color: material.color,
+                        map: material.map
+                    })
+
+                    let iMesh = new THREE.InstancedMesh(geometry, mat, 180);
+                    let position = new THREE.Vector3()
+                    let quat = new THREE.Quaternion();
+                    let scale = new THREE.Vector3();
+
+                    let euler = new THREE.Euler(Math.PI, 0, 0, "ZYX");
+                    let radius = 5;
+
+                    for (let i = 0; i < 180; i++) {
+                        let angle = 2 * i * Math.PI / 180;
+                        root.matrix.decompose(position, quat, scale);
+                        // Position in a circle
+                        let x = Math.cos(angle) * radius;
+                        let y = Math.sin(angle) * radius;
+                        position.set(x, y, 0);
+
+                        // face inwards
+                        euler.set(Math.PI / 2, 0, Math.PI + angle)
+                        quat.setFromEuler(euler);
+
+                        mtx.compose(position, quat, scale);
+                        iMesh.setMatrixAt(i, mtx)
+                    }
+                    iMesh.frustumCulled = false;
+                    iMesh.instanceMatrix.needsUpdate = true;
+                    root.add(iMesh)
+                })
+
+            }
+        })
+    </script>
+</head>
+<body>
+    <div style="position: fixed; top: 5%; z-index: 10; text-align: center; width: 100%">
+        <p>Arrow by <a href="https://poly.google.com/view/6pMBOmBFxGt">google</a>
+            <a href="https://creativecommons.org/licenses/by/3.0/legalcode">(license)</a></p>
+    </div>
+    <a-scene stats>
+        <a-entity position="0 0 -5" instanced></a-entity>
+        <a-box position="-1 0.5 -5" rotation="0 45 0" color="#4CC3D9"></a-box>
+        <a-sphere position="0 1.25 -6" radius="1.25" color="#EF2D5E"></a-sphere>
+        <a-cylinder position="1 0.75 -5" radius="0.5" height="1.5" color="#FFC65D"></a-cylinder>
+        <a-plane position="0 0 -5" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
+    </a-scene>
+</body>
+</html>
