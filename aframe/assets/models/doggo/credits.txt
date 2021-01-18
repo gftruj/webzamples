@@ -1,0 +1,2 @@
+model: https://sketchfab.com/3d-models/animated-dog-shiba-inu-9abfce885a834399b2c3ccaed51cd474 
+license: https://creativecommons.org/licenses/by/4.0/

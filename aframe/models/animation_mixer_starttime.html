@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>animation start time</title>
+    <meta name="description" content="Box above head" />
+
+    <script src="https://aframe.io/releases/1.1.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.min.js"></script>
+    <script src="https://kit.fontawesome.com/c9500776a0.js" crossorigin="anonymous"></script>
+    <script src="misc/codeBtn.js"></script>
+    <script>
+        AFRAME.registerComponent("animation-manager", {
+            schema: {
+                // in seconds
+                startTime: {default: 1}
+            },
+            init: function () {
+                // bind the methods
+                this.modelLoaded = this.modelLoaded.bind(this);
+                this.setStartTime = this.setStartTime.bind(this);
+
+                // wait until the model is ready
+                this.el.addEventListener("model-loaded", this.modelLoaded);
+            },
+            modelLoaded: function() {
+                this.animationMixer = this.el.components["animation-mixer"];
+                // set the start time of the first play
+                this.setStartTime();
+                // set the start time on each loop
+                this.el.addEventListener("animation-loop", this.setStartTime);
+            },
+            setStartTime: function() {
+                this.animationMixer.mixer.setTime(this.data.startTime);
+            },
+            remove: function() {
+                this.el.removeEventListener("model-loaded", this.modelLoaded);
+                this.el.removeEventListener("animation-loop", this.setStartTime);
+            }
+        })
+    </script>
+</head>
+
+<body>
+    <div style="position: fixed; top: 5%; z-index: 10; text-align: center; width: 100%">
+        <p>shiba-inu by <a href="https://sketchfab.com/3d-models/animated-dog-shiba-inu-9abfce885a834399b2c3ccaed51cd474">quander</a>
+            <a href="https://creativecommons.org/licenses/by/4.0/">(license)</a></p>
+    </div>
+    <a-scene background="color: #fafafa">
+        <a-assets>
+            <a-asset-item id="doggo" src="../assets/models/doggo/scene.gltf" crossorigin="anonymous">
+            </a-asset-item>
+        </a-assets>
+        <a-text color="black" position="1.5 3 -6" value="startTime: 1s"></a-text>
+        <a-gltf-model src="#doggo" position="2 0 -6" scale="0.025 0.025 0.025" rotation="0 0 0"
+            animation-mixer="clip: 0|shake*" animation-manager></a-gltf-model>
+
+        <a-text color="black" position="-3.5 3 -6" value="full animation"></a-text>
+        <a-gltf-model src="#doggo" position="-2 0 -6" scale="0.025 0.025 0.025" rotation="0 0 0"
+            animation-mixer="clip: 0|shake*" ></a-gltf-model>
+
+
+    </a-scene>
+    <script>
+        // show-code button
+        setCodeBtnUrl("aframe/models/animation_mixer.html");
+    </script>
+
+</body>
+
+</html>
