@@ -1,0 +1,2 @@
+The video is part of this repo https://github.com/samdutton/simpl
+which is licensed under the apache-2.0 license (http://www.apache.org/licenses/LICENSE-2.0)
