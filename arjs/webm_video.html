@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>webm alpha video material</title>
+    <meta name="description" content="webm alpha video material" />
+
+    <script src="https://aframe.io/releases/1.1.0/aframe.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+    <script src="https://kit.fontawesome.com/c9500776a0.js" crossorigin="anonymous"></script>
+    <script src="misc/codeBtn.js"></script>
+
+    <script>
+        // Alpha video
+        AFRAME.registerComponent("alpha-video", {
+            init: function () {
+                this.materialLoaded = this.materialLoaded.bind(this);
+
+                // wait until the material is ready
+                this.el.addEventListener('loaded', this.materialLoaded)
+            }, materialLoaded: function () {
+                // grab the material
+                let material = this.el.getObject3D("mesh").material;
+                // swap the format
+                material.map.format = THREE.RGBAFormat;
+                material.map.needsUpdate = true;
+            },
+            remove: function () {
+                this.el.removeEventListener("loaded", this.materialLoaded)
+            }
+        })
+
+        // clickable
+        AFRAME.registerComponent("play-on-click", {
+            init: function () {
+                document.body.addEventListener("click", e => {
+                    document.querySelector("#my-video").play()
+                })
+            }
+        })
+    </script>
+</head>
+
+<body style="margin : 0px; overflow: hidden;">
+    <div style="position: fixed; top: 5%; z-index: 10; text-align: center; width: 100%">
+        <p>soccer video from <a
+                href="https://github.com/samdutton/simpl/blob/gh-pages/videoalpha/video/soccer1.webm">simpl</a>
+            <a href="https://github.com/samdutton/simpl/blob/gh-pages/LICENSE">(license)</a>
+        </p>
+        <p>Click the guy to play the video (mobile)</p>
+    </div>
+    <a-scene embedded arjs cursor="rayOrigin: mouse" raycaster="objects: .interactable">
+        <a-assets>
+            <video id="my-video" src="../aframe/assets/videos/soccer/soccer1.webm" preload="auto" autoplay loop="true">
+        </a-assets>
+
+        <a-marker preset="hiro">
+            <a-plane class="interactable" position="0 0.5 -3" material="src: #my-video; transparent: true;" alpha-video
+                play-on-click>
+            </a-plane>
+            <a-box position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
+            <a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E"></a-sphere>
+            <a-cylinder position="1 0.75 -3" radius="0.5" height="1.5" color="#FFC65D"></a-cylinder>
+            <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
+        </a-marker>
+
+    </a-scene>
+
+
+    <script>
+        // show-code button
+        setCodeBtnUrl("arjs/webm_video.html");
+    </script>
+
+</body>
+
+</html>
