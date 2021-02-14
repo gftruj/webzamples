@@ -1,0 +1,96 @@
+<html>
+
+<head>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://kit.fontawesome.com/c9500776a0.js" crossorigin="anonymous"></script>
+    <script src="misc/codeBtn.js"></script>
+    <script>
+        AFRAME.registerComponent("apply-color-to-vertices", {
+            init: function () {
+                this.el.addEventListener("loaded", e => {
+                    // grab the mesh
+                    const mesh = this.el.getObject3D("mesh");
+                    const geometry = mesh.geometry;
+                    const currentColor = mesh.material.color;
+                    const vertices = geometry.attributes.position.count;
+                    const colorArray = new Float32Array(vertices * 3);
+
+
+                    // create rgb values for each vertex
+                    for (var i = 0; i < vertices; i++) {
+                        currentColor.toArray(colorArray, i * 3);
+                    }
+
+                    geometry.setAttribute( 'color', new THREE.InstancedBufferAttribute( colorArray, 3 ) );
+                    mesh.material.vertexColors = true;
+                })
+            }
+        })
+
+        AFRAME.registerComponent("merger", {
+            init: function () {
+                setTimeout(this.mergeChildren.bind(this), 500);
+            },
+            mergeChildren: function () {
+                const childMeshes = [];
+                const geometries = [];
+
+                this.el.object3D.traverse(node => {
+                    if (node.type === "Mesh") {
+                        childMeshes.push(node);
+                        const geometry = node.geometry.clone();
+                        geometry.applyMatrix4(node.parent.matrix);
+                        geometries.push(geometry)
+                    }
+                });
+
+                for (let mesh of childMeshes) {
+                    mesh.parent.remove(mesh);
+                    mesh.geometry.dispose();
+                    mesh.material.dispose();
+                }
+
+                const mergedGeo = THREE.BufferGeometryUtils.mergeBufferGeometries(geometries);
+                const mergedMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.3, vertexColors: THREE.FaceColors });
+                mergedMaterial.flatShading = true;
+                const mergedMesh = new THREE.Mesh(mergedGeo, mergedMaterial);
+                this.el.object3D.add(mergedMesh)
+            }
+        })
+    </script>
+</head>
+
+<body>
+    <a-scene stats>
+        <div style="position: fixed; top: 5%; z-index: 99999; width: 100%; text-align: center">
+            <p>
+              Left - standard group.<br>
+              Middle - vertices coloured + vertexColors.<br>  
+              Right - merged, added roughness and flatshading.<br> 
+              5 draw calls (left merged), 3 geometries (the merged group is a new geometry).
+            </p>
+          </div>
+        <a-entity position="-3 0 0">
+            <a-box position="0 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
+            <a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E"></a-sphere>
+        </a-entity>
+
+        <a-entity position="0 0 0">
+            <a-box position="0 0.5 -3" rotation="0 45 0" color="#4CC3D9" apply-color-to-vertices></a-box>
+            <a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E" apply-color-to-vertices></a-sphere>
+        </a-entity>
+
+        <a-entity position="3 0 0" merger>
+            <a-box position="0 0.5 -3" rotation="0 45 0" color="#4CC3D9" apply-color-to-vertices></a-box>
+            <a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E" apply-color-to-vertices></a-sphere>
+        </a-entity>
+    </a-scene>
+
+    
+    <script>
+        // show-code button
+        setCodeBtnUrl("aframe/perf_calls/merge_simple.html");
+    </script>
+</body>
+
+</html>
