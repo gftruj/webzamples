@@ -40,7 +40,7 @@ module.exports.component = AFRAME.registerComponent("full-gltf-model", {
       el.setObject3D('mesh', rootItem);
       el.emit('model-loaded', {
         format: 'gltf',
-        model: rootItem
+        model: self.model
       });
     }, undefined
     /* onProgress */

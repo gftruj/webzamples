@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>Hello, WebVR! • A-Frame</title>
+  <meta name="description" content="Hello, WebVR! • A-Frame" />
+  <script src="https://kit.fontawesome.com/c9500776a0.js" crossorigin="anonymous"></script>
+  <script src="misc/codeBtn.js"></script>
+
+  <script src="https://aframe.io/releases/1.1.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.min.js"></script>
+
+  <script src="../wasm/msc_basis_transcoder.js"></script>
+  <script src="../dist/full-gltf-model.js"></script>
+</head>
+
+<body>
+  <p style="position: fixed; top: 5%; width: 100%; text-align: center; z-index: 10">
+    Models by <a href="https://sketchfab.com/3d-models/mech-drone-8d06874aac5246c59edb4adbe3606e0e">Willy Decarpentrie</a></p>
+  <a-scene background="color: #FAFAFA">
+    <a-assets>
+      <a-asset-item id="model" src="../../assets/models/mech_drone/scene.gltf"></a-asset-item>
+    </a-assets>
+    <a-entity position="0 1 -5" scale="0.01 0.01 0.01">
+      <a-entity rotation="0 180 0" full-gltf-model="#model" shadow="cast: false; receive: false"
+        animation-mixer="clip:*"></a-entity>
+    </a-entity>
+    </a-entity>
+  </a-scene>
+  <script>
+    // create the "show code" button
+    setCodeBtnUrl("aframe/gltf-packed/examples/animated_nonpacked.html");
+  </script>
+</body>
+
+</html>

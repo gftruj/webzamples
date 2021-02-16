@@ -32,7 +32,7 @@ module.exports.component = AFRAME.registerComponent("full-gltf-model", {
                 let rootItem = new THREE.Object3D();
                 rootItem.add(self.model)
                 el.setObject3D('mesh', rootItem);
-                el.emit('model-loaded', { format: 'gltf', model: rootItem });
+                el.emit('model-loaded', { format: 'gltf', model: self.model });
             }, undefined /* onProgress */,
             function gltfFailed(error) {
                 var message = (error && error.message) ? error.message : 'Failed to load glTF model';

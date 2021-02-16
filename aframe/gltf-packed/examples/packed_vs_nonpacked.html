@@ -2,22 +2,22 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Hello, WebVR! • A-Frame</title>
+    <title>Packed vs nonpacked</title>
     <meta name="description" content="Hello, WebVR! • A-Frame" />
     <script src="https://kit.fontawesome.com/c9500776a0.js" crossorigin="anonymous"></script>
-    <script src="misc/codeBtn.js"></script>
+    <script src="../misc/codeBtn.js"></script>
     
     <script src="https://aframe.io/releases/1.1.0/aframe.min.js"></script>
-    <script src="wasm/msc_basis_transcoder.js"></script>
-    <script src="dist/full-gltf-model.js"></script>
+    <script src="../wasm/msc_basis_transcoder.js"></script>
+    <script src="../dist/full-gltf-model.js"></script>
   </head>
   <body>
       <p style="position: fixed; top: 5%; width: 100%; text-align: center; z-index: 10">
         Models by <a href="https://stackoverflow.com/users/4133847/chekeichan">chekeichan</a></p>
     <a-scene background="color: #FAFAFA">
         <a-assets>
-            <a-asset-item id="model" src="assets/megaladapis.glb"></a-asset-item>
-            <a-asset-item id="model-packed" src="assets/megaladapis-packed.glb"></a-asset-item>
+            <a-asset-item id="model" src="../assets/megaladapis.glb"></a-asset-item>
+            <a-asset-item id="model-packed" src="../assets/megaladapis-packed.glb"></a-asset-item>
         </a-assets>
       <a-entity position="-3 0 -3">
         <a-text position="-1 3 0" color="black" value="megaladapis"></a-text>
@@ -38,7 +38,7 @@
     </a-scene>
     <script>
         // create the "show code" button
-        setCodeBtnUrl("aframe/gltf-packed/index.html");
+        setCodeBtnUrl("aframe/gltf-packed/examples/packed_vs_nonpacked.html");
     </script>
   </body>
 </html>
