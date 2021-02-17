@@ -1,8 +1,11 @@
 <html>
+
 <head>
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.min.js"></script>
-    <script src="dist/collada-model.js"></script>
+    <script src="../dist/collada-model.js"></script>
+    <script src="https://kit.fontawesome.com/c9500776a0.js" crossorigin="anonymous"></script>
+    <script src="misc/codeBtn.js"></script>
 </head>
 <body>
     <p style="position: fixed; top: 5%; width: 100%; text-align: center; z-index: 10">
@@ -11,8 +14,8 @@
 
     <a-scene>
         <a-assets>
-            <a-asset-item id="elf-model" src="../assets/models/elf/elf.dae"></a-asset-item>
-            <a-asset-item id="stormtrooper" src="../assets/models/stormtrooper/stormtrooper.dae"></a-asset-item>
+            <a-asset-item id="elf-model" src="../../assets/models/elf/elf.dae"></a-asset-item>
+            <a-asset-item id="stormtrooper" src="../../assets/models/stormtrooper/stormtrooper.dae"></a-asset-item>
         </a-assets>
         <a-text color="black" value="Collada model" position="-4.5 1.8 -2"></a-text>
         <a-entity position="-3.5 0 -2" scale="0.2 0.2 0.2" collada-model="src: #elf-model"></a-entity>
@@ -24,5 +27,9 @@
             animation-mixer="clip: *"></a-entity>
         <a-camera position="0 1.6 2"></a-camera>
     </a-scene>
+    <script>
+        // create the "show code" button
+        setCodeBtnUrl("aframe/collada/index.html");
+    </script>
 </body>
 </html>
