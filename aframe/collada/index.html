@@ -1,0 +1,28 @@
+<html>
+<head>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.min.js"></script>
+    <script src="dist/collada-model.js"></script>
+</head>
+<body>
+    <p style="position: fixed; top: 5%; width: 100%; text-align: center; z-index: 10">
+        Elf Girl by <a href="https://sketchfab.com/yellow09" target="_blank" rel="noopener">halloween</a>, <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC Attribution</a><br>
+        Stormtrooper by <a href="https://sketchfab.com/strykerdoesgames" target="_blank" rel="noopener">StrykerDoesAnimationis </a>, <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC Attribution</a></p>
+
+    <a-scene>
+        <a-assets>
+            <a-asset-item id="elf-model" src="../assets/models/elf/elf.dae"></a-asset-item>
+            <a-asset-item id="stormtrooper" src="../assets/models/stormtrooper/stormtrooper.dae"></a-asset-item>
+        </a-assets>
+        <a-text color="black" value="Collada model" position="-4.5 1.8 -2"></a-text>
+        <a-entity position="-3.5 0 -2" scale="0.2 0.2 0.2" collada-model="src: #elf-model"></a-entity>
+        <a-text color="black" value="Collada model /w color correction" position="-1.5 1.8 -2"></a-text>
+        <a-entity position="0 0 -2" scale="0.2 0.2 0.2" collada-model="src: #elf-model; colorCorrection: true">
+        </a-entity>
+        <a-text color="black" value="Collada model /w Animation" position="2.5 1.8 -2"></a-text>
+        <a-entity position="3 0 -2" rotation="0 180 0" scale="0.2 0.2 0.2" collada-model="src: #stormtrooper"
+            animation-mixer="clip: *"></a-entity>
+        <a-camera position="0 1.6 2"></a-camera>
+    </a-scene>
+</body>
+</html>

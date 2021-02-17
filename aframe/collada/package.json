@@ -1,0 +1,20 @@
+{
+  "name": "collada",
+  "version": "1.0.0",
+  "description": "",
+  "main": "collada-model.js",
+  "directories": {
+    "example": "examples",
+    "lib": "lib"
+  },
+  "scripts": {
+    "build": "browserify collada-model.js -p esmify > dist/collada-model.js"
+  },
+  "dependencies": {
+    "browserify": "*",
+    "esmify": "*"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
