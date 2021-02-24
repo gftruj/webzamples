@@ -1,0 +1,56 @@
+<style>
+    iframe {
+        border-width: 0px;
+    }
+
+    #container {
+        width: 75%;
+        height: 100%;
+        display: table;
+        background-color: whitesmoke;
+    }
+
+    body {
+        background-color: rgb(153, 153, 255);
+        margin: 0;
+    }
+
+    .center {
+        margin: 0 auto;
+    }
+
+    #ui {
+        width: 100px;
+    }
+
+    #cell {
+        display: table-cell;
+        vertical-align: middle;
+        width: 100%;
+        height: 60vh;
+    }
+    button {
+        width: 100%;
+    }
+</style>
+
+<body>
+    <div id="container" class="center">
+        <div id="cell">
+            <iframe src="iframes/simple_scene.html" width="100%" height="100%"></iframe>
+            <div id="ui" class="center">
+                <button onclick="toggle('box')">Toggle Box</button>
+                <button onclick="toggle('cylinder')">Toggle Cylinder</button>
+                <button onclick="toggle('sphere')">Toggle Sphere</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggle(item) {
+            console.log("clicked button: Toggle", item);
+            document.querySelector('iframe').contentWindow.toggle(item);
+        }
+
+    </script>
+</body>
