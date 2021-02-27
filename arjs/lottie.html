@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<script src="https://aframe.io/releases/1.0.0/aframe.min.js"></script>
+<!-- we import arjs version without NFT but with marker + location based support -->
+<script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.7.3/lottie.min.js"></script>
+<script src="https://kit.fontawesome.com/c9500776a0.js" crossorigin="anonymous"></script>
+<script src="misc/codeBtn.js"></script>
+
+<script>
+    AFRAME.registerComponent("update-texture", {
+        init: function () {
+            this.el.addEventListener("loaded", e => {
+                const mesh = this.el.getObject3D("mesh");
+                this.texture = mesh.material.map
+            })
+        },
+        tick: function () {
+            if (this.texture) {
+                this.texture.needsUpdate = true;
+            }
+        }
+    })
+</script>
+
+<body style="margin : 0px; overflow: hidden;">
+    <div style="position: fixed; z-index: 99; top: 10px; left: 10px">
+        <p>Try it out with this marker:</p>
+        <image width="128" src="0.png"></image>
+    </div>
+    
+    <canvas id="animation" width="1024" height="1024" style="display: none;"></canvas>
+    <a-scene embedded arjs="detectionMode: mono_and_matrix; matrixCodeType: 3x3;">
+        <a-marker type="barcode" value="0">
+            <a-box position="0 0.5 0" material="shading: flat; transparent: true; src: #animation" update-texture>
+            </a-box>
+        </a-marker>
+        <a-entity camera></a-entity>
+    </a-scene>
+    <script>
+        // load the lottie animation
+        const canvas = document.getElementById('animation')
+        const context = canvas.getContext("2d");
+
+        const animation = bodymovin.loadAnimation({
+            renderer: "canvas",
+            rendererSettings: {
+                context: context
+            },
+            loop: true,
+            autplay: true,
+            path: "https://assets5.lottiefiles.com/packages/lf20_mb9ka7yz.json"
+        });
+
+        // show-code button
+        setCodeBtnUrl("arjs/lottie.html");
+    </script>
+</body>
+
+</html>
