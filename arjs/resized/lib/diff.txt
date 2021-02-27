@@ -1,0 +1,50 @@
+>
+1658a1653
+> var wrapperElement = null;
+2932,2933c2927,2928
+<     this.domElement.style.left = '0px'
+<     this.domElement.style.zIndex = '-2'
+---
+>     //this.domElement.style.left = '0px'
+>     this.domElement.style.zIndex = '10'
+2960c2955
+<
+---
+>     console.log("initSourceImage?")
+2976a2972
+>     console.log("initSourceVideo")
+3019a3016
+>     console.log("initSourceWebCam")
+3163d3159
+<
+3167a3164,3170
+>     if (wrapperElement) {
+>         const bounds = wrapperElement.getBoundingClientRect();
+>         screenWidth = wrapperElement.offsetWidth;
+>         screenHeight = wrapperElement.offsetHeight;
+>         this.domElement.style.top = bounds.top + 'px';
+>         //console.log(screenWidth, screenHeight)
+>     }
+3171d3173
+<
+3219d3220
+<
+3224,3225c3225,3226
+<         otherElement.style.marginLeft = this.domElement.style.marginLeft
+<         otherElement.style.marginTop = this.domElement.style.marginTop
+---
+>        // otherElement.style.marginLeft = this.domElement.style.marginLeft
+>        // otherElement.style.marginTop = this.domElement.style.marginTop
+3234d3234
+<
+3261d3260
+<
+3428d3426
+<
+7356,7357c7354,7355
+<                 if (arProfile.contextParameters.trackingBackend !== 'tango') {
+<                     arSource.copyElementSizeTo(document.body)
+---
+>                 if (arProfile.contextParameters.trackingBackend !== 'tango' && wrapperElement) {
+>                     arSource.copyElementSizeTo(wrapperElement)
+

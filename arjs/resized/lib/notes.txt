@@ -1,4 +1,0 @@
-Creating the video element:
-- ARController.getUserMedia = function(configuration): document.createElement('video');
-- ARjs.Source.prototype._initSourceWebcam: document.createElement('video')
-- ARjs.Source.prototype._initSourceVideo = function (onReady): var domElement = document.createElement('video');

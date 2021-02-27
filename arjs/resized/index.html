@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+
+<body>
+
+    <div style="text-align: justify; width: 35%; margin: 0 auto">
+
+        <h2>Resizing arjs to make it only part of a website:</h2>
+
+
+        <h3>Using an iframe</h3>
+        <p>Easy and simple. Interactive example <a href="arjs_iframe.html">here</a>. Preview below:</p>
+        <video width="320" height="240" controls>
+            <source src="prev/iframe.mp4" type="video/mp4">
+        </video>
+        <p>Hacking into arjs. In the most </p>
+
+        <h3>Changing the scene and video feed size</h3>
+        <p>This is by no means an "universal" solution. Afaik arjs has hardcoded styles, body and window usage all over the place. I've added an "wrapperElement" to arjs, which is used instead of the body. Once arjs emits
+            "arjs-video-loaded", the video is reparented to any element and the "wrapperElement" is set.</p>
+        <p>Example <a href="resized.html">here</a>. The modified ar.js file is <a href="lib/ar_modified.js">here</a>.
+            Preview below:</p>
+        <video width="320" height="240" controls>
+            <source src="prev/smol.mp4" type="video/mp4">
+        </video>
+
+        <p>Barcode used</p>
+        <image src="0.png" width="256"></image>
+    </div>
+
+</body>
+
+</html>

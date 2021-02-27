@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <!-- we import arjs version without NFT but with marker + location based support -->
+    <script src="lib/ar_modified.js"></script>
+    <style>
+        /* Create three unequal columns that floats next to each other */
+        .column {
+            float: left;
+            height: 100vh;
+        }
+
+        .left,
+        .right {
+            width: 25%;
+            background-color: blueviolet;
+        }
+
+        .middle {
+            width: 50%;
+        }
+
+        #arjs-cell {
+            width: 100%;
+            height: 50%;
+            margin-top: 25%;
+        }
+
+        a-scene {
+            z-index: 20;
+        }
+    </style>
+
+    <script>
+        window.addEventListener("arjs-video-loaded", evt => {
+            console.log("VIDEO LOADED")
+            const video = evt.detail.component;
+            const cell = document.querySelector("#arjs-cell")
+            cell.appendChild(video)
+            wrapperElement = cell
+        })
+    </script>
+
+</head>
+
+<body style="margin : 0px; overflow: hidden;">
+    <div class="column left"></div>
+    <div class="column middle">
+        <div id="arjs-cell">
+            <a-scene embedded arjs="detectionMode: mono_and_matrix; matrixCodeType: 3x3;">
+                <a-marker foo type="barcode" value="0">
+                    <a-box position="0 0.5 0">
+                    </a-box>
+                </a-marker>
+                <a-entity camera></a-entity>
+            </a-scene>
+        </div>
+    </div>
+    <div class="column right"></div>
+</body>
+
+</html>
