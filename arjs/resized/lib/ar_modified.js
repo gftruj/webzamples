@@ -1650,7 +1650,11 @@ var Qb=[Ik,Zh,_h,Qj,Qi,Pi,Ri,Ag,sg,qg,rg,yg,kh,jh,Oi,Mj];var Rb=[Jk,ki,ji,gi];va
 
 })();
 var THREEx = THREEx || {}
-var wrapperElement = null;
+THREEx.wrapperElement = null;
+THREEx.setWrapperElement = function(wrapperEl, video) {
+    THREEx.wrapperElement = wrapperEl
+    wrapperEl.appendChild(video);
+}
 
 THREEx.ArBaseControls = function(object3d){
 	this.id = THREEx.ArBaseControls.id++
@@ -3161,10 +3165,10 @@ ARjs.Source.prototype.onResizeElement = function () {
     var _this = this
     var screenWidth = window.innerWidth
     var screenHeight = window.innerHeight
-    if (wrapperElement) {
-        const bounds = wrapperElement.getBoundingClientRect();
-        screenWidth = wrapperElement.offsetWidth;
-        screenHeight = wrapperElement.offsetHeight;
+    if (THREEx.wrapperElement) {
+        const bounds = THREEx.wrapperElement.getBoundingClientRect();
+        screenWidth = THREEx.wrapperElement.offsetWidth;
+        screenHeight = THREEx.wrapperElement.offsetHeight;
         this.domElement.style.top = bounds.top + 'px';
         //console.log(screenWidth, screenHeight)
     }
@@ -7351,8 +7355,8 @@ AFRAME.registerSystem('arjs', {
                 var arSource = _this._arSession.arSource
 
                 // ugly kludge to get resize on aframe... not even sure it works
-                if (arProfile.contextParameters.trackingBackend !== 'tango' && wrapperElement) {
-                    arSource.copyElementSizeTo(wrapperElement)
+                if (arProfile.contextParameters.trackingBackend !== 'tango' && THREEx.wrapperElement) {
+                    arSource.copyElementSizeTo(THREEx.wrapperElement)
                 }
 
                 // fixing a-frame css
@@ -7389,7 +7393,7 @@ AFRAME.registerSystem('arjs', {
         // KLUDGE: kludge to write a 'resize' event
         var startedAt = Date.now()
         var timerId = setInterval(function () {
-            if (Date.now() - startedAt > 10000 * 1000) {
+            if (Date.now() - startedAt > 1000) {
                 clearInterval(timerId)
                 return
             }
