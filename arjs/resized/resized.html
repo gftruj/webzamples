@@ -38,8 +38,7 @@
             console.log("VIDEO LOADED")
             const video = evt.detail.component;
             const cell = document.querySelector("#arjs-cell")
-            cell.appendChild(video)
-            wrapperElement = cell
+            THREEx.setWrapperElement(cell, video)
         })
     </script>
 
