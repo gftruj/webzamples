@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<style>
+    #ui {
+        position: fixed;
+        background-color: wheat;
+    }
+
+    iframe {
+        width: 100vw;
+        height: 100vh;
+    }
+</style>
+<script src="https://kit.fontawesome.com/c9500776a0.js" crossorigin="anonymous"></script>
+<script src="misc/codeBtn.js"></script>
+<body style="margin : 0px; overflow: hidden;">
+    <div id="ui">
+        <p>Example inputs:</p>
+        <input value='type: "barcode"' disabled> <input value="barcodeValue: 20" disabled> <br>
+        <input value='type: "pattern"' disabled> <input value='patternUrl: "myPatt.patt"' disabled> <br>
+        <hr>
+        <div id="inputs">
+            <div>
+                <input> <input>
+            </div>
+        </div>
+        <button onclick="addRow()">Add</button>  <button onclick="resetIframe()">Set</button>
+    </div>
+
+<iframe src="learner.html"></iframe>
+
+
+    <script>
+        function addRow() {
+            var div = document.createElement("div")
+            var first = document.createElement("input");
+            var second = document.createElement("input");
+            div.append(first);
+            div.append(second)
+            document.querySelector("#inputs").appendChild(div);
+        }
+
+        const iframe_base = "learner.html"
+        const iframe = document.querySelector("iframe")
+
+        function resetIframe() {
+            const inputs = document.querySelectorAll("#inputs input");
+            var obj = {}
+
+            for (var index = 0; index < inputs.length; index += 2) {
+                var input1 = inputs[index].value
+                var input2 = inputs[index + 1].value
+                if (input1.length === 0 ||input2.length === 0) continue
+                
+                // omg this parsing... o.0
+                let i1arr = input1.replace(/ /g,'').split(":")
+                let i2arr = input2.replace(/ /g,'').split(":")
+                let inputString = '{"' + i1arr[0] +'":' + i1arr[1] +',"' + i2arr[0] +'":' + i2arr[1] +'}'
+                let inputObj = JSON.parse(inputString)
+                obj[index] = inputObj
+            }
+
+            var query = "?data=" + JSON.stringify(obj)
+            iframe.src = iframe_base + query
+        }
+    </script>
+</body>
+<script>
+    // show-code button
+    setCodeBtnUrl("multimarkers/learner_wrapper.html");
+</script>
+</html>
