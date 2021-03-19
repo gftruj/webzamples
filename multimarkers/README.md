@@ -21,7 +21,7 @@ How to use it
 The "download" button already sets the localStorage item. You should be able to read it, and check it out.
 ### Examples
 
-There are examples [here](https://gftruj.github.io/webzamples/multimarkers/learner_wrapper.html) and [here](https://gftruj.github.io/webzamples/multimarkers/learner_wrapper.html).
+There are examples [here](https://gftruj.github.io/webzamples/multimarkers/hiro_0_box.html) and [here](https://gftruj.github.io/webzamples/multimarkers/hiro_0_model.html).
 
 ![ezgif-7-04f41364bbf5](https://user-images.githubusercontent.com/17348360/111715380-fc361d00-8853-11eb-8c63-df9f3214b858.gif)
 
