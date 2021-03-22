@@ -1,0 +1,12 @@
+.circle-overlay {
+  z-index: 1000;
+  position: fixed;
+  width: 25px;
+  height: 25px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 25px;
+}
+
+.circle-overlay:hover {
+  background-color: rgba(100, 100, 255, 0.6);
+}

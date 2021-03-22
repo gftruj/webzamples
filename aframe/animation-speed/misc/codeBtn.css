@@ -1,0 +1,13 @@
+.showCode {
+    z-index: 1000;
+    position: fixed;
+    font-size: 3em;
+    color: rgb(128, 0, 128);
+    top: 0;
+    right: 0;
+    margin: 25px;
+}
+
+.showCode:hover {
+        color: rgba(128, 0, 128, 0.6);
+}
