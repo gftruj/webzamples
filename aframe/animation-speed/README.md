@@ -17,3 +17,10 @@ Simple component to change the animation speed.
         
 
 Example with an object with multiple animation components [here](https://gftruj.github.io/webzamples/aframe/animation-speed/multiple.html)
+
+### Dynamic changing
+
+You can change the speed at any time using `setAttribute("animation-speed", "multiplier", <value>);`
+
+    el.setAttribute("animation-speed", "multiplier", 2);          // change the speed multiplier by 2
+    el.setAttribute("animation-speed_position", "multiplier", 0.5); // change the speed multiplier by 0.5
