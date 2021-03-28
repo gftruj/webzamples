@@ -1,0 +1,152 @@
+<html>
+
+<head>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="lib/aframe-orbit-controls.js"></script>
+    <script src="lib/apply-envmap.js"></script>
+    <script src="material-modifier.js"></script>
+    <style>
+        #UI {
+            position: fixed;
+            z-index: 999;
+        }
+    </style>
+
+    <style>
+        #info {
+            position: fixed;
+            z-index: 1000;
+            text-align: center;
+            width: 100%;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="info">
+        <p>Police car by <a href="https://sketchfab.com/3d-models/lowpoly-police-car-b2566e74d1574932965c1fc42e535ab0">Omkar_suryavanshi </a>
+        <a href="https://creativecommons.org/licenses/by/4.0/">(CC)</a><br>
+        EnvMap by <a href="http://www.pauldebevec.com/Probes/">pauldebevec </a><br>
+        Source code <a href="https://github.com/gftruj/webzamples/tree/master/PlanetVoodoo/material-modifier/">here</a>
+    </p>
+    </div>
+
+    <div id="UI">
+        <p><b>Left Siren:</b></p>
+        <div>
+            <input id="lsirencolor" type="color" value="#0000ff"><label>Color</label>
+        </div>
+        <div>
+            <input id="lsirenemissive" type="color" value="#0000ff"><label>Emissive</label>
+        </div>
+        <div>
+            <input id="lsirenintensity" type="range" min="0" max="100" value="50"><label>Emissive intensity</label>
+        </div>
+        <div>
+            <input id="lsirenopacity" type="range" min="0" max="100" value="100"><label>opacity</label>
+        </div>
+        <div>
+            <input id="lsirenroughness" type="range" min="0" max="100" value="100"><label>roughness</label>
+        </div>
+        <div>
+            <input id="lsirenmetalness" type="range" min="0" max="100" value="100"><label>metalness</label>
+        </div>
+        <hr>
+        <p><b>Right Siren:</b></p>
+        <div>
+            <input id="rsirencolor" type="color" value="#ff0000"><label>Color</label>
+        </div>
+        <div>
+            <input id="rsirenemissive" type="color" value="#ff0000"><label>Emissive</label>
+        </div>
+        <div>
+            <input id="rsirenintensity" type="range" min="0" max="100" value="50"><label>Emissive intensity</label>
+        </div>
+        <div>
+            <input id="rsirenopacity" type="range" min="0" max="100" value="100"><label>opacity</label>
+        </div>
+        <div>
+            <input id="rsirenroughness" type="range" min="0" max="100" value="100"><label>roughness</label>
+        </div>
+        <div>
+            <input id="rsirenmetalness" type="range" min="0" max="100" value="100"><label>metalness</label>
+        </div>
+    </div>
+
+    <!-- AFRAME SCENE -->
+    <a-scene >
+        <a-entity id="model" position="0 1 -2" scale="0.75 0.75 0.75" gltf-model="assets/police_car/police_car.glb" apply-envmap
+            material-modifier__Siren_Blue_light="emissive: 0x0000FF; emissiveIntensity: 0.5"
+            material-modifier__Car_Black_Part="roughness: 0"
+            material-modifier__Car_Glass="roughness: 0"
+            material-modifier="name: Siren_Red_light; emissive: 0xFF0000; emissiveIntensity: 0.5;">
+        </a-entity>
+        <a-entity camera look-controls orbit-controls="target: 0 1.25 -2; minDistance: 0; maxDistance: 180; initialPosition: 0 6 6"></a-entity>
+
+    </a-scene>
+
+    <!-- "UI" handling -->
+    <script>
+        const entity = document.querySelector("#model");
+
+        // UI CHANGES
+        function updateColorAttribute(componentName, property, evt) {
+            model.setAttribute(componentName, property, evt.target.value);
+        }
+        function updateNumberAttribute(componentName, property, evt) {
+            model.setAttribute(componentName, property, evt.target.value / 100);
+        }
+        // ui elements
+        const lSirenColor = document.getElementById("lsirencolor")
+        const lSirenEmissive = document.getElementById("lsirenemissive")
+        const lSirenIntensity = document.getElementById("lsirenintensity")
+        const lSirenOpacity = document.getElementById("lsirenopacity")
+        const lSirenRoughness = document.getElementById("lsirenroughness")
+        const lSirenMetalness = document.getElementById("lsirenmetalness")
+
+        const rSirenColor = document.getElementById("rsirencolor")
+        const rSirenEmissive = document.getElementById("rsirenemissive")
+        const rSirenIntensity = document.getElementById("rsirenintensity")
+        const rSirenOpacity = document.getElementById("rsirenopacity")
+        const rSirenRoughness = document.getElementById("rsirenroughness")
+        const rSirenMetalness = document.getElementById("rsirenmetalness")
+
+        function inputListenerWrapper(element, callback) {
+            element.addEventListener("input", callback, false);
+            element.addEventListener("change", callback, false);
+        }
+
+        // Left Siren
+        const updateLSirenColor = updateColorAttribute.bind(this, "material-modifier__Siren_Blue_light", "color")
+        inputListenerWrapper(lSirenColor, updateLSirenColor)
+        const updateLSirenEmissive = updateColorAttribute.bind(this, "material-modifier__Siren_Blue_light", "emissive")
+        inputListenerWrapper(lSirenEmissive, updateLSirenEmissive)
+        const updateLSirenEmissiveIntensity = updateNumberAttribute.bind(this, "material-modifier__Siren_Blue_light", "emissiveIntensity")
+        inputListenerWrapper(lSirenIntensity, updateLSirenEmissiveIntensity)
+        const updateLSirenOpacity = updateNumberAttribute.bind(this, "material-modifier__Siren_Blue_light", "opacity")
+        inputListenerWrapper(lSirenOpacity, updateLSirenOpacity)
+        const updateLSirenRoughness = updateNumberAttribute.bind(this, "material-modifier__Siren_Blue_light", "roughness")
+        inputListenerWrapper(lSirenRoughness, updateLSirenRoughness)
+        const updateLSirenMetalness = updateNumberAttribute.bind(this, "material-modifier__Siren_Blue_light", "metalness")
+        inputListenerWrapper(lSirenMetalness, updateLSirenMetalness)
+
+        // right Siren
+        const updateRSirenColor = updateColorAttribute.bind(this, "material-modifier", "color")
+        inputListenerWrapper(rSirenColor, updateRSirenColor)
+        const updateRSirenEmissive = updateColorAttribute.bind(this, "material-modifier", "emissive")
+        inputListenerWrapper(rSirenEmissive, updateRSirenEmissive)
+        const updateRSirenEmissiveIntensity = updateNumberAttribute.bind(this, "material-modifier", "emissiveIntensity")
+        inputListenerWrapper(rSirenIntensity, updateRSirenEmissiveIntensity)
+        const updateRSirenOpacity = updateNumberAttribute.bind(this, "material-modifier", "opacity")
+        inputListenerWrapper(rSirenOpacity, updateRSirenOpacity)
+        const updateRSirenRoughness = updateNumberAttribute.bind(this, "material-modifier", "roughness")
+        inputListenerWrapper(rSirenRoughness, updateRSirenRoughness)
+        const updateRSirenMetalness = updateNumberAttribute.bind(this, "material-modifier", "metalness")
+        inputListenerWrapper(rSirenMetalness, updateRSirenMetalness)
+
+
+    </script>
+</body>
+
+</html>

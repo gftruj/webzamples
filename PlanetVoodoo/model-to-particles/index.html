@@ -1,0 +1,68 @@
+<html>
+
+<head>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="lib/animationmixer.js"></script>
+    <script src="lib/ColladaLoader.js"></script>
+    <script src="lib/collada-storm-trooper.js"></script>
+    <script src="model-to-particles.js"></script>
+    <style>
+        #info {
+            position: fixed;
+            z-index: 1000;
+            text-align: center;
+            width: 100%;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="info">
+        <p>Drone by <a href="https://sketchfab.com/3d-models/mech-drone-8d06874aac5246c59edb4adbe3606e0e">Willy Decarpentrie</a>
+        <a href="https://creativecommons.org/licenses/by/4.0/">(CC)</a><br>
+        Stormtrooper by <a href="https://sketchfab.com/strykerdoesgames">StrykerDoesAnimationis </a>
+        <a href="https://creativecommons.org/licenses/by/4.0/">(CC)</a><br>
+        Source code <a href="https://github.com/gftruj/webzamples/tree/master/PlanetVoodoo/model-to-particles/">here</a>
+    </p>
+    </div>
+    <a-scene stats>
+        <a-assets>
+            <a-asset-item id="mech-model" src="assets/mech_drone/scene.gltf"></a-asset-item>
+        </a-assets>
+
+        <!-- Indexed geometries geometries -->
+        <a-text color="black" position="-7 3.2 -8" value=".gltf models with indexed geometry"></a-text>
+        <a-entity position="-6 0.5 -8" scale="0.005 0.005 0.005" rotation="0 180 0" gltf-model="#mech-model"
+            animation-mixer></a-entity>
+        <a-entity position="-4 0.5 -8" scale="0.005 0.005 0.005" rotation="0 180 0" gltf-model="#mech-model"
+        model-to-particles animation-mixer>
+        </a-entity>
+
+        <!-- non - indexed geometries -->
+        <a-text color="black" position="1.5 3.2 -8" value="collada models with non-indexed geometry"></a-text>
+        <a-entity collada-storm-trooper position="2 0 -8" rotation="0 180 0" scale="0.5 0.5 0.5"></a-entity>
+        <a-entity id="animated" collada-storm-trooper position="4 0 -8" rotation="0 180 0" scale="0.5 0.5 0.5"
+        model-to-particles>
+        </a-entity>
+
+    </a-scene>
+
+    <script>
+        const model = document.querySelector("#animated")
+        model.addEventListener("model-loaded", e => {
+            setTimeout(e => {
+                model.setAttribute("animation", {
+                    "property": "model-to-particles.color",
+                    "from": 0x00ff00,
+                    "to": 0x0000ff,
+                    "dir": "alternate",
+                    "loop": "true",
+                    "easing": "linear",
+                    "dur": 2000
+                })
+            }, 250)
+        })
+    </script>
+</body>
+</html>

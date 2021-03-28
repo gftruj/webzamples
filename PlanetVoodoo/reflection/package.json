@@ -1,0 +1,20 @@
+{
+  "name": "reflector",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npm run build:full && npm run build:min",
+    "build:full": "browserify src/reflector.js -p esmify > dist/reflector-component.js",
+    "build:min": "uglifyjs dist/reflector-component.js > dist/reflector-component.min.js"
+  },
+  "dependencies": {
+    "browserify": "*",
+    "esmify": "*",
+    "uglify-js": "*"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

@@ -1,0 +1,11 @@
+Model Information:
+* title:	Lowpoly Police Car
+* source:	https://sketchfab.com/3d-models/lowpoly-police-car-b2566e74d1574932965c1fc42e535ab0
+* author:	Omkar_suryavanshi (https://sketchfab.com/Omkar_suryavanshi)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Lowpoly Police Car" (https://sketchfab.com/3d-models/lowpoly-police-car-b2566e74d1574932965c1fc42e535ab0) by Omkar_suryavanshi (https://sketchfab.com/Omkar_suryavanshi) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
