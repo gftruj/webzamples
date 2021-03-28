@@ -82,7 +82,7 @@ AFRAME.registerComponent("model-to-particles", {
                 var index = geometryIndex ? geometryIndex.array[idx] : idx;
                 this.skinnedMesh.boneTransform(index, skinnedVertex);
 
-                // if an array was provided - fil it with the data
+                // if an array was provided - fill it with data
                 if (array)
                     skinnedVertex.toArray(array, 3 * (offset++));
                 else
