@@ -58,7 +58,7 @@ AFRAME.registerComponent("model-to-particles", {
         this.particles = new THREE.Points(pointsGeometry, material);
         this.particles.frustumCulled = false;
 
-        // partices wrapper for matrix adjustments (prob better to do this on the geometry but w/e)
+        // particles wrapper for matrix adjustments (prob better to do this on the geometry but w/e)
         this.particleSystem = new THREE.Object3D();
         this.el.sceneEl.object3D.add(this.particleSystem)
         this.particleSystem.add(this.particles);
