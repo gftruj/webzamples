@@ -23,4 +23,4 @@ Usage:
 Both components are used in [this example](https://gftruj.github.io/webzamples/PlanetVoodoo/reflection):
 <hr>
 
-![Reflections](./media/mirrors.gif "mirrors")
+![Reflections](./../media/mirrors.gif "mirrors")
