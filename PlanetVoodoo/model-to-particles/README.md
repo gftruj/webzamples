@@ -27,6 +27,7 @@ The component is used with models with both indexed and non-indexed geometries i
 
 
 #### todo
+- pre-compute geometries ( FPS vs Memory usage).
 - throttle tick
 - particle density limits
 - ignore vertices that are closer than `d`
