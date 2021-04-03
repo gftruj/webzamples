@@ -1,6 +1,6 @@
 ### These components were developed in partnership with [Planet Voodoo® (Voodoo LLC)](https://planetvoodoo.org/) as part of their 'WebXR Wizardry' initiative.
-![Logo](media/PlanetVoodoo.gif "PlanetVoodoo")
-
+![Logo](media/PlanetVoodoo.png "PlanetVoodoo")
+<hr>
 
 ### Model vertices to particles:
 ![Particles](media/stormtroopers.gif "StormTroopers")
