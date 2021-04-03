@@ -1,5 +1,5 @@
 ### This component was developed in partnership with [Planet Voodoo® (Voodoo LLC)](https://planetvoodoo.org/) as part of their 'WebXR Wizardry' initiative.
-[![Logo](media/PlanetVoodoo.png)](https://planetvoodoo.org/)
+[![Logo](../media/PlanetVoodoo.png)](https://planetvoodoo.org/)
 <hr>
 
 ### material-modifier
