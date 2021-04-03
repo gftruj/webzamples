@@ -1,3 +1,6 @@
+### This component was developed in partnership with [Planet Voodoo® (Voodoo LLC)](https://planetvoodoo.org/) as part of their 'WebXR Wizardry' initiative.
+![Logo](./../media/PlanetVoodoo.gif "PlanetVoodoo")
+
 ### aalavandhaann work disclaimer.
 
 The `Ashok.GroundSceneReflector`, and `aframe-mirror` component which are created by [aalavandhaann](https://github.com/aalavandhaann/three_reflector).

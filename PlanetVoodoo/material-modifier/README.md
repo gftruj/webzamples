@@ -1,3 +1,6 @@
+### This component was developed in partnership with [Planet Voodoo® (Voodoo LLC)](https://planetvoodoo.org/) as part of their 'WebXR Wizardry' initiative.
+![Logo](./../media/PlanetVoodoo.gif "PlanetVoodoo")
+
 ### material-modifier
 
 Material changes in a specific material node.
