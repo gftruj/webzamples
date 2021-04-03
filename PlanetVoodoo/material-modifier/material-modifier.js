@@ -15,7 +15,9 @@ AFRAME.registerComponent("material-modifier", {
         // roughness value
         roughness: { type: 'string' },
         // metalness value
-        metalness: { type: 'string' }
+        metalness: { type: 'string' },
+        // fog
+        fog: {type: 'string'}
     },
     init: function () {
         // material name
@@ -75,6 +77,11 @@ AFRAME.registerComponent("material-modifier", {
                 value = value.replace("#", "0x");
             if (value.includes("0x")) {
                 this.material[attribute].setHex(value)
+                continue;
+            }
+            // fog - three states. no changes, 'true', or 'false'
+            if (attribute === "fog" && value.length) {
+                this.material.fog = value.toLowerCase() === "true" ? true : false;
                 continue;
             }
 
