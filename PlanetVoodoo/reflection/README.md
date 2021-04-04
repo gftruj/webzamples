@@ -22,13 +22,14 @@ Based on the `THREE.Reflector`, but using `MeshPhongMaterial`:
          </a-plane>
     </a-scene>
 
-#### properties
 
 #### Example
 Check it out working [here](https://gftruj.github.io/webzamples/PlanetVoodoo/reflection/phong_reflector.html) with applied texture, normal maps, ambient occlusion maps, and displacement maps (on the left):
 <hr>
 
 ![phong-reflection](./../media/phong-reflection.gif "phong-reflection")
+
+#### properties
 
 | Property                  | Description               | Default |
 | -------------             |:-------------:            | -----:  |
@@ -39,7 +40,7 @@ Check it out working [here](https://gftruj.github.io/webzamples/PlanetVoodoo/ref
 | ambientOcclusionIntensity | ao intensity              |   1     |
 | displacementMap           | displacement map path     |   ""    |
 | displacementIntensity     | displacement intensity    |   1     |
-| blendingIntensity         | 1 - color*texture + reflection, 0 - sole reflection                  |   1     |
+| blendingIntensity         | ranging from 1 to 0: 1 displays a mix of color*texture and reflection, 0 - sole reflection                  |   1     |
 | reflectionTextureWidth    | reflection texture witdth |   512   |
 | reflectionTextureHeight   | reflection texture height |   512   |
 | useWindowDimensions       | override texture dimensions with the window size                  |   true  |
