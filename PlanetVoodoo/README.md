@@ -1,5 +1,5 @@
 ### These components were developed in partnership with [Planet Voodoo® (Voodoo LLC)](https://planetvoodoo.org/) as part of their 'WebXR Wizardry' initiative.
-[![Logo](media/PlanetVoodoo.png)](https://planetvoodoo.org/)
+[![Logo](media/planet-voodoo.png)](https://planetvoodoo.org/)
 
 <hr>
 
