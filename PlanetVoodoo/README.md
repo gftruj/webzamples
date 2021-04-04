@@ -11,7 +11,7 @@
 <hr>
 
 ### Reflection components
-![Reflections](media/mirrors.gif "mirrors")
+![Reflections](media/phong-reflection.gif "mirrors")
 
 [Docs](./reflection)<br>
 [Example](https://gftruj.github.io/webzamples/PlanetVoodoo/reflection)

@@ -5,9 +5,13 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npm run build:full && npm run build:min",
-    "build:full": "browserify src/reflector.js -p esmify > dist/reflector-component.js",
-    "build:min": "uglifyjs dist/reflector-component.js > dist/reflector-component.min.js"
+    "build": "npm run build:phong && npm run build:reflectormin",
+    "build:phong": "npm run build:phongfull && npm run build:phongmin",
+    "build:phongfull": "browserify src/phong-reflector.js -p esmify > dist/phong-reflector-component.js",
+    "build:phongmin": "uglifyjs dist/phong-reflector-component.js > dist/phong-reflector-component.min.js",
+    "build:reflector": "npm run build:reflectorfull && npm run build:reflectormin",
+    "build:reflectorfull": "browserify src/reflector.js -p esmify > dist/reflector-component.js",
+    "build:reflectormin": "uglifyjs dist/reflector-component.js > dist/reflector-component.min.js"
   },
   "dependencies": {
     "browserify": "*",

@@ -1,0 +1,60 @@
+<html>
+
+<head>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="dist/reflector-component.js"></script>
+    <script src="src/ashok_reflector.js"></script>
+    <style>
+        #info {
+            position: fixed;
+            z-index: 1000;
+            text-align: center;
+            width: 100%;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="info">
+        <p>Mask by <a href="https://sketchfab.com/3d-models/drift-mask-3d-printable-b9a0c72488214a53b44d6ea91241fd13">Mac</a>
+        <a href="https://creativecommons.org/licenses/by-nc/4.0/">(CC)</a><br>
+        Ashok GroundSceneReflector (modified) from <a href="https://github.com/aalavandhaann/three_reflector">here</a><br>
+        Source code <a href="https://github.com/gftruj/webzamples">here</a>
+    </p>
+    </div>
+    <a-scene stats>
+        <a-assets>
+            <a-asset-item id="mask-model" src="./assets/mask/scene.gltf"></a-asset-item>
+        </a-assets>
+        <!-- scene items -->
+        <a-box position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
+        <a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E"></a-sphere>
+        <a-cylinder position="1 0.75 -3" radius="0.5" height="1.5" color="#FFC65D"></a-cylinder>
+        
+        <!-- ASHOK MIRROR-->
+        <a-text color="black" position="-4.64 3.5 -5.3" rotation="0 45 0" value="Ashok.GroundSceneReflector\n+ textureTwo / intensity (0.5)"></a-text>
+        <a-plane position="-3 2 -7" rotation="0 45 0" width="5" height="2" aframe-mirror="intensity: 0.5; textureTwo: assets/aframe/aframe_cut.jpg"></a-plane>
+        <a-plane position="-3 2 -7.01" rotation="0 45 0" width="5.2" height="2.2" color="green"></a-plane>
+
+        <!-- THREE Reflector-->
+        <a-text color="black" position="2.6 3.2 -7.46" rotation="0 -45 0" value="THREE Reflector"></a-text>
+        <a-plane position="3 2 -7" rotation="0 -45 0" width="5" height="2" reflector="clipBias: 0; useWindowDimensions: true"></a-plane>
+        <a-plane position="3 2 -7.01" rotation="0 -45 0" width="5.2" height="2.2" color="green"></a-plane>
+
+        <!-- animated three reflector -->
+        <a-entity position="0 -1 -4" rotation="-70 0 0"
+        animation="property: rotation; to: -120 0 0; dir: alternate; dur: 2000; loop: true">
+            <a-circle radius="2" reflector></a-circle>
+            <a-plane position="0 0 -0.01" width="4.25" height="4.25" color="#7BC8A4"></a-plane>
+        </a-entity>
+        <a-text color="black" position="-1 -1 -1.5" rotation="-90 0 0" value="THREE Reflector"></a-text>
+
+        <!-- camera + mask -->
+        <a-camera position="0 1.6 0">
+            <a-entity gltf-model="#mask-model" scale="0.05 0.05 0.05" rotation="0 90 0" position="0 0 0.5"></a-entity>
+        </a-camera>
+        <a-sky></a-sky>
+    </a-scene>
+</body>
+</html>

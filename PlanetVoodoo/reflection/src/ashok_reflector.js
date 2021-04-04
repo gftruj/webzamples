@@ -74,7 +74,11 @@ Ashok.GroundSceneReflector = function(meshobject, renderer, scene, data)
 		transparent: true,
 		lights: true,
 		});
-
+		console.log('hello')
+		material.onBeforeCompile(x => {
+			console.log("BEFORE COMPILE")
+			console.log(x, y)
+		})
 		material.uniforms.intensity.value = this.data.intensity;
 		material.uniforms.blendIntensity.value = this.data.blendIntensity;
 		material.uniforms.tDiffuse.value  = renderTarget.texture;
