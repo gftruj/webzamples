@@ -28,8 +28,8 @@ const component = AFRAME.registerComponent("phong-reflector", {
     displacementMap: {
       default: ""
     },
-    displacementIntensity: {
-      default: 1
+    displacementBias: {
+      default: 0
     },
     clipBias: {
       default: 0
@@ -90,6 +90,7 @@ const component = AFRAME.registerComponent("phong-reflector", {
     var setup = {};
     const loader = new THREE.TextureLoader();
     const data = this.data;
+    setup.color = new THREE.Color(this.data.color);
 
     if (data.src.length) {
       setup.map = loader.load(data.src);
@@ -100,13 +101,13 @@ const component = AFRAME.registerComponent("phong-reflector", {
     }
 
     if (data.ambientOcclusionMap.length) {
-      setup.ambientOcclusionMap = loader.load(data.ambientOcclusionMap);
-      setup.ambientOcclusionIntensity = data.ambientOcclusionIntensity;
+      setup.aoMap = loader.load(data.ambientOcclusionMap);
+      setup.aoMapIntensity = data.ambientOcclusionIntensity;
     }
 
     if (data.displacementMap.length) {
       setup.displacementMap = loader.load(data.displacementMap);
-      setup.displacementIntensity = data.displacementIntensity;
+      setup.displacementBias = data.displacementBias;
     }
 
     return setup;
