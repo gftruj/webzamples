@@ -39,7 +39,7 @@ Check it out working [here](https://gftruj.github.io/webzamples/PlanetVoodoo/ref
 | ambientOcclusionMap       | ao map path               |   ""    |
 | ambientOcclusionIntensity | ao intensity              |   1     |
 | displacementMap           | displacement map path     |   ""    |
-| displacementIntensity     | displacement intensity    |   1     |
+| displacementBias          | displacement intensity    |   0     |
 | blendingIntensity         | ranging from 1 to 0: 1 displays a mix of color*texture and reflection, 0 - sole reflection                  |   1     |
 | reflectionTextureWidth    | reflection texture witdth |   512   |
 | reflectionTextureHeight   | reflection texture height |   512   |
