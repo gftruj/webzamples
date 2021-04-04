@@ -1,5 +1,5 @@
 ### This component was developed in partnership with [Planet Voodoo® (Voodoo LLC)](https://planetvoodoo.org/) as part of their 'WebXR Wizardry' initiative.
-[![Logo](../media/planet-voodoo.png)](https://planetvoodoo.org/)
+<a href="https://planetvoodoo.org/"> <img src="../media/planet-voodoo.png" height="200" /></a>
 <hr>
 
 ### aalavandhaann work disclaimer.
