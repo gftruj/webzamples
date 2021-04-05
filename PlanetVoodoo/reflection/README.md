@@ -6,8 +6,7 @@
 
 ### phong-reflector component
 
-Based on the `THREE.Reflector`, but using `MeshPhongMaterial`:
-
+Based on the `THREE.Reflector`, but using <a href="https://threejs.org/docs/?q=mesh#api/en/materials/MeshPhongMaterial">`MeshPhongMaterial`</a>:
 
 
 #### usage
@@ -40,6 +39,7 @@ Check it out working [here](https://gftruj.github.io/webzamples/PlanetVoodoo/ref
 | ambientOcclusionIntensity | ao intensity              |   1     |
 | displacementMap           | displacement map path     |   ""    |
 | displacementBias          | displacement map offset   |   0     |
+| src                       |             |   true  |
 | blendingIntensity         | ranging from 1 to 0: 1 displays a mix of color*texture and reflection, 0 - sole reflection                  |   1     |
 | reflectionTextureWidth    | reflection texture witdth |   512   |
 | reflectionTextureHeight   | reflection texture height |   512   |
