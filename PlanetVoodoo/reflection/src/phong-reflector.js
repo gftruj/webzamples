@@ -32,7 +32,7 @@ export const component = AFRAME.registerComponent("phong-reflector", {
             this.createReflector();
             return;
         }
-        this.changes = AFRAME.utils.diff(oldData, this.data);
+        const changes = AFRAME.utils.diff(oldData, this.data);
         if (!changes) return;
         /* material changes */
         const material = this.reflector.material;
@@ -43,13 +43,13 @@ export const component = AFRAME.registerComponent("phong-reflector", {
         }
 
         // normal changes
-        this.el.handleNormalChanges(material, changes);
+        this.handleNormalChanges(material, changes);
 
         // AO changes
-        this.el.handleAOChanges(material, changes);
+        this.handleAOChanges(material, changes);
 
         // displacement updates
-        this.el.handleDisplacementChanges(material, changes);
+        this.handleDisplacementChanges(material, changes);
 
         if (changes.repeat) {
             this.repeatSetup(AFRAME.utils.coordinates.parse(changes.repeat))
