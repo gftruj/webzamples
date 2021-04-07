@@ -22,6 +22,9 @@
             <a href="https://creativecommons.org/licenses/by-nc/4.0/">(CC)</a><br>
             Source code <a href="https://github.com/gftruj/webzamples/PlanetVoodoo/reflection">here</a>
         </p>
+        <button id=twobtn>2x2 repeat</button>
+        <button id=sevenbtn>7x3 repeat</button>
+        <button id=tenbtn>10x10 repeat</button>
     </div>
     <a-scene stats>
         <a-assets>
@@ -35,15 +38,13 @@
 
         <!-- DISPLACEMENT-->
         <a-entity position="4 1.5 -4" rotation="0 -60 0">
-            <a-plane position="-1 0 0" width="2" height="2" segments-height="64" segments-width="64"
-                phong-reflector="src: assets/aframe/aframe_cut256.jpg; normalMap: assets/maps/NormalMap.png;ambient-occlusion-map: assets/maps/ao.png; displacementMap: assets/maps/DisplacementMap.png; blendingIntensity: 0.5; clipBias: 0; useWindowDimensions: true
-                ;repeat: 2 4; displacementScale: 0.5">
+            <a-plane position="-1 0 0" width="2" height="2" segments-height="64" segments-width="64" phong-reflector="src: assets/aframe/aframe_cut256.jpg; normalMap: assets/maps/NormalMap.png;ambient-occlusion-map: assets/maps/ao.png; displacementMap: assets/maps/DisplacementMap.png; blendingIntensity: 0.5; clipBias: 0; useWindowDimensions: true
+                ;repeat: 2 2; displacementScale: 0.5">
             </a-plane>
 
-            <a-plane position="1 0 -0.5" width="2" height="2" segments-height="64" segments-width="64"
-            phong-reflector="src: assets/maps/rocks.png; normalMap: assets/maps/rocksNormal.png;ambient-occlusion-map: assets/maps/rocksAO.png; displacementMap: assets/maps/rocksDisplacement.png; blendingIntensity: 0.5; clipBias: 0; useWindowDimensions: true
+            <a-plane position="1 0 -0.5" width="2" height="2" segments-height="64" segments-width="64" phong-reflector="src: assets/maps/rocks.png; normalMap: assets/maps/rocksNormal.png;ambient-occlusion-map: assets/maps/rocksAO.png; displacementMap: assets/maps/rocksDisplacement.png; blendingIntensity: 0.5; clipBias: 0; useWindowDimensions: true
             ;repeat: 2 2; displacementScale: 0.5">
-        </a-plane>
+            </a-plane>
         </a-entity>
 
         <!-- camera + mask -->
@@ -52,6 +53,21 @@
         </a-camera>
         <a-sky></a-sky>
     </a-scene>
+    <script>
+        const reflectors = document.querySelectorAll("[phong-reflector]")
+        const btn2 = document.getElementById("twobtn")
+        const btn7 = document.getElementById("sevenbtn")
+        const btn10 = document.getElementById("tenbtn")
+
+        function setRepeat(size) {
+            reflectors.forEach(node => {
+                node.setAttribute("phong-reflector", "repeat", size);
+            })
+        }
+        btn2.addEventListener("click", e => setRepeat("2 2"))
+        btn7.addEventListener("click", e => setRepeat("7 3"))
+        btn10.addEventListener("click", e => setRepeat("10 10"))
+    </script>
 </body>
 
 </html>
