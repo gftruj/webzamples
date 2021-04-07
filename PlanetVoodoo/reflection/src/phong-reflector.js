@@ -42,6 +42,11 @@ export const component = AFRAME.registerComponent("phong-reflector", {
             if (oldsrc) oldsrc.dispose();
         }
 
+        if (changes.fog) {
+            material.fog = changes.fog
+            material.needsUpdate = true;
+        }
+
         // normal changes
         this.handleNormalChanges(material, changes);
 

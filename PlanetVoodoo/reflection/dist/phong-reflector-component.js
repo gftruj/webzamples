@@ -82,6 +82,11 @@ const component = AFRAME.registerComponent("phong-reflector", {
       const oldsrc = material.map;
       material.map = this.loader.load(changes.src);
       if (oldsrc) oldsrc.dispose();
+    }
+
+    if (changes.fog) {
+      material.fog = changes.fog;
+      material.needsUpdate = true;
     } // normal changes
 
 
