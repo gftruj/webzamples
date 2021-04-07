@@ -34,12 +34,15 @@ Check it out working [here](https://gftruj.github.io/webzamples/PlanetVoodoo/ref
 | -------------             |:-------------:            | -----:  |
 | color                     | material color            | #FFFFFF |
 | src                       | texture(image)            |   ""    |
+| repeat                    | texture repeat (applies to all maps). |  "1 1"  |
 | normalMap                 | normal map path           |   ""    |
+| normalScale               | normal map scale          |  "1 1"  |
 | ambientOcclusionMap       | ao map path               |   ""    |
 | ambientOcclusionIntensity | ao intensity              |   1     |
 | displacementMap           | displacement map path     |   ""    |
 | displacementBias          | displacement map offset   |   0     |
-| src                       |             |   true  |
+| displacementScale         | how much the displacement map affects the vertices   |     1     |
+| fog                       | whether the material should be affected by fog       |   true    |
 | blendingIntensity         | ranging from 1 to 0: 1 displays a mix of color*texture and reflection, 0 - sole reflection                  |   1     |
 | reflectionTextureWidth    | reflection texture witdth |   512   |
 | reflectionTextureHeight   | reflection texture height |   512   |
