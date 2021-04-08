@@ -19,6 +19,8 @@ Attach the component to any primitive, or gltf model:
       <a-entity gltf-model="model.gltf" glow>
     </a-scene>
 
+<a href="https://gftruj.github.io/webzamples/PlanetVoodoo/glow/index.html">Example here</a>
+
 ### Properties
 
 | Property        | Default       |
