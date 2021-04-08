@@ -54,10 +54,15 @@ const component = AFRAME.registerComponent("phong-reflector", {
     },
     useWindowDimensions: {
       default: true
+    },
+    refreshRate: {
+      type: "number",
+      default: 60
     }
   },
   init: function () {
     this.loader = new THREE.TextureLoader();
+    this.elapsed = this.interval = 0;
     this.createReflector = this.createReflector.bind(this);
 
     if (!this.el.hasLoaded) {
@@ -74,7 +79,27 @@ const component = AFRAME.registerComponent("phong-reflector", {
 
     const changes = AFRAME.utils.diff(oldData, this.data);
     if (!changes) return;
+    /* RT dimensions change */
+
+    if ('useWindowDimensions' in changes || changes.reflectionTextureDimensions) {
+      var textureDimensions = this.data.useWindowDimensions ? {
+        x: window.innerWidth,
+        y: window.innerHeight
+      } : AFRAME.utils.coordinates.parse(this.data.reflectionTextureDimensions);
+      this.reflector.updateRT(textureDimensions.x, textureDimensions.y);
+    }
+    /* refreshrate changes */
+
+
+    if (changes.refreshRate) {
+      if (isNaN(this.data.refreshRate)) {
+        this.interval = 60 / 1000;
+      }
+
+      this.interval = 1000 / this.data.refreshRate;
+    }
     /* material changes */
+
 
     const material = this.reflector.material;
 
@@ -120,7 +145,7 @@ const component = AFRAME.registerComponent("phong-reflector", {
     if (changes.ambientOcclusionMap) {
       const oldmap = material.ambientOcclusionMap;
       material.ambientOcclusionMap = this.loader.load(this.data.ambientOcclusionMap);
-      if (oldMap) oldMap.dispose();
+      if (oldmap) oldmap.dispose();
       material.needsUpdate = true;
     }
 
@@ -232,8 +257,17 @@ const component = AFRAME.registerComponent("phong-reflector", {
     if (material.ambientOcclusionMap) setRepeat(material.ambientOcclusionMap, _repeat);
     if (material.displacementMap) setRepeat(material.displacementMap, _repeat);
   },
-  tick: function () {
+  tick: function (t, dt) {
+    // Throttle tick. Would use AFRAME.utils but updating those won't work for me
     if (!this.reflector || this.paused) return;
+    this.elapsed += dt;
+
+    if (this.elapsed < this.interval) {
+      return;
+    } else {
+      this.elapsed = 0;
+    }
+
     const renderer = this.el.sceneEl.renderer;
     const camera = this.el.sceneEl.camera;
     const scene = this.el.sceneEl.object3D;
@@ -400,7 +434,8 @@ const PhongReflector = function (geometry, phongOptions, reflectionOptions) {
   var textureWidth = options.textureWidth || 512;
   var textureHeight = options.textureHeight || 512;
   var clipBias = options.clipBias || 0;
-  var blendingIntensity = options.blendingIntensity || 0; //
+  var blendingIntensity = options.blendingIntensity || 0;
+  var phongShader = phongShader; //
 
   var reflectorPlane = new THREE.Plane();
   var normal = new THREE.Vector3();
@@ -428,6 +463,7 @@ const PhongReflector = function (geometry, phongOptions, reflectionOptions) {
   var material = new THREE.MeshPhongMaterial(phongOptions); // add the "reflection" stuff
 
   material.onBeforeCompile = (shader, program) => {
+    phongShader = shader;
     shader.uniforms['blendingIntensity'] = {
       value: blendingIntensity
     };
@@ -443,7 +479,21 @@ const PhongReflector = function (geometry, phongOptions, reflectionOptions) {
 
   this.material = material;
 
+  this.updateRT = function (_textureWidth, _textureHeight) {
+    var newTextureWidth = _textureWidth || 512;
+    var newTextureHeight = _textureHeight || 512; // ignore if the dimensions are the same
+
+    if (newTextureHeight === textureHeight && newTextureWidth === textureWidth) {
+      return;
+    }
+
+    textureWidth = newTextureWidth;
+    textureHeight = newTextureHeight;
+    renderTarget.setSize(textureWidth, textureHeight);
+  };
+
   this.update = function (renderer, scene, camera) {
+    if (!renderTarget) return;
     reflectorWorldPosition.setFromMatrixPosition(scope.matrixWorld);
     cameraWorldPosition.setFromMatrixPosition(camera.matrixWorld);
     rotationMatrix.extractRotation(scope.matrixWorld);
