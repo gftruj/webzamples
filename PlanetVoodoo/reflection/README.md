@@ -44,8 +44,7 @@ Check it out working [here](https://gftruj.github.io/webzamples/PlanetVoodoo/ref
 | displacementScale         | how much the displacement map affects the vertices   |     1     |
 | fog                       | whether the material should be affected by fog       |   true    |
 | blendingIntensity         | ranging from 1 to 0: 1 displays a mix of color*texture and reflection, 0 - sole reflection                  |   1     |
-| reflectionTextureWidth    | reflection texture witdth |   512   |
-| reflectionTextureHeight   | reflection texture height |   512   |
+| reflectionTextureDimensions | reflection texture dimensions <witdth height> |   "512 512"   |
 | useWindowDimensions       | override texture dimensions with the window size                  |   true  |
 | clipBias                  | projection clipping bias  |   0 |
 
