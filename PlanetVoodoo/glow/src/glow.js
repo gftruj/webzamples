@@ -103,7 +103,7 @@ export const component = AFRAME.registerComponent("glow", {
             this.glowMaterial.needsUpdate = true;
             delete changes.glowColor;
         }
-        console.log("CHANGES", change)
+
         for (let prop in changes) {
             this.glowMaterial.uniforms[prop].value = changes[prop];
             this.glowMaterial.needsUpdate = true;

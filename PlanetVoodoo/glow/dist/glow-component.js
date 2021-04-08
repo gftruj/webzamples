@@ -930,6 +930,8 @@ exports.component = void 0;
 
 require("../lib/BufferGeometryUtils.js");
 
+// based on Lee Stemkoskis work
+// https://github.com/stemkoski/stemkoski.github.com/blob/master/Three.js/Shader-Glow.html
 const component = AFRAME.registerComponent("glow", {
   schema: {
     intensityPower: {
