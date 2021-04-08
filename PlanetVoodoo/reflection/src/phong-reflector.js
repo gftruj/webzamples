@@ -16,10 +16,12 @@ export const component = AFRAME.registerComponent("phong-reflector", {
         clipBias: { default: 0 },
         reflectionTextureDimensions: { default: "512 512" },
         blendingIntensity: { default: 1 },
-        useWindowDimensions: { default: true }
+        useWindowDimensions: { default: true },
+        refreshRate: {type: "number", default: 60}
     },
     init: function () {
         this.loader = new THREE.TextureLoader();
+        this.elapsed = this.interval = 0;
         this.createReflector = this.createReflector.bind(this);
         if (!this.el.hasLoaded) {
             this.el.addEventListener("loaded", this.createReflector);
@@ -34,6 +36,21 @@ export const component = AFRAME.registerComponent("phong-reflector", {
         }
         const changes = AFRAME.utils.diff(oldData, this.data);
         if (!changes) return;
+       
+        /* RT dimensions change */
+        if ('useWindowDimensions' in changes || changes.reflectionTextureDimensions) {
+            var textureDimensions = this.data.useWindowDimensions ? { x: window.innerWidth, y: window.innerHeight } : AFRAME.utils.coordinates.parse(this.data.reflectionTextureDimensions)
+            this.reflector.updateRT(textureDimensions.x, textureDimensions.y)
+        }
+
+        /* refreshrate changes */
+        if (changes.refreshRate) {
+            if (isNaN(this.data.refreshRate)) {
+                this.interval = 60 / 1000;
+            }
+            this.interval = 1000 / this.data.refreshRate;
+        }
+
         /* material changes */
         const material = this.reflector.material;
         if (changes.src) {
@@ -73,14 +90,14 @@ export const component = AFRAME.registerComponent("phong-reflector", {
             material.normalScale.copy(AFRAME.utils.coordinates.parse(this.data.normalScale))
             const normalScaleParams = AFRAME.utils.coordinates.parse(data.normalScale)
             setup.normalScale.x = normalScaleParams.x ? normalScaleParams.x : 1;
-            setup.normalScale.y = normalScaleParams.y ? normalScaleParams.y : 1;        
+            setup.normalScale.y = normalScaleParams.y ? normalScaleParams.y : 1;
         }
     },
     handleAOChanges: function (material, changes) {
         if (changes.ambientOcclusionMap) {
             const oldmap = material.ambientOcclusionMap;
             material.ambientOcclusionMap = this.loader.load(this.data.ambientOcclusionMap)
-            if (oldMap) oldMap.dispose();
+            if (oldmap) oldmap.dispose();
             material.needsUpdate = true;
         }
 
@@ -189,8 +206,17 @@ export const component = AFRAME.registerComponent("phong-reflector", {
         if (material.ambientOcclusionMap) setRepeat(material.ambientOcclusionMap, _repeat)
         if (material.displacementMap) setRepeat(material.displacementMap, _repeat)
     },
-    tick: function () {
+    tick: function (t, dt) {
+        // Throttle tick. Would use AFRAME.utils but updating those won't work for me
         if (!this.reflector || this.paused) return;
+
+        this.elapsed += dt;
+        if (this.elapsed < this.interval) {
+            return;
+        } else {
+            this.elapsed = 0;
+        }
+
         const renderer = this.el.sceneEl.renderer;
         const camera = this.el.sceneEl.camera;
         const scene = this.el.sceneEl.object3D;
