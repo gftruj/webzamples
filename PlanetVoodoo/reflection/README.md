@@ -46,6 +46,7 @@ Check it out working [here](https://gftruj.github.io/webzamples/PlanetVoodoo/ref
 | blendingIntensity         | ranging from 1 to 0: 1 displays a mix of color*texture and reflection, 0 - sole reflection                  |   1     |
 | reflectionTextureDimensions | reflection texture dimensions <witdth height> |   "512 512"   |
 | useWindowDimensions       | override texture dimensions with the window size                  |   true  |
+| refreshRate               | reflection texture update rate (Hz / FPS) | 60 |
 | clipBias                  | projection clipping bias  |   0 |
 
 ### Other components
