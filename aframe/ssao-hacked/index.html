@@ -53,7 +53,6 @@
             },
             update: function (oldData) {
                 var changes = AFRAME.utils.diff(oldData, this.data);
-                console.log(changes)
                 if ('enabled' in changes) {
                     this.el.sceneEl.renderer.render = changes.enabled ? this.composerFunc : this.originalRenderFunc
                 }
