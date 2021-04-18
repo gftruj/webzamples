@@ -11,7 +11,7 @@ AFRAME.registerComponent("simple-glow", {
             {
                 color: 0x00ffff,
                 blending: THREE.AdditiveBlending,
-                map: this.loader.load("assets/glowmaps/testmap.jpg")
+                map: this.loader.load("../assets/glowmaps/testmap.jpg")
                 //opacity: this.data.intensity,
                 //transparent: true
             });
