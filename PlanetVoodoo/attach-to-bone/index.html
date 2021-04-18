@@ -1,0 +1,53 @@
+<html>
+
+<head>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.min.js"></script>
+
+    <script src="./attach-to-bone.js"></script>
+    <style>
+        #info {
+            position: fixed;
+            z-index: 1000;
+            text-align: center;
+            width: 100%;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="info">
+        <p>attach-to-bone component<br>
+            The hat is attached to a bone in the dog's neck<br>
+            Dog by <a
+                href="https://sketchfab.com/3d-models/animated-dog-shiba-inu-9abfce885a834399b2c3ccaed51cd474">quander</a>
+            <a href="https://creativecommons.org/licenses/by-nc/4.0/">(CC)</a><br>
+            Hat by <a
+            href="https://sketchfab.com/3d-models/witch-hat-444a0c2f7ed449be9f127341b4eb2137">Eques_inferno</a>
+            <a href="https://creativecommons.org/licenses/by-nc/4.0/">(CC)</a><br>
+            Source code <a href="https://github.com/gftruj/webzamples/PlanetVoodoo/attach-to-bone">here</a>
+        </p>
+        </div>
+    <a-scene>
+        <a-assets>
+            <a-asset-item id="doggo-model" src="assets/doggo/scene.gltf"></a-asset-item>
+            <a-asset-item id="hat-model" src="assets/hat/scene.gltf"></a-asset-item>
+        </a-assets>
+
+        <!-- DOG MODEL -->
+        <a-entity id="doggo" position="-1 0 -3" scale="0.01 0.01 0.01" gltf-model="#doggo-model" animation-mixer="clip: *shake*" >
+        </a-entity>
+        <!-- Hat model attached to the neck bone -->
+        <a-entity scale="0.075 0.075 0.075" gltf-model="#hat-model"
+            attach-to-bone="target: #doggo; boneName: head; debug: true; offset: 0 0.12 0">
+        </a-entity>
+
+        <!-- scene -->
+        <a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E"></a-sphere>
+        <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
+        <a-sky color="#ECECEC"></a-sky>
+    </a-scene>
+</body>
+
+</html>
