@@ -1,0 +1,19 @@
+<head>
+    <title>My A-Frame Scene</title>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://rawgit.com/protyze/aframe-curve-component/master/dist/aframe-curve-component.min.js"></script>
+    <script src="index.js"></script>
+  </head>
+  
+  <body>
+    <a-scene>
+      <a-curve id="track1">
+        <a-curve-point position="-2 2 -3"></a-curve-point>
+        <a-curve-point position="0 1 -3"></a-curve-point>
+        <a-curve-point position="2 2 -3"></a-curve-point>
+      </a-curve>
+      <a-draw-curve curveref="#track1" material="shader: line; color: blue;"></a-draw-curve>
+
+      <a-box alongpath="curve: #track1" color="red"></a-box>
+    </a-scene>
+  </body>
