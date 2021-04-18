@@ -1,37 +1,25 @@
 AFRAME.registerComponent("simple-glow", {
     schema: {
-        geometry: { default: "Box", oneOf: ["Box", "Plane"]},
         glowTexture: { default: "" },
         presetTexture: { default: "sphere", oneOf: ["", "sphere", "half-sphere", "star"] },
-        color: { type: "color", default: "#0ff" },
-        intensity: { default: 0.5 }
+        color: { type: "color", default: "#f00" },
+        intensity: { default: 1 }
     },
     init: function () {
         this.loader = new THREE.TextureLoader();
-        var material = new THREE.MeshBasicMaterial(
+        var spriteMaterial = new THREE.SpriteMaterial(
             {
-                color: this.data.color,
+                color: 0x00ffff,
                 blending: THREE.AdditiveBlending,
-                map: this.loader.load(this.data.glowTexture),
-                opacity: this.data.intensity,
-                transparent: true
+                map: this.loader.load("assets/glowmaps/testmap.jpg")
+                //opacity: this.data.intensity,
+                //transparent: true
             });
-        var geometry;
-        if (this.data.geometry === "Box"){
-            geometry = new THREE.BoxGeometry(1, 1, 1);
-        } else {
-            geometry = new THREE.PlaneGeometry(1, 1);
-        } 
-        var mesh = new THREE.Mesh(geometry, material);
-        this.el.object3D.add(mesh);
-        this.mesh = mesh
-    },
-    tick: function () {
-        const cam = this.el.sceneEl.camera;
-        if (!this.mesh || !cam) return;
-
-        this.mesh.lookAt(cam.el.object3D.position);
-
+        this.spriteContainer = new THREE.Object3D();
+        this.sprite = new THREE.Sprite(spriteMaterial);
+        this.spriteContainer.scale.set(1.5, 1.5, 1.5)
+        this.spriteContainer.add(this.sprite)
+        this.el.object3D.add(this.spriteContainer);
     },
     update: function (oldData) {
         return
