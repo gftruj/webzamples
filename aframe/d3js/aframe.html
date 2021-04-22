@@ -42,7 +42,7 @@
                     var mag = (p.magnitude / mag_max) * 20
                     const box = document.createElement("a-box")
                     const sphere = document.createElement("a-sphere");
-                    sphere.setAttribute("position", (-1 / 2) * mag + " 0 0");
+                    sphere.setAttribute("position", (1 / 2) * mag + " 0 0");
                     sphere.setAttribute("color", "red");
                     box.appendChild(sphere)
 
@@ -58,27 +58,31 @@
             }
         })
     </script>
+</head>
+
+<body>
     <div id="info">
         <p>
             Source code <a href="https://github.com/gftruj/webzamples/aframe/d3js/aframe.html">here</a>
         </p>
     </div>
     <div id="plot">
-        <button id="plotBtn">
-            SHOW PLOT
-        </button>
-</head>
-<body>
-<a-scene stats>
-    <a-entity position="0 0 -4" foo></a-entity>
-    <a-entity position="0 0 -3">
-        <a-box position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
-        <a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E"></a-sphere>
-        <a-cylinder position="1 0.75 -3" radius="0.5" height="1.5" color="#FFC65D"></a-cylinder>
-        <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
-        <a-sky color="#ECECEC"></a-sky>
-    </a-entity>
-</a-scene>
+    </div>
+
+    <button id="plotBtn">
+        SHOW PLOT
+    </button>
+
+    <a-scene stats>
+        <a-entity position="0 0 -4" foo></a-entity>
+        <a-entity position="0 0 -3">
+            <a-box position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
+            <a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E"></a-sphere>
+            <a-cylinder position="1 0.75 -3" radius="0.5" height="1.5" color="#FFC65D"></a-cylinder>
+            <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
+            <a-sky color="#ECECEC"></a-sky>
+        </a-entity>
+    </a-scene>
 </body>
 
 </html>
