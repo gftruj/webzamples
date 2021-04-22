@@ -1,0 +1,112 @@
+<html>
+
+<head>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script src="d3splot.js" defer></script>
+    <style>
+        #plot {
+            position: fixed;
+            z-index: 2;
+            top: 1%;
+            right: 1%;
+            background-color: rgba(255, 255, 255, 0.75);
+            display: none;
+        }
+
+        #plotBtn {
+            position: fixed;
+            z-index: 2;
+            bottom: 5%;
+            left: 1%;
+        }
+    </style>
+    <script>
+        AFRAME.registerComponent("foo", {
+            init: function () {
+                this.createVectors = this.createVectors.bind(this)
+                this.el.addEventListener("plot-ready", this.createVectors)
+            },
+            createVectors: function (evt) {
+                const arr = evt.detail.vector_array;
+                const mag_max = evt.detail.mag_max;
+
+                const el = this.el;
+                const sphereGeo = new THREE.SphereGeometry(0.025);
+                const sphereMat = new THREE.MeshBasicMaterial({ color: "#000000" });
+
+                const iMesh = new THREE.InstancedMesh(sphereGeo, sphereMat, arr.length)
+
+
+                const points = []
+
+                function checkForNans(val) {
+                    if (isNaN(val)) return 0;
+                    return val;
+                }
+
+                const tmpPos = new THREE.Vector3();
+                const tmpQuat = new THREE.Quaternion();
+                const tmpScale = new THREE.Vector3();
+                const mtx = el.object3D.matrix.clone();
+
+                var index = 0;
+                arr.forEach(p => {
+                    // sanity checks
+                    p.vx = checkForNans(p.vx);
+                    p.vy = checkForNans(p.vy);
+
+                    // line vertices
+                    var origin = [p.x, p.y, 0]
+                    var target = [p.x + p.vx, p.y + p.vy, 0]
+                    points.push(...origin)
+                    points.push(...target)
+
+                    // sphere positions
+                    mtx.setPosition(target[0], target[1], 0);
+                    iMesh.setMatrixAt(index++, mtx);
+                })
+
+                iMesh.frustumCulled = false;
+                iMesh.instanceMatrix.needsUpdate = true;
+                el.object3D.add(iMesh)
+
+                const geometry = new THREE.BufferGeometry();
+                const vertices = new Float32Array(points);
+                const vertices_BA = new THREE.BufferAttribute(vertices, 3)
+                geometry.setAttribute('position', vertices_BA);
+
+                const lineMaterial = new THREE.MeshBasicMaterial({ color: "#0000FF" })
+
+                const lineSegments = new THREE.LineSegments(geometry, lineMaterial);
+                this.el.object3D.add(lineSegments)
+            }
+        })
+
+    </script>
+</head>
+<body>
+<div id="info">
+    <p>
+        Source code <a href="https://github.com/gftruj/webzamples/aframe/d3js/instanced.html">here</a>
+    </p>
+</div>
+<div id="plot">
+</div>
+<button id="plotBtn">
+    SHOW D3 PLOT
+</button>
+
+<a-scene stats>
+    <a-entity position="0 1 -4" foo></a-entity>
+    <a-entity position="0 0 -3">
+        <a-box position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
+        <a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E"></a-sphere>
+        <a-cylinder position="1 0.75 -3" radius="0.5" height="1.5" color="#FFC65D"></a-cylinder>
+        <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
+    </a-entity>
+</a-scene>
+
+</body>
+
+</html>
