@@ -26,12 +26,6 @@ AFRAME.registerComponent("depth-material", {
         
         this.el.getObject3D("mesh").customDepthMaterial = this.customDepthMaterial;
     },
-    tick: function() {
-        if (this.customDepthMaterial) {
-           // this.customDepthMaterial.needsUpdate = true;
-           this.customDepthMaterial.map.needsUpdate = true;
-        }
-    },
     remove: function() {
         this.el.removeEventListener("loaded", this.loaded);
         this.mesh.customDepthMaterial = null
