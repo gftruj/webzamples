@@ -1,0 +1,74 @@
+<script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.7.3/lottie.min.js"></script>
+
+<script src="depth-material.js"></script>
+<script>
+  // lottie animation handling
+  AFRAME.registerComponent("update-texture", {
+    init: function () {
+      this.el.addEventListener("loaded", e => {
+        const mesh = this.el.getObject3D("mesh");
+        this.texture = mesh.material.map
+      })
+    },
+    tick: function () {
+      if (this.texture) {
+        this.texture.needsUpdate = true;
+      }
+    }
+  })
+</script>
+<style>
+  #info {
+    position: fixed;
+    z-index: 1000;
+    text-align: center;
+    width: 100%;
+    margin: 0 auto;
+  }
+</style>
+<div id="info">
+  <h3>depth-material</h3>
+  <p>Hussar cut out the <a
+      href="https://pl.wikipedia.org/wiki/Husaria#/media/Plik:Husarz,_J%C3%B3zef_Brandt,_1890.jpg">hussar by Józef Brandt</a><br>
+    Lottie animation by <a
+      href="https://lottiefiles.com/48604-leadership#">Irfan Munawar</a><br>
+      source <a
+      href="https://lottiefiles.com/48604-leadership#">here</a>
+  </p>
+</div>
+<a-scene background="color: #ECECEC">
+  <canvas id="animation" width="1024" height="1024" style="display: none;"></canvas>
+  <a-assets>
+    <img id="hussar" src="hussar.png">
+  </a-assets>
+
+  <a-box position="-2 0.5 -3" rotation="0 45 0" color="#4CC3D9" shadow></a-box>
+  <a-cylinder position="2 0.75 -5" radius="0.5" height="1.5" color="#FFC65D" shadow></a-cylinder>
+  <a-plane position="0 0 -4" rotation="-90 0 0" width="8" height="6" color="#7BC8A4" shadow></a-plane>
+  <a-plane position="0 1.5 -3" width="2" height="3" shadow material="src: #hussar; 
+                         side: double; 
+                         transparent: true" depth-material>
+  </a-plane>
+  <a-plane position="2 0.5 -3" material="shader: flat; transparent: true; side: double; src: #animation" update-texture
+    shadow="receive: false" depth-material></a-plane>
+
+  <a-camera position="2 1.6 1"></a-camera>
+</a-scene>
+
+<script>
+  // load the lottie animation
+  const canvas = document.getElementById('animation')
+  const context = canvas.getContext("2d");
+
+  const animation = bodymovin.loadAnimation({
+    renderer: "canvas",
+    rendererSettings: {
+      context: context
+    },
+    loop: true,
+    autplay: true,
+    // https://lottiefiles.com/48604-leadership#
+    path: "https://assets10.lottiefiles.com/packages/lf20_doyhajlr.json"
+  });
+</script>
