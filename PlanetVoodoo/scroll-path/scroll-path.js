@@ -1,3 +1,6 @@
+// originally by Jan Azzati
+// https://github.com/protyze/aframe-curve-component
+
 if (typeof AFRAME === 'undefined') {
     throw new Error('Component attempted to register before AFRAME was available.');
 }
@@ -18,7 +21,8 @@ AFRAME.registerComponent('scroll-path', {
         loop: { default: false },
         rotate: { default: false },
         resetonplay: { default: true },
-        speed: { default: 10 }
+        speed: { default: 10 },
+        damping: {default: 0.9}
     },
 
     init: function () {
@@ -53,7 +57,7 @@ AFRAME.registerComponent('scroll-path', {
     },
     nextImpulse: function (impulse) {
         if (Math.abs(impulse) > 1) {
-            return impulse *= 0.90;
+            return impulse *= this.data.damping;
         } else {
             return impulse = 0;
         }
