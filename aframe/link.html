@@ -1,0 +1,38 @@
+<script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+<style>
+    #info {
+        position: fixed;
+        z-index: 1000;
+        text-align: center;
+        width: 100%;
+        margin: 0 auto;
+    }
+</style>
+<script>
+    // lottie animation handling
+    AFRAME.registerComponent("link-component", {
+        schema: {
+            href: {type: "string"}
+        },
+        init: function () {
+            this.el.addEventListener("click", e => {
+                window.open(this.data.href);
+            })
+        }
+    })
+</script>
+<div id="info">
+    <h3>link</h3>
+    <p>Each object should work like a hyperlink<br>
+        source <a href="https://github.com/gftruj/webzamples/tree/master/aframe/link.html">here</a>
+    </p>
+</div>
+<a-scene cursor="rayOrigin: mouse" raycaster="objects: a-icosahedron">
+    <a-icosahedron color="#ff0000" position="-1 1 -2" radius="0.25" link-component="href: https://www.google.com"></a-icosahedron>
+    <a-text color="black" value="google" position="-1.25 1.1 -1.65"></a-text>
+    <a-icosahedron color="#00ff00" position="0 1 -2" radius="0.25" link-component="href: https://en.wikipedia.org/wiki/OR_gate"></a-icosahedron>
+    <a-text color="black" value="or" position="-0.12 1.1 -1.65"></a-text>
+    <a-icosahedron color="#0000ff" position="1 1 -2" radius="0.25" link-component="href: https://www.bing.com"></a-icosahedron>
+    <a-text color="black" value="bing" position="0.7 1.1 -1.65"></a-text>
+
+</a-scene>
