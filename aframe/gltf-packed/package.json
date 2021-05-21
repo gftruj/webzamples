@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "three": "^0.123.0",
     "browserify": "*",
-    "esmify": "*"
+    "esmify": "*",
+    "three": "*"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
