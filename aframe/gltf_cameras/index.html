@@ -19,17 +19,22 @@
         const camdbtn = document.getElementById("camd");
         const camsystem = this.el.sceneEl.systems.camera;
 
-        /* Grab the cameras in the model */
         var perspectiveCam = null;
         var orthoCam = null;
         var defaultCamEl = null
+        const scene = this.el.sceneEl.object3D;
 
+        /* Grab the cameras in the model */
         this.el.addEventListener("model-loaded", e => {
           const mesh = this.el.getObject3D("mesh")
           mesh.traverse((node) => {
             if (node.isCamera) {
               if (node.type === "PerspectiveCamera") perspectiveCam = node;
               else orthoCam = node;
+
+              // add camera helper to better visualize whats going on
+              const helper = new THREE.CameraHelper( node );
+              scene.add( helper );
             }
           });
           defaultCamEl = document.querySelector("[camera]");
