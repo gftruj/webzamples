@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+<!-- we import arjs version without NFT but with marker + location based support -->
+<script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+<script>
+    AFRAME.registerComponent('soundhandler', {
+        init: function () {
+            this.soundEl = document.querySelector('[sound]');
+            this.marker = document.querySelector('a-marker');
+            this.visible = false;
+        },
+        tick: function () {
+
+            if (this.marker.object3D.visible && !this.visible) {
+                console.log("ding")
+                this.soundEl.components.sound.stopSound(); // stop if playing
+                this.soundEl.components.sound.playSound(); // play
+                this.visible = true; // make sure it plays only once per visible
+            } else if (!this.marker.object3D.visible) {
+                this.visible = false;
+            }
+        }
+    });
+</script>
+<style>
+    #info {
+        position: fixed;
+        top: 5%;
+        z-index: 1000;
+        text-align: center;
+        width: 100%;
+        margin: 0 auto;
+    }
+</style>
+
+<body style="margin : 0px; overflow: hidden;">
+    <div id="info">
+        <p>Show a HIRO marker to play a "ding" sound</p>
+        <a href="https://github.com/gftruj/webzamples/tree/master/arjs/sound/index.html">source code</a>
+    </div>
+    <a-scene embedded arjs='sourceType: webcam; debugUIEnabled: false;' soundhandler>
+        <a-assets>
+            <audio id="sound" src="sound/Ding-sound-effect.mp3" preload="auto"></audio>
+        </a-assets>
+        <a-marker preset="hiro">
+            <a-box position="0 0.5 0"></a-box>
+        </a-marker>
+        <a-entity sound="src: #sound" autoplay="false"></a-entity>
+        <a-entity camera></a-entity>
+    </a-scene>
+</body>
+
+</html>
