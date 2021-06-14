@@ -1,6 +1,6 @@
 // Save the original opacity values, and multiply them by a modifier
 AFRAME.registerComponent('model-relative-opacity', {
-    schema: { opacityFactor: { default: 0.5 } },
+    schema: { opacityFactor: { default: 1.0 } },
     init: function () {
         this.nodeMap = {}
         this.prepareMap.bind(this)
