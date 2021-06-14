@@ -19,6 +19,7 @@
         var SpeechGrammarList = SpeechGrammarList || webkitSpeechGrammarList
         var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEvent
         const diagnostic = document.querySelector("#debug")
+        const btn = document.querySelector("button")
 
         var recognition = new SpeechRecognition();
 
@@ -27,7 +28,7 @@
         recognition.interimResults = false;
         recognition.maxAlternatives = 1;
 
-        document.body.onclick = function () {
+        btn.onclick = function () {
           recognition.start();
           diagnostic.textContent = 'voice recognition active';
           console.log('Ready to receive a color command.');
