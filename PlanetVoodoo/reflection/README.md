@@ -6,8 +6,7 @@
 
 ### phong-reflector component
 
-Based on the `THREE.Reflector`, but using `MeshPhongMaterial`:
-
+Based on the `THREE.Reflector`, but using <a href="https://threejs.org/docs/?q=mesh#api/en/materials/MeshPhongMaterial">`MeshPhongMaterial`</a>:
 
 
 #### usage
@@ -35,15 +34,19 @@ Check it out working [here](https://gftruj.github.io/webzamples/PlanetVoodoo/ref
 | -------------             |:-------------:            | -----:  |
 | color                     | material color            | #FFFFFF |
 | src                       | texture(image)            |   ""    |
+| repeat                    | texture repeat (applies to all maps). |  "1 1"  |
 | normalMap                 | normal map path           |   ""    |
+| normalScale               | normal map scale          |  "1 1"  |
 | ambientOcclusionMap       | ao map path               |   ""    |
 | ambientOcclusionIntensity | ao intensity              |   1     |
 | displacementMap           | displacement map path     |   ""    |
 | displacementBias          | displacement map offset   |   0     |
+| displacementScale         | how much the displacement map affects the vertices   |     1     |
+| fog                       | whether the material should be affected by fog       |   true    |
 | blendingIntensity         | ranging from 1 to 0: 1 displays a mix of color*texture and reflection, 0 - sole reflection                  |   1     |
-| reflectionTextureWidth    | reflection texture witdth |   512   |
-| reflectionTextureHeight   | reflection texture height |   512   |
+| reflectionTextureDimensions | reflection texture dimensions <witdth height> |   "512 512"   |
 | useWindowDimensions       | override texture dimensions with the window size                  |   true  |
+| refreshRate               | reflection texture update rate (Hz / FPS) | 60 |
 | clipBias                  | projection clipping bias  |   0 |
 
 ### Other components

@@ -1,0 +1,192 @@
+<html>
+
+<head>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <!-- effect composer + ssao -->
+    <script src="lib/three-js/postprocessing/EffectComposer.js"></script>
+
+    <script src="lib/three-js/postprocessing/RenderPass.js"></script>
+    <script src="lib/three-js/postprocessing/ShaderPass.js"></script>
+    <script src="lib/three-js/shaders/CopyShader.js"></script>
+
+    <script src="lib/three-js/math/SimplexNoise.js"></script>
+    <script src="lib/three-js/shaders/SSAOShader.js"></script>
+
+    <script src="lib/three-js/postprocessing/SSAOPass.js"></script>
+    <script>
+        AFRAME.registerComponent('ssao', {
+            schema: {
+                enabled: { default: true },
+                output: { default: 'SSAO' },
+                kernelRadius: { default: 64 },
+                minDistance: { default: 0.0001 },
+                maxDistance: { default: 0.15 }
+            },
+            init: function () {
+                const scene = this.el.sceneEl.object3D;
+                const camera = this.el.sceneEl.camera;
+                const renderer = this.el.sceneEl.renderer;
+                const render = renderer.render;
+                const composer = new THREE.EffectComposer(renderer);
+
+                this.ssaoPass = new THREE.SSAOPass(scene, camera, window.innerWidth, window.innerHeight);
+                window.addEventListener('resize', e => {
+                    this.ssaoPass.width = window.innerWidth;
+                    this.ssaoPass.height = window.innerHeight;
+                });
+                composer.addPass(this.ssaoPass);
+
+                this.originalRenderFunc = render;
+
+                let calledByComposer = false;
+                const clock = new THREE.Clock();
+                this.composerFunc = function () {
+                    if (calledByComposer) {
+                        render.apply(renderer, arguments);
+                    } else {
+                        calledByComposer = true;
+                        composer.render(clock.getDelta());
+                        calledByComposer = false;
+                    }
+                };
+                renderer.render = this.composerFunc
+            },
+            update: function (oldData) {
+                var changes = AFRAME.utils.diff(oldData, this.data);
+                if ('enabled' in changes) {
+                    this.el.sceneEl.renderer.render = changes.enabled ? this.composerFunc : this.originalRenderFunc
+                }
+                if (changes.output) {
+                    this.ssaoPass.output = THREE.SSAOPass.OUTPUT[changes.output]
+                }
+                this.ssaoPass.kernelRadius = this.data.kernelRadius;
+                this.ssaoPass.minDistance = this.data.minDistance;
+                this.ssaoPass.maxDistance = this.data.maxDistance;
+            }
+        });
+
+        AFRAME.registerComponent("boxes", {
+            init: function () {
+                var group = new THREE.Group();
+                this.el.object3D.add(group);
+
+                const geometry = new THREE.BoxGeometry(1, 1, 1);
+
+                for (let i = 0; i < 100; i++) {
+
+                    const material = new THREE.MeshLambertMaterial({
+                        color: Math.random() * 0xffffff
+                    });
+
+                    const mesh = new THREE.Mesh(geometry, material);
+                    mesh.position.x = Math.random() * 4 - 2;
+                    mesh.position.y = Math.random() * 4 - 2;
+                    mesh.position.z = Math.random() * 4 - 2;
+                    mesh.rotation.x = Math.random();
+                    mesh.rotation.y = Math.random();
+                    mesh.rotation.z = Math.random();
+
+                    mesh.scale.setScalar(Math.random() * 2 + 0.5);
+                    group.add(mesh);
+                }
+            }
+        })
+    </script>
+    <style>
+        #UI {
+            z-index: 50;
+            position: fixed;
+            background-color: whitesmoke;
+            padding: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="UI">
+        Source code <a href="https://github.com/gftruj/webzamples/blob/master/aframe/ssao-hacked/index.html">here</a><br>
+        <label for="items">Items:</label>
+        <select name="items" id="items">
+            <option value="default">default</option>
+            <option value="boxes">Boxes</option>
+        </select>
+        <p>SSAO</p>
+        <label for="output">output:</label>
+        <select name="output" id="output">
+            <option value="Default">Default</option>
+            <option value="SSAO" selected="selected">SSAO</option>
+            <option value="Blur">Blur</option>
+            <option value="Beauty">Beauty</option>
+            <option value="Depth">Depth</option>
+            <option value="Normal">Normal</option>
+        </select>
+        <br>
+        <input type="range" id="radius" name="radius" min="0" max="256" value="64">
+        <label id="radiusLabel" for="radius">Kernel Radius 64</label>
+        <br>
+        <input type="range" id="minDistance" name="minDistance" step="0.00001" min="0" max="0.001" value="0.0001">
+        <label id="minDistanceLabel" for="minDistance">minDistance "0.0001</label>
+        <br>
+        <input type="range" id="maxDistance" name="maxDistance" step="0.0001" min="0" max="1" value="0.001">
+        <label id="maxDistanceLabel" for="maxDistance">maxDistance 0.001</label>
+    </div>
+    <a-scene ssao>
+        <a-entity id="default" position="0 0 1.8">
+            <a-box position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
+            <a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E"></a-sphere>
+            <a-cylinder position="1 0.75 -3" radius="0.5" height="1.5" color="#FFC65D"></a-cylinder>
+            <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
+        </a-entity>
+        <a-entity boxes position="0 1 -8" visible="false" ></a-entity>
+        <a-sky color="#ECECEC"></a-sky>
+
+        <a-entity light="type: directional; color: #EEE; intensity: 0.5" position="-1 1 0"></a-entity>
+        <a-entity light="type: hemisphere; color: #33C; groundColor: #3C3; intensity: 2"></a-entity>
+    </a-scene>
+</body>
+<script>
+    const boxesEl = document.querySelector("[boxes]")
+    const defaultEl = document.querySelector("#default")
+    const scene = document.querySelector("a-scene")
+
+    const items = document.getElementById("items");
+    const output = document.getElementById("output");
+    const radius = document.getElementById("radius");
+    const minDist = document.getElementById("minDistance")
+    const maxDist = document.getElementById("maxDistance")
+
+    const radiusLabel = document.getElementById("radiusLabel")
+    const minDistLabel = document.getElementById("minDistanceLabel")
+    const maxDistLabel = document.getElementById("maxDistanceLabel")
+
+    items.addEventListener("change", evt => {
+        var newVis = evt.target.value === "default" ? defaultEl : boxesEl;
+        var oldVis = evt.target.value === "default" ? boxesEl : defaultEl;
+        newVis.setAttribute("visible", true);
+        oldVis.setAttribute("visible", false);
+    })
+
+    function updateSSAO(prop, val) {
+        scene.setAttribute("ssao", prop, val)
+    }
+
+    output.addEventListener("change", evt => {
+        updateSSAO("output", evt.target.value)
+    })
+
+    radius.addEventListener("input", evt => {
+        updateSSAO("kernelRadius", evt.target.value)
+        radiusLabel.innerHTML = "Kernel Radius " + evt.target.value
+    })
+    minDist.addEventListener("input", evt => {
+        updateSSAO("minDistance", evt.target.value)
+        minDistLabel.innerHTML = "Min. Distance " + evt.target.value
+    })
+    maxDist.addEventListener("input", evt => {
+        updateSSAO("maxDistance", evt.target.value)
+        maxDistLabel.innerHTML = "Max. Distance " + evt.target.value
+    })
+
+</script>
+
+</html>

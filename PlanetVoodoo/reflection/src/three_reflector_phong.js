@@ -150,6 +150,7 @@ const PhongReflector = function (geometry, phongOptions, reflectionOptions) {
 	var textureHeight = options.textureHeight || 512;
 	var clipBias = options.clipBias || 0;
 	var blendingIntensity = options.blendingIntensity || 0;
+	var phongShader = phongShader;
 
 	//
 
@@ -174,7 +175,6 @@ const PhongReflector = function (geometry, phongOptions, reflectionOptions) {
 	};
 
 	var renderTarget = new THREE.WebGLRenderTarget(textureWidth, textureHeight, parameters);
-
 	if (!THREE.MathUtils.isPowerOfTwo(textureWidth) || !THREE.MathUtils.isPowerOfTwo(textureHeight)) {
 		renderTarget.texture.generateMipmaps = false;
 	}
@@ -182,16 +182,30 @@ const PhongReflector = function (geometry, phongOptions, reflectionOptions) {
 	var material = new THREE.MeshPhongMaterial(phongOptions);
 	// add the "reflection" stuff
 	material.onBeforeCompile = (shader, program) => {
-		shader.uniforms[ 'blendingIntensity' ] = {value: blendingIntensity};
-		shader.uniforms[ 'reflectionDiffuse' ] = {value: renderTarget.texture};
-		shader.uniforms[ 'reflectionMatrix' ] = {value: textureMatrix};
+		phongShader = shader;
+		shader.uniforms['blendingIntensity'] = { value: blendingIntensity };
+		shader.uniforms['reflectionDiffuse'] = { value: renderTarget.texture };
+		shader.uniforms['reflectionMatrix'] = { value: textureMatrix };
 		shader.fragmentShader = frag;
 		shader.vertexShader = vert;
 	}
 
 	this.material = material;
 
+	this.updateRT = function(_textureWidth, _textureHeight) {
+		var newTextureWidth = _textureWidth || 512;
+		var newTextureHeight = _textureHeight || 512;
+		// ignore if the dimensions are the same
+		if (newTextureHeight === textureHeight && newTextureWidth === textureWidth) {
+			return
+		}
+		textureWidth = newTextureWidth;
+		textureHeight = newTextureHeight;
+		renderTarget.setSize(textureWidth, textureHeight)
+	}
+
 	this.update = function (renderer, scene, camera) {
+		if (!renderTarget) return;
 		reflectorWorldPosition.setFromMatrixPosition(scope.matrixWorld);
 		cameraWorldPosition.setFromMatrixPosition(camera.matrixWorld);
 

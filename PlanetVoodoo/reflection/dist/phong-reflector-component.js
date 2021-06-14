@@ -16,8 +16,14 @@ const component = AFRAME.registerComponent("phong-reflector", {
     src: {
       default: ""
     },
+    repeat: {
+      default: "1 1"
+    },
     normalMap: {
       default: ""
+    },
+    normalScale: {
+      default: "1 1"
     },
     ambientOcclusionMap: {
       default: ""
@@ -31,29 +37,143 @@ const component = AFRAME.registerComponent("phong-reflector", {
     displacementBias: {
       default: 0
     },
+    displacementScale: {
+      default: 1
+    },
+    fog: {
+      default: true
+    },
     clipBias: {
       default: 0
     },
-    reflectionTextureWidth: {
-      default: 512
-    },
-    reflectionTextureHeight: {
-      default: 512
+    reflectionTextureDimensions: {
+      default: "512 512"
     },
     blendingIntensity: {
       default: 1
     },
     useWindowDimensions: {
       default: true
+    },
+    refreshRate: {
+      type: "number",
+      default: 60
     }
   },
   init: function () {
+    this.loader = new THREE.TextureLoader();
+    this.elapsed = this.interval = 0;
     this.createReflector = this.createReflector.bind(this);
 
-    if (this.el.hasLoaded) {
-      this.createReflector();
-    } else {
+    if (!this.el.hasLoaded) {
       this.el.addEventListener("loaded", this.createReflector);
+    }
+  },
+  update: function (oldData) {
+    // create the reflector if the entity was already loaded
+    if (!this.reflector && this.el.hasLoaded) {
+      this.el.removeEventListener("loaded", this.createReflector);
+      this.createReflector();
+      return;
+    }
+
+    const changes = AFRAME.utils.diff(oldData, this.data);
+    if (!changes) return;
+    /* RT dimensions change */
+
+    if ('useWindowDimensions' in changes || changes.reflectionTextureDimensions) {
+      var textureDimensions = this.data.useWindowDimensions ? {
+        x: window.innerWidth,
+        y: window.innerHeight
+      } : AFRAME.utils.coordinates.parse(this.data.reflectionTextureDimensions);
+      this.reflector.updateRT(textureDimensions.x, textureDimensions.y);
+    }
+    /* refreshrate changes */
+
+
+    if (changes.refreshRate) {
+      if (isNaN(this.data.refreshRate)) {
+        this.interval = 60 / 1000;
+      }
+
+      this.interval = 1000 / this.data.refreshRate;
+    }
+    /* material changes */
+
+
+    const material = this.reflector.material;
+
+    if (changes.src) {
+      const oldsrc = material.map;
+      material.map = this.loader.load(changes.src);
+      if (oldsrc) oldsrc.dispose();
+    }
+
+    if (changes.fog) {
+      material.fog = changes.fog;
+      material.needsUpdate = true;
+    } // normal changes
+
+
+    this.handleNormalChanges(material, changes); // AO changes
+
+    this.handleAOChanges(material, changes); // displacement updates
+
+    this.handleDisplacementChanges(material, changes);
+
+    if (changes.repeat) {
+      this.repeatSetup(AFRAME.utils.coordinates.parse(changes.repeat));
+      material.needsUpdate = true;
+    }
+  },
+  handleNormalChanges: function (material, changes) {
+    if (changes.normalMap) {
+      const oldmap = material.normal;
+      material.displacementMap = this.loader.load(this.data);
+      if (oldMap) oldMap.dispose();
+      material.needsUpdate = true;
+    }
+
+    if (changes.normalScale) {
+      material.normalScale.copy(AFRAME.utils.coordinates.parse(this.data.normalScale));
+      const normalScaleParams = AFRAME.utils.coordinates.parse(data.normalScale);
+      setup.normalScale.x = normalScaleParams.x ? normalScaleParams.x : 1;
+      setup.normalScale.y = normalScaleParams.y ? normalScaleParams.y : 1;
+    }
+  },
+  handleAOChanges: function (material, changes) {
+    if (changes.ambientOcclusionMap) {
+      const oldmap = material.ambientOcclusionMap;
+      material.ambientOcclusionMap = this.loader.load(this.data.ambientOcclusionMap);
+      if (oldmap) oldmap.dispose();
+      material.needsUpdate = true;
+    }
+
+    if (changes.ambientOcclusionIntensity) {
+      material.ambientOcclusionIntensity = this.data.ambientOcclusionIntensity;
+      material.needsUpdate = true;
+    }
+  },
+  handleDisplacementChanges: function (material, changes) {
+    // map updates
+    if (changes.displacementMap) {
+      // if there was a displacementmap
+      const oldMap = material.displacementMap;
+      material.displacementMap = this.loader.load(this.data.displacementMap);
+      if (oldMap) oldMap.dispose();
+      material.needsUpdate = true;
+    } // scale
+
+
+    if (changes.displacementScale) {
+      material.displacementScale = this.data.displacementScale;
+      material.needsUpdate = true;
+    } // bias
+
+
+    if (changes.displacementScale) {
+      material.displacementBias = this.data.displacementBias;
+      material.needsUpdate = true;
     }
   },
   createReflector: function () {
@@ -65,20 +185,20 @@ const component = AFRAME.registerComponent("phong-reflector", {
     }
 
     mesh.visible = false;
-    var textureWidth = this.data.useWindowDimensions ? window.innerWidth * window.devicePixelRatio : this.data.reflectionTextureWidth;
-    var textureHeight = this.data.useWindowDimensions ? window.innerHeight * window.devicePixelRatio : this.data.reflectionTextureHeight;
     var phongOptions = this.phongSetup();
+    var data = this.data;
+    var textureDimensions = data.useWindowDimensions ? {
+      x: window.innerWidth,
+      y: window.innerHeight
+    } : AFRAME.utils.coordinates.parse(data.reflectionTextureDimensions);
     var reflectorOptions = {
-      clipBias: this.data.clipBias,
-      textureWidth: textureWidth,
-      textureHeight: textureHeight,
-      blendingIntensity: this.data.blendingIntensity
+      clipBias: data.clipBias,
+      textureWidth: textureDimensions.x,
+      textureHeight: textureDimensions.y,
+      blendingIntensity: data.blendingIntensity
     };
     this.reflector = new _three_reflector_phong.PhongReflector(mesh.geometry, phongOptions, reflectorOptions);
     this.el.object3D.add(this.reflector);
-  },
-  update: function (oldData) {
-    this.changes = AFRAME.utils.diff(oldData, this.data);
   },
   play: function () {
     this.paused = false;
@@ -91,29 +211,63 @@ const component = AFRAME.registerComponent("phong-reflector", {
     const loader = new THREE.TextureLoader();
     const data = this.data;
     setup.color = new THREE.Color(this.data.color);
+    setup.fog = data.fog;
 
     if (data.src.length) {
-      setup.map = loader.load(data.src);
+      setup.map = this.loader.load(data.src);
     }
 
     if (data.normalMap.length) {
-      setup.normalMap = loader.load(data.normalMap);
+      setup.normalMap = this.loader.load(data.normalMap);
+      const normalScaleParams = AFRAME.utils.coordinates.parse(data.normalScale);
+      setup.normalScale = new THREE.Vector2();
+      setup.normalScale.x = normalScaleParams.x ? normalScaleParams.x : 1;
+      setup.normalScale.y = normalScaleParams.y ? normalScaleParams.y : 1;
     }
 
     if (data.ambientOcclusionMap.length) {
-      setup.aoMap = loader.load(data.ambientOcclusionMap);
+      setup.aoMap = this.loader.load(data.ambientOcclusionMap);
       setup.aoMapIntensity = data.ambientOcclusionIntensity;
     }
 
     if (data.displacementMap.length) {
-      setup.displacementMap = loader.load(data.displacementMap);
+      setup.displacementMap = this.loader.load(data.displacementMap);
       setup.displacementBias = data.displacementBias;
+      setup.displacementScale = data.displacementScale;
     }
 
+    this.repeatSetup(AFRAME.utils.coordinates.parse(data.repeat), setup);
     return setup;
   },
-  tick: function () {
+  repeatSetup: function (_repeat, _material) {
+    var material = _material || this.reflector.material;
+
+    function setRepeat(texture, repeatObj) {
+      texture.repeat.set(repeatObj.x, repeatObj.y);
+
+      if (repeatObj.x === 1 && repeatObj.y === 1) {
+        texture.wrapS = texture.wrapT = THREE.ClampToEdgeWrapping;
+      } else {
+        texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+      }
+    }
+
+    if (material.map) setRepeat(material.map, _repeat);
+    if (material.normalMap) setRepeat(material.normalMap, _repeat);
+    if (material.ambientOcclusionMap) setRepeat(material.ambientOcclusionMap, _repeat);
+    if (material.displacementMap) setRepeat(material.displacementMap, _repeat);
+  },
+  tick: function (t, dt) {
+    // Throttle tick. Would use AFRAME.utils but updating those won't work for me
     if (!this.reflector || this.paused) return;
+    this.elapsed += dt;
+
+    if (this.elapsed < this.interval) {
+      return;
+    } else {
+      this.elapsed = 0;
+    }
+
     const renderer = this.el.sceneEl.renderer;
     const camera = this.el.sceneEl.camera;
     const scene = this.el.sceneEl.object3D;
@@ -280,7 +434,8 @@ const PhongReflector = function (geometry, phongOptions, reflectionOptions) {
   var textureWidth = options.textureWidth || 512;
   var textureHeight = options.textureHeight || 512;
   var clipBias = options.clipBias || 0;
-  var blendingIntensity = options.blendingIntensity || 0; //
+  var blendingIntensity = options.blendingIntensity || 0;
+  var phongShader = phongShader; //
 
   var reflectorPlane = new THREE.Plane();
   var normal = new THREE.Vector3();
@@ -308,6 +463,7 @@ const PhongReflector = function (geometry, phongOptions, reflectionOptions) {
   var material = new THREE.MeshPhongMaterial(phongOptions); // add the "reflection" stuff
 
   material.onBeforeCompile = (shader, program) => {
+    phongShader = shader;
     shader.uniforms['blendingIntensity'] = {
       value: blendingIntensity
     };
@@ -323,7 +479,21 @@ const PhongReflector = function (geometry, phongOptions, reflectionOptions) {
 
   this.material = material;
 
+  this.updateRT = function (_textureWidth, _textureHeight) {
+    var newTextureWidth = _textureWidth || 512;
+    var newTextureHeight = _textureHeight || 512; // ignore if the dimensions are the same
+
+    if (newTextureHeight === textureHeight && newTextureWidth === textureWidth) {
+      return;
+    }
+
+    textureWidth = newTextureWidth;
+    textureHeight = newTextureHeight;
+    renderTarget.setSize(textureWidth, textureHeight);
+  };
+
   this.update = function (renderer, scene, camera) {
+    if (!renderTarget) return;
     reflectorWorldPosition.setFromMatrixPosition(scope.matrixWorld);
     cameraWorldPosition.setFromMatrixPosition(camera.matrixWorld);
     rotationMatrix.extractRotation(scope.matrixWorld);

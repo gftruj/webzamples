@@ -1,0 +1,47 @@
+<head>
+  <title>My A-Frame Scene</title>
+  <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+  <script src="aframe-curve-component.js"></script>
+  <script src="scroll-path.js"></script>
+  <style>
+    #info {
+      position: fixed;
+      z-index: 1000;
+      text-align: center;
+      width: 100%;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="info">
+    <h3>scroll-path</h3>
+    <p>Based on the <a href="https://github.com/protyze/aframe-alongpath-component">along-path component by Jan
+        Azzati</a><br>
+      scroll the mousewheel to move the plane<br>
+      spitfire model by <a
+        href="https://sketchfab.com/3d-models/supermarine-spitfire-8349f26e1e88455da75dd7352b02b794">Renafox</a><br>
+      Source code <a href="https://github.com/gftruj/webzamples/tree/master/PlanetVoodoo/scroll-path/">here</a>
+    </p>
+  </div>
+  <a-scene>
+    <a-assets>
+      <a-asset-item id="spitfire-model" src="assets/spitfire/scene.gltf">
+    </a-assets>
+    <a-curve id="track1">
+      <a-curve-point position="-2 2 -1"></a-curve-point>
+      <a-curve-point position="0 1 -1"></a-curve-point>
+      <a-curve-point position="2 2 -1"></a-curve-point>
+      <a-curve-point position="2 2 -3"></a-curve-point>
+      <a-curve-point position="0 1 -3"></a-curve-point>
+      <a-curve-point position="-2 2 -3"></a-curve-point>
+    </a-curve>
+    <a-draw-curve curveref="#track1" material="shader: line; color: blue;"></a-draw-curve>
+
+    <a-entity scroll-path="curve: #track1; rotate: true">
+      <a-entity scale="0.0025 0.0025 0.0025" rotation="13.88 27.14 -31.78" position="-0.21 -0.284 0"
+        gltf-model="#spitfire-model"> </a-entity>
+    </a-entity>
+  </a-scene>
+</body>

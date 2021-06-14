@@ -1,0 +1,20 @@
+{
+  "name": "glow",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npm run build:full && npm run build:min",
+    "build:full": "browserify src/glow.js -p esmify > dist/glow-component.js",
+    "build:min": "uglifyjs dist/glow-component.js > dist/glow-component.min.js"
+  },
+  "dependencies": {
+    "browserify": "*",
+    "esmify": "*",
+    "uglify-es": "*",
+    "uglify-js": "*"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

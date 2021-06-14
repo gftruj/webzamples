@@ -1,0 +1,113 @@
+<html>
+
+<head>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="dist/phong-reflector-component.js"></script>
+    <style>
+        #info {
+            position: fixed;
+            z-index: 1000;
+            text-align: center;
+            width: 100%;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="info">
+        <p>phong-reflector component - phong material based mirror<br>
+            Mask by <a
+                href="https://sketchfab.com/3d-models/drift-mask-3d-printable-b9a0c72488214a53b44d6ea91241fd13">Mac</a>
+            <a href="https://creativecommons.org/licenses/by-nc/4.0/">(CC)</a><br>
+            Source code <a href="https://github.com/gftruj/webzamples/PlanetVoodoo/reflection">here</a>
+        </p>
+        Repeat:<br>
+        <button id=twobtn>2x2</button>
+        <button id=sevenbtn>7x3</button>
+        <button id=tenbtn>10x10</button><br>
+        Refresh rate:<br>
+        <button id=max>100 Hz</button>
+        <button id=middle>30 Hz</button>
+        <button id=low>10 Hz</button><br>
+        Reflection texture size:<br>
+        <button id=windowdims>window</button>
+        <button id=512dims>512x512</button>
+        <button id=256dims>256x256</button>
+        <button id=64dims>64x64</button>
+    </div>
+    <a-scene stats>
+        <a-assets>
+            <a-asset-item id="mask-model" src="./assets/mask/scene.gltf"></a-asset-item>
+        </a-assets>
+        <!-- scene items -->
+        <a-box position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
+        <a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E"></a-sphere>
+        <a-cylinder position="1 0.75 -3" radius="0.5" height="1.5" color="#FFC65D"></a-cylinder>
+        <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
+
+        <!-- DISPLACEMENT-->
+        <a-entity position="4 1.5 -4" rotation="0 -60 0">
+            <a-plane position="-1 0 0" width="2" height="2" segments-height="64" segments-width="64" phong-reflector="src: assets/aframe/aframe_cut256.jpg; normalMap: assets/maps/NormalMap.png;ambient-occlusion-map: assets/maps/ao.png; displacementMap: assets/maps/DisplacementMap.png; blendingIntensity: 0.5; clipBias: 0; useWindowDimensions: true
+                ;repeat: 2 2; displacementScale: 0.5">
+            </a-plane>
+
+            <a-plane position="1 0 -0.5" width="2" height="2" segments-height="64" segments-width="64" phong-reflector="src: assets/maps/rocks.png; normalMap: assets/maps/rocksNormal.png;ambient-occlusion-map: assets/maps/rocksAO.png; displacementMap: assets/maps/rocksDisplacement.png; blendingIntensity: 0.5; clipBias: 0; useWindowDimensions: true
+            ;repeat: 2 2; displacementScale: 0.5">
+            </a-plane>
+        </a-entity>
+
+        <!-- camera + mask -->
+        <a-camera position="0 1.6 0">
+            <a-entity gltf-model="#mask-model" scale="0.05 0.05 0.05" rotation="0 90 0" position="0 0 0.5"></a-entity>
+        </a-camera>
+        <a-sky></a-sky>
+    </a-scene>
+    <script>
+        const reflectors = document.querySelectorAll("[phong-reflector]")
+        const btn2 = document.getElementById("twobtn")
+        const btn7 = document.getElementById("sevenbtn")
+        const btn10 = document.getElementById("tenbtn")
+        const max = document.getElementById("max")
+        const middle = document.getElementById("middle")
+        const low = document.getElementById("low")
+        const windowDims = document.getElementById("windowdims")
+        const highDims = document.getElementById("512dims")
+        const mediumDims = document.getElementById("256dims")
+        const lowDims = document.getElementById("64dims")
+        function setRepeat(size) {
+            reflectors.forEach(node => {
+                node.setAttribute("phong-reflector", "repeat", size);
+            })
+        }
+
+        function setRefreshRate(refreshrate) {
+            reflectors.forEach(node => {
+                node.setAttribute("phong-reflector", "refreshRate", refreshrate);
+            })
+        }
+
+        function setReflectorDims(dims, window) {
+            reflectors.forEach(node => {
+                node.setAttribute("phong-reflector", {
+                    "reflectionTextureDimensions": dims,
+                    "useWindowDimensions": window
+                    
+                })
+            })
+        }
+
+        max.addEventListener("click", e => setRefreshRate("100"))
+        middle.addEventListener("click", e => setRefreshRate("30"))
+        low.addEventListener("click", e => setRefreshRate("10"))
+        btn2.addEventListener("click", e => setRepeat("2 2"))
+        btn7.addEventListener("click", e => setRepeat("7 3"))
+        btn10.addEventListener("click", e => setRepeat("10 10"))
+        windowDims.addEventListener("click", e => setReflectorDims("512 512", true))
+        highDims.addEventListener("click", e => setReflectorDims("512 512", false))
+        mediumDims.addEventListener("click", e => setReflectorDims("256 256", false))
+        lowDims.addEventListener("click", e => setReflectorDims("64 64", false))
+    </script>
+</body>
+
+</html>

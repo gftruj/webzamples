@@ -1,0 +1,40 @@
+<html>
+<head>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="simple-glow.js"></script>
+    <style>
+        #info {
+            position: fixed;
+            z-index: 1000;
+            text-align: center;
+            width: 100%;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="info">
+        <p>simple-glow component<br>
+            Lamp by <a
+                href="https://poly.google.com/view/6yoNj_z0h-L">Gregory Swords</a>
+            <a href="https://creativecommons.org/licenses/by-nc/4.0/">(CC)</a><br>
+           Source code <a href="https://github.com/gftruj/webzamples/PlanetVoodoo/simple-glow/Readme.md">here</a>
+        </p>
+        </div>
+    <a-scene>
+        <a-assets>
+            <a-asset-item id="lamp-model" src="assets/models/streetlamp/model.gltf"></a-asset-item>
+        </a-assets>
+        <a-entity gltf-model="#lamp-model" position="-2 -0.5 -4" rotation="0 180 0"></a-entity>
+        <a-entity position="-1.41 2.128 -3.7" simple-glow="glowTexture: assets/glowmaps/testmap.jpg"></a-entity>
+        <a-sphere radius="0.25" position="1 1 -1" color="blue" simple-glow="glowTexture: assets/glowmaps/testmap.jpg"></a-sphere>
+        <a-box position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
+        <a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E"></a-sphere>
+        <a-cylinder position="1 0.75 -3" radius="0.5" height="1.5" color="#FFC65D"></a-cylinder>
+        <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
+        <a-sky color="#ECECEC"></a-sky>
+    </a-scene>
+</body>
+
+</html>
