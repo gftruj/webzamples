@@ -1,0 +1,90 @@
+<html>
+
+<head>
+  <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+  <style>
+    #info {
+      position: fixed;
+      z-index: 1000;
+      text-align: center;
+      width: 100%;
+      margin: 0 auto;
+    }
+  </style>
+  <script>
+    AFRAME.registerComponent("speech-control", {
+      init: function () {
+        var el = this.el
+        var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition
+        var SpeechGrammarList = SpeechGrammarList || webkitSpeechGrammarList
+        var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEvent
+        const diagnostic = document.querySelector("#debug")
+
+        var recognition = new SpeechRecognition();
+
+        recognition.continuous = false;
+        recognition.lang = 'en-US';
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
+
+        document.body.onclick = function () {
+          recognition.start();
+          diagnostic.textContent = 'voice recognition active';
+          console.log('Ready to receive a color command.');
+        }
+
+        recognition.onresult = function (event) {
+          // The SpeechRecognitionEvent results property returns a SpeechRecognitionResultList object
+          // The SpeechRecognitionResultList object contains SpeechRecognitionResult objects.
+          // It has a getter so it can be accessed like an array
+          // The first [0] returns the SpeechRecognitionResult at the last position.
+          // Each SpeechRecognitionResult object contains SpeechRecognitionAlternative objects that contain individual results.
+          // These also have getters so they can be accessed like arrays.
+          // The second [0] returns the SpeechRecognitionAlternative at position 0.
+          // We then return the transcript property of the SpeechRecognitionAlternative object
+          var side = event.results[0][0].transcript;
+          diagnostic.textContent = 'Result received: ' + side + '.';
+          console.log('Confidence: ' + event.results[0][0].confidence);
+
+          side = side.toLowerCase();
+          if (side.includes("right")) {
+            el.emit("go_right")
+          } else if (side.includes("left")) {
+            el.emit("go_left")
+          }
+        }
+
+        recognition.onspeechend = function () {
+          recognition.stop();
+        }
+
+        recognition.onnomatch = function (event) {
+          diagnostic.textContent = "";
+        }
+
+        recognition.onerror = function (event) {
+          diagnostic.textContent = 'Error occurred in recognition: ' + event.error;
+        }
+
+      }
+    })
+  </script>
+</head>
+
+<body>
+  <div id="info">
+    <p>Press the button and say "left" or "right" to rotate the box. <br>
+      voice recognition picked up: </p>
+    <p id="debug"></p>
+    <button>Voice Recognition</button>
+  </div>
+  <a-scene>
+    <a-box  position="0 0.5 -3" color="#4CC3D9" speech-control 
+            animation__right="property: rotation; from: 0 0 0; to: 0 360 0; 
+                    loop: false; dur: 400; startEvents: go_right" 
+            animation__left="property: rotation; from: 0 0 0; to: 0 -360 0; 
+                    loop: false; dur: 400; startEvents: go_left"></a-box>
+  </a-scene>
+</body>
+
+</html>
