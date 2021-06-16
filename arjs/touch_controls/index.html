@@ -1,0 +1,78 @@
+<html>
+
+<head>
+  <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.min.js"></script>
+  <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+  <script src="hammer.js"></script>
+  <style>
+    #info {
+      position: fixed;
+      z-index: 1000;
+      text-align: center;
+      width: 100%;
+      margin: 0 auto;
+      top: 10%;
+    }
+  </style>
+  <script>
+    AFRAME.registerComponent("foo", {
+      init: function () {
+        var element = document.querySelector('body');
+        const marker = document.querySelector('a-marker')
+        var model = document.querySelector('a-gltf-model');
+        var hammertime = new Hammer(element);
+        var pinch = new Hammer.Pinch(); // Pinch is not by default in the recognisers
+        hammertime.add(pinch); // add it to the Manager instance
+
+        hammertime.on('pan', (ev) => {
+          if (!marker.object3D.visible) return;
+          let rotation = model.getAttribute("rotation")
+          switch (ev.direction) {
+            case 2:
+              rotation.y = rotation.y + 4
+              break;
+            case 4:
+              rotation.y = rotation.y - 4
+              break;
+            case 8:
+              rotation.x = rotation.x + 4
+              break;
+            case 16:
+              rotation.x = rotation.x - 4
+              break;
+            default:
+              break;
+          }
+          model.setAttribute("rotation", rotation)
+        });
+
+        hammertime.on("pinch", (ev) => {
+          if (!marker.object3D.visible) return;
+          let scale = { x: ev.scale, y: ev.scale, z: ev.scale }
+          model.setAttribute("scale", scale);
+        });
+      }
+    });
+  </script>
+</head>
+
+<body style="margin : 0px; overflow: hidden;">
+  <div id="info">
+    <p>Drag and pinch the screen when the model is visible</p>
+    Model by <a
+      href="https://sketchfab.com/3d-models/animated-dog-shiba-inu-9abfce885a834399b2c3ccaed51cd474">quander</a>
+    <br><a href="https://github.com/gftruj/webzamples/tree/master/arjs/touch_controls/index.html">source code</a>
+  </div>
+  <a-scene embedded arjs='sourceType: webcam; debugUIEnabled: false;' soundhandler>
+    <a-assets>
+      <a-asset-item id="model" src="../../aframe/assets/models/doggo/scene.gltf"></a-asset-item>
+    </a-assets>
+    <a-marker preset="hiro">
+      <a-entity position="0 0.5 0" scale="0.005 0.005 0.005" gltf-model="#model" animation-mixer="clip:0|standing_0">
+        </a-box>
+    </a-marker>
+  </a-scene>
+</body>
+
+</html>
