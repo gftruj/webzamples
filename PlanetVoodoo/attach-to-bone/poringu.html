@@ -1,0 +1,64 @@
+<html>
+
+<head>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.min.js"></script>
+    <script src="attach-to-bone.js"></script>
+    
+    <style>
+        #info {
+            position: fixed;
+            z-index: 1000;
+            text-align: center;
+            width: 100%;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="info">
+        <p>attach-to-bone component<br>
+            The sword is attached to a bone in the poringus hand<br>
+            Poringu by <a
+                href="https://sketchfab.com/3d-models/poringu-39597630992f454eacd6b5f0c693e1ac">jbnotjeebe</a>
+            <a href="https://creativecommons.org/licenses/by-nc/4.0/">(CC)</a><br>
+            Sword by <a
+                href="https://sketchfab.com/3d-models/sword-test-ef52c640195b4735a01411ad3d6a45da">JoseDiaz</a>
+            <a href="https://creativecommons.org/licenses/by-nc/4.0/">(CC)</a><br>
+            Source code <a href="https://github.com/gftruj/webzamples/PlanetVoodoo/attach-to-bone/poringu.html">here</a>
+        </p>
+    </div>
+    <a-scene>
+        <a-assets>
+            <a-asset-item id="poringu-model" src="assets/Poringu-no-weapon/poringu.glb"></a-asset-item>
+            <a-asset-item id="sword-model" src="assets/sword/scene.gltf"></a-asset-item>
+        </a-assets>
+
+
+        <a-text color="black" value="Animated model"  position="-2 2 -3.982"></a-text>
+        <a-entity position="-1 0.5 -3" scale="0.05 0.05 0.05" gltf-model="#poringu-model"
+            animation-mixer="clip: *" foo>
+        </a-entity>
+
+        <a-text color="black" value="Sword model" position="-0.59 0.904 -3.421"></a-text>
+        <a-entity gltf-model="#sword-model" position="0 0.5 -3" scale="0.075 0.075 0.075"></a-entity>
+
+        <!-- poringu + attached sword -->
+        <a-text color="black" value="Animated model + sword\nattached to a bone" position="0.738 2.012 -3.433"></a-text>
+        <a-entity id="poringu" position="1 0.5 -3" scale="0.05 0.05 0.05" gltf-model="#poringu-model"
+            animation-mixer="clip: *" foo>
+        </a-entity>
+        <a-entity attach-to-bone="target: #poringu; boneName: joint17_08;">
+            <!-- fix the sword orientation and position -->
+            <a-entity scale="0.075 0.075 0.075" position="0 -0.188 0.337" rotation="90 0 35" gltf-model="#sword-model">
+            </a-entity>
+        </a-entity>
+
+        <!-- scene -->
+        <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
+        <a-sky color="#ECECEC"></a-sky>
+    </a-scene>
+</body>
+
+</html>

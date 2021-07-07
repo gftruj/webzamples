@@ -13,11 +13,15 @@ AFRAME.registerComponent("attach-to-bone", {
         rotation: {
             default: "0 0 0"
         },
+        debugBone: {
+            default: false
+        },
         debug: {
             default: false
         }
     },
     init: function () {
+        console.log("init")
         // binds
         this.targetLoaded = this.targetLoaded.bind(this);
 
@@ -30,6 +34,11 @@ AFRAME.registerComponent("attach-to-bone", {
         axesContainer.add(new THREE.AxesHelper(1));
         this.el.sceneEl.object3D.add(axesContainer)
         this.axesContainer = axesContainer;
+
+        let boneAxesContainer = new THREE.Object3D();
+        boneAxesContainer.add(new THREE.AxesHelper(0.25));
+        this.el.sceneEl.object3D.add(boneAxesContainer)
+        this.boneAxesContainer = boneAxesContainer;
 
         this.targetMesh = null;
         this.bone = null;
@@ -73,6 +82,9 @@ AFRAME.registerComponent("attach-to-bone", {
         if (changes.debug) {
             this.axesContainer.visible = this.data.debug;
         }
+        if (changes.debugBone) {
+            this.boneAxesContainer.visible = this.data.debugBone;
+        }
 
         if (changes.target || changes.bone) {
             this.boneChanged();
@@ -85,7 +97,6 @@ AFRAME.registerComponent("attach-to-bone", {
         // or look for bones containing the name
         if (!bone) {
             root.traverse(node => {
-                console.log(node.name)
                 if (node.name.includes(boneName)) {
                     if (bone) {
                         console.log("Multiple bones contain", boneName, "in their name.")
@@ -97,7 +108,6 @@ AFRAME.registerComponent("attach-to-bone", {
         if (!bone) {
             console.log(boneName, "was not found in the model")
         }
-        console.log(bone)
         return bone;
     },
     play: function () {
@@ -131,8 +141,16 @@ AFRAME.registerComponent("attach-to-bone", {
             // get bone matrix
             inverseWorldMatrix.copy(this.targetMesh.matrix).invert();
             boneMatrix.multiplyMatrices(inverseWorldMatrix, this.bone.matrixWorld);
-            position.setFromMatrixPosition(boneMatrix).add(this.offset);
-            orientation.copy(this.bone.quaternion).multiply(this.orientation)
+            position.setFromMatrixPosition(boneMatrix)
+            orientation.copy(this.bone.quaternion)
+
+            if (this.data.debugBone) {
+                this.boneAxesContainer.position.copy(position)
+                this.boneAxesContainer.quaternion.copy(orientation)                
+            }
+
+            position.add(this.offset);
+            orientation.multiply(this.orientation)
 
             this.el.object3D.quaternion.copy(orientation);
             this.el.object3D.position.copy(position);
