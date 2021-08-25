@@ -95,10 +95,13 @@ AFRAME.registerComponent('curve', {
                         this.curve = new THREE.QuadraticBezierCurve3(this.pathPoints[0], this.pathPoints[1], this.pathPoints[2]);
                         break;
                     case 'Line':
-                        if (this.pathPoints.length != 2) {
-                            throw new Error('The Three constructor of type LineCurve3 requires 2 points');
+                        if (this.pathPoints.length < 2) {
+                            throw new Error('The Three constructor of type LineCurve3 requires at least 2 points');
                         }
-                        this.curve = new THREE.LineCurve3(this.pathPoints[0], this.pathPoints[1]);
+                        this.curve = new THREE.CurvePath();
+                        for (var i = 0; i < this.pathPoints.length - 1; i++) {
+                            this.curve.add(new THREE.LineCurve3(this.pathPoints[i], this.pathPoints[i + 1]))
+                        }
                         break;
                     case 'CatmullRom':
                         this.curve = new THREE.CatmullRomCurve3(this.pathPoints);
@@ -109,7 +112,9 @@ AFRAME.registerComponent('curve', {
                     default:
                         throw new Error('No Three constructor of type (case sensitive): ' + this.data.type + 'Curve3');
                 }
-
+                if (!this.curve.points) {
+                    this.curve.points = this.pathPoints
+                }
                 this.curve.closed = this.data.closed;
 
                 this.el.emit('curve-updated');
