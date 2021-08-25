@@ -3,10 +3,13 @@
 <hr>
 
 ### scroll-path component
+![scroll-path](media/scroll-path.gif "scroll-path")
 
 Based on the <a href="https://github.com/protyze/aframe-alongpath-component">`along-path` component</a> by Jan Azzati.
 
-The component should behave in a similar manner, but is controlled with the mouse wheel.
+The component should behave in a similar manner, but is controlled with the mouse wheel, or swiping on a mobile device.
+Minor *aframe-curve* changes include working with a line with more than 2 points.
+Minor *along-path* changes include smooth rotation changes, trigger debugging, ofc working with a mousewheel, or touch events.
 
 ### Example
 
@@ -40,10 +43,12 @@ Most of the properties are "inherited" from the original
 | -------- | -----------                                                                          | ------------- |
 | curve    | Selector to reference to the corresponding [curve](https://github.com/protyze/aframe-curve-component) | ''            |
 | triggers   | Selector to identify the Trigger-Points that should fire the alongpath-trigger-activated-Event when the entity moves close to it.                               | 'a-curve-point'         |
-| triggerRadius   | Defines how close the entity should be to the Trigger-Point to activate it.                               | 0.01         |
+| triggerRadius   | Defines how close the entity should be to the Trigger-Point to activate it. If 0 - trigger proximity logic is cut off.   | 0.01         |
+| debugTriggers  | create / remove spheres corresponding to the trigger size / position           | false         |
 | dur      | Duration in milliseconds for the object to follow the entire path                    | 1000          |
 | loop     | Whether or not the animation should loop                                             | false         |
 | rotate   | Whether or not the Entity should adjust it's rotation while moving along the path    | false         |
+| smoothRotation   | Whether we want to slerp the rotation, or snap it.                           | false         |
 | resetonplay   | Whether or not the Movement on the path should be reset on the play event       | true          |
 | speed    | The speed applied on each "mousewheel" impulse                                       | 10            |
 | damping  | "Stopping" force factor                                                              | 0.9           |
@@ -57,5 +62,5 @@ Most of the properties are "inherited" from the original
 
 ### Events different than the mousewheel?
 
-You can manually call `updateCurve(obj)` with the direction provided as `obj.deltaY` - the value does not matter, just positive or negative values. 
+You can manually call `updateCurve(dir)` - the value does not matter, just positive or negative values. 
 
