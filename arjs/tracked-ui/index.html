@@ -1,0 +1,101 @@
+
+<!DOCTYPE html>
+<html>
+  <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+  <!-- we import arjs version without NFT but with marker + location based support -->
+  <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+  <script>
+    AFRAME.registerComponent("tracked-ui", {
+        init: function() {
+            // references
+            this.uiDiv = document.querySelector("#UI")
+            const rangebtn = document.querySelector("#rangeicon")
+            const coinbtn = document.querySelector("#coinicon")
+            const rangemodel = document.getElementById("range")
+            const marketmodel = document.getElementById("market")
+
+            const visible="0.05 0.05 0.05"
+            const hidden="0.0001 0.0001 0.0001"
+
+            rangebtn.addEventListener("click", e => {
+                rangemodel.setAttribute("scale", visible)
+                marketmodel.setAttribute("scale", hidden)
+            })
+            coinbtn.addEventListener("click", e => {
+                rangemodel.setAttribute("scale", hidden)
+                marketmodel.setAttribute("scale", visible)
+            })
+            this.vector = new THREE.Vector3();
+        },
+        tick: function() {
+            if (!this.uiDiv) return;
+            const cam = this.el.sceneEl.camera
+
+            this.uiDiv.style.display = this.el.object3D.visible ? "block" : "none"
+
+            this.vector.copy(this.el.object3D.position).project(cam);
+
+            this.vector.x = ( this.vector.x + 1) * window.innerWidth / 2;
+            this.vector.y = - ( this.vector.y - 1) * window.innerHeight / 2;
+            this.vector.z = 0;
+            this.uiDiv.style.left = this.vector.x + 'px';
+            this.uiDiv.style.top = (this.vector.y + 200) + 'px';
+        }
+    })
+
+    AFRAME.registerComponent("linear-encoding", {
+        init: function() {
+            this.el.addEventListener("model-loaded", e => {
+                const mesh = this.el.getObject3D("mesh");
+                
+                mesh.traverse(node => {
+                    if (!node.material || !node.material.map) return;
+                    node.material.map.encoding = THREE.LinearEncoding
+                })
+            })
+        }
+    })
+</script>
+    <body style="margin : 0px; overflow: hidden;">
+        <!-- info + CREDITS -->
+        <div style='position: fixed; width:200%; text-align: center; z-index: 1; background-color: rgba(75, 2, 59, 0.363);'>
+            <h3>tracked-ui</h3>
+            works with a hiro marker<br>
+            Models by 
+            <a href="https://sketchfab.com/StanislasDolcini">StanislasDolcini</a>:<br>
+            <a href="https://sketchfab.com/models/f925a85a10d8451fb523121058564459">Range</a>,
+            <a href="https://sketchfab.com/models/51a94cabda344ebcb579476b16296dfb">Market</a>
+            <a href="http://creativecommons.org/licenses/by-sa/4.0/">(CC-BY-SA-4.0)</a>
+            <br>
+             openclipart icons -
+            <a href="https://openclipart.org/detail/252262/male-archer-silhouette">archer</a>,
+            <a href="https://openclipart.org/detail/319535/chinese-coin">coin</a>,
+            <br>
+            Source code <a href="https://github.com/gftruj/webzamples/tree/master/arjs/tracked-ui/">here</a>
+        </div>
+
+        <!-- UI -->
+        <div id="UI" style="position: fixed; z-index: 1000; display: none;">
+            <div style="margin-left: -48px;border:1px solid black; background-color: rgba(75, 2, 59, 0.363);">
+                <img id="coinicon" src="assets/coin.png" width="64px">
+                <span style="width: 32px; height: 32px">&nbsp;</span>
+                <img id="rangeicon" src="assets/archer.png" width="64px">
+            </div>
+        </div>
+
+        <!-- SCENE -->
+        <a-scene embedded arjs renderer="logarithmicDepthBuffer: true" vr-mode-ui="enabled: false">
+          <a-assets>
+            <a-asset-item id="market-model" src="assets/market/scene.gltf"></a-asset-item>
+            <a-asset-item id="range-model" src="assets/range/scene.gltf"></a-asset-item>
+        </a-assets>
+        <a-marker smooth="true" preset="hiro" tracked-ui>
+            <a-entity id="market" scale="0.05 0.05 0.05" gltf-model="#market-model" linear-encoding></a-entity>
+            <a-entity id="range" scale="0.0001 0.0001 0.0001" gltf-model="#range-model" linear-encoding></a-entity>
+
+            <a-box scale="1 0.01 1" position="0 -0.1 0" material="opacity: 0.5; transparent: true"></a-box>
+        </a-marker>
+        <a-entity camera></a-entity>
+        </a-scene>
+    </body>
+</html>
