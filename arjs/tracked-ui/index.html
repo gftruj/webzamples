@@ -55,7 +55,8 @@
 </script>
     <body style="margin : 0px; overflow: hidden;">
         <!-- info + CREDITS -->
-        <div id="info" style='position: fixed; width:200%; text-align: center; z-index: 1; background-color: rgba(75, 2, 59, 0.363);display: none'>
+        <div style='position: fixed; width:100%; text-align: center; z-index: 1; left: 0;
+        right: 0; background-color: rgba(75, 2, 59, 0.363);'>
             <h3>tracked-ui</h3>
             works with a hiro marker<br>
             Models by 
@@ -98,11 +99,5 @@
         </a-marker>
         <a-entity camera></a-entity>
         </a-scene>
-        <script>
-            // this is sloppy
-            setTimeout(function() {
-                document.querySelector("#info").style.display = "block"
-            }, 2000)
-        </script>
     </body>
 </html>
