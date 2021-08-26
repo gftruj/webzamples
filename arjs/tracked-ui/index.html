@@ -14,16 +14,13 @@
             const rangemodel = document.getElementById("range")
             const marketmodel = document.getElementById("market")
 
-            const visible="0.05 0.05 0.05"
-            const hidden="0.0001 0.0001 0.0001"
-
             rangebtn.addEventListener("click", e => {
-                rangemodel.setAttribute("scale", visible)
-                marketmodel.setAttribute("scale", hidden)
+                rangemodel.emit("showrange")
+                marketmodel.emit("showrange")
             })
             coinbtn.addEventListener("click", e => {
-                rangemodel.setAttribute("scale", hidden)
-                marketmodel.setAttribute("scale", visible)
+                rangemodel.emit("showmarket")
+                marketmodel.emit("showmarket")
             })
             this.vector = new THREE.Vector3();
         },
@@ -58,7 +55,7 @@
 </script>
     <body style="margin : 0px; overflow: hidden;">
         <!-- info + CREDITS -->
-        <div style='position: fixed; width:200%; text-align: center; z-index: 1; background-color: rgba(75, 2, 59, 0.363);'>
+        <div id="info" style='position: fixed; width:200%; text-align: center; z-index: 1; background-color: rgba(75, 2, 59, 0.363);display: none'>
             <h3>tracked-ui</h3>
             works with a hiro marker<br>
             Models by 
@@ -90,12 +87,22 @@
             <a-asset-item id="range-model" src="assets/range/scene.gltf"></a-asset-item>
         </a-assets>
         <a-marker smooth="true" preset="hiro" tracked-ui>
-            <a-entity id="market" scale="0.05 0.05 0.05" gltf-model="#market-model" linear-encoding></a-entity>
-            <a-entity id="range" scale="0.0001 0.0001 0.0001" gltf-model="#range-model" linear-encoding></a-entity>
-
-            <a-box scale="1 0.01 1" position="0 -0.1 0" material="opacity: 0.5; transparent: true"></a-box>
+            <a-entity id="market" scale="0.05 0.05 0.05" gltf-model="#market-model" linear-encoding
+            animation__show="property: scale; to:0.05 0.05 0.05; dur: 250; startEvents: showmarket"
+            animation__hide="property: scale; to:0.0001 0.0001 0.0001; dur: 100; startEvents: showrange"
+            ></a-entity>
+            <a-entity id="range" scale="0.0001 0.0001 0.0001" gltf-model="#range-model" linear-encoding
+            animation__show="property: scale; to:0.05 0.05 0.05; dur: 250; startEvents: showrange"
+            animation__hide="property: scale; to:0.0001 0.0001 0.0001; dur: 100; startEvents: showmarket"
+            ></a-entity>
         </a-marker>
         <a-entity camera></a-entity>
         </a-scene>
+        <script>
+            // this is sloppy
+            setTimeout(function() {
+                document.querySelector("#info").style.display = "block"
+            }, 2000)
+        </script>
     </body>
 </html>
