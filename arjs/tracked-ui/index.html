@@ -5,6 +5,7 @@
   <!-- we import arjs version without NFT but with marker + location based support -->
   <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
   <script>
+    // the CORE tracking component
     AFRAME.registerComponent("tracked-ui", {
         init: function() {
             // references
@@ -14,37 +15,47 @@
             const rangemodel = document.getElementById("range")
             const marketmodel = document.getElementById("market")
 
+            // toggle the animation events
+            function notifyEntities(event) {
+                rangemodel.emit(event)
+                marketmodel.emit(event)
+            }
+
+            // handle image clicking
             rangebtn.addEventListener("click", e => {
-                rangemodel.emit("showrange")
-                marketmodel.emit("showrange")
+                notifyEntities("showrange")
             })
             coinbtn.addEventListener("click", e => {
-                rangemodel.emit("showmarket")
-                marketmodel.emit("showmarket")
+                notifyEntities("showmarket")
             })
+
+            // THREE.Vector3 helper. 
             this.vector = new THREE.Vector3();
         },
         tick: function() {
             if (!this.uiDiv) return;
             const cam = this.el.sceneEl.camera
 
+            // show the UI only if the marker is visible
             this.uiDiv.style.display = this.el.object3D.visible ? "block" : "none"
 
+            // project the current marker position
             this.vector.copy(this.el.object3D.position).project(cam);
-
+            // the vector is now normalized, so we need to adjust it to the dimensions
             this.vector.x = ( this.vector.x + 1) * window.innerWidth / 2;
             this.vector.y = - ( this.vector.y - 1) * window.innerHeight / 2;
             this.vector.z = 0;
+            // apply the vector to the style
             this.uiDiv.style.left = this.vector.x + 'px';
             this.uiDiv.style.top = (this.vector.y + 200) + 'px';
         }
     })
 
+    // just to make the models brighter
     AFRAME.registerComponent("linear-encoding", {
         init: function() {
             this.el.addEventListener("model-loaded", e => {
                 const mesh = this.el.getObject3D("mesh");
-                
                 mesh.traverse(node => {
                     if (!node.material || !node.material.map) return;
                     node.material.map.encoding = THREE.LinearEncoding
