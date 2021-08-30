@@ -13,3 +13,6 @@ Major changes include customizing the curve type between points, and using the <
 ### Example
 
 Check it out [here](https://gftruj.github.io/webzamples/PlanetVoodoo/scroll-path/smooth-scroll-path). 
+
+### Credits
+Awesome models by <a href="https://sketchfab.com/olmopotums">olmopotums</a><a href="http://creativecommons.org/licenses/by/4.0/">(CC-BY-4.0)</a><br>
