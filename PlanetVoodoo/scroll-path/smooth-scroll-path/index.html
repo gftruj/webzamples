@@ -1,0 +1,142 @@
+<head>
+    <title>My A-Frame Scene</title>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="./smooth-scrollbar.js"></script>
+    <script src="./aframe-curve-component.js"></script>
+    <script src="./smooth-scroll-path.js"></script>
+    <script>
+      AFRAME.registerComponent("toggle-look-at", {
+        init: function() {
+          this.rig = document.querySelector("#camera-rig");
+          const scnd = document.querySelector("#second-point");
+          const thrd = document.querySelector("#third-point")
+
+          // toggle "rotate", deactivate "look-at"
+          scnd.addEventListener("alongpath-trigger-activated", evt => {
+              this.rig.setAttribute("smooth-scroll-path", "rotate", true)
+              this.followFocusPoint = false;
+          })
+          // deactivate "rotate", toggle "look-at"
+          thrd.addEventListener("alongpath-trigger-activated", evt => {
+              this.rig.setAttribute("smooth-scroll-path", "rotate", false)
+              this.followFocusPoint = true;
+          })
+
+          this.lerpDummy = new THREE.Object3D();
+          this.focusPoint = new THREE.Vector3(0, 3, 0);
+        }, 
+        tick: function() {
+          if (!this.followFocusPoint) return;
+          this.lerpDummy.position.copy(this.rig.object3D.position);
+          this.lerpDummy.lookAt(this.focusPoint);
+          this.rig.object3D.quaternion.slerp(this.lerpDummy.quaternion, 0.2)
+        }
+      })
+    </script>
+    <style>
+    #info {
+        position: fixed;
+        z-index: 1000;
+        text-align: center;
+        width: 100%;
+        margin: 0 auto;
+        background-color: rgb(233, 143, 25);
+    }
+
+    #text {
+    	width: 25%;
+	    height: 100vh;
+        position: fixed;
+        z-index: 1000;
+        background-color: blanchedalmond;
+        top: 0px;
+    }  
+    </style>
+  </head>
+  
+  <body>
+    <div id="info">
+      <h3>scroll-path</h3>
+      <p>Based on the <a href="https://github.com/protyze/aframe-alongpath-component">along-path component by Jan
+          Azzati</a>. Uses the <a href="https://idiotwu.github.io/smooth-scrollbar/">smooth-scrollbar</a><br>
+        Scroll the text to move the camera<br>
+        Awesome models by <a
+          href="https://sketchfab.com/olmopotums">olmopotums</a><a href="http://creativecommons.org/licenses/by/4.0/">(CC-BY-4.0)</a><br>
+        Source code <a href="https://github.com/gftruj/webzamples/tree/master/PlanetVoodoo/scroll-path/smooth-scroll-path">here</a>
+      </p>
+    </div>
+    <a-scene background="color: black" ui-logic>
+      <a-assets>
+        <a-asset-item id="craftsman-model" src="assets/craftsman/scene.gltf"></a-asset-item>
+        <a-asset-item id="patch-model" src="assets/patch_of_heaven/scene.gltf"></a-asset-item>
+      </a-assets>
+      <a-curve id="track1" type="Custom">
+        <a-curve-point position="0 1 13" type="Line"></a-curve-point>
+        <a-curve-point id="second-point" position="0 1 10" type="Line"></a-curve-point>
+        <a-curve-point id="third-point" position="0 1 8" type="CatmullRom" toggle-look-at></a-curve-point>
+        <a-curve-point position="-2 1 6" ></a-curve-point>
+        <a-curve-point position="-5 1 2"></a-curve-point>
+        <a-curve-point position="-5 1 -2"></a-curve-point>
+        <a-curve-point position="-4 1 -4"></a-curve-point>
+        <a-curve-point position="-2 1 -6"></a-curve-point>
+      </a-curve>
+  
+      <a-draw-curve curveref="#track1" material="shader: line; color: blue;"></a-draw-curve>
+      <a-entity gltf-model="#patch-model" position="0 0 -0.6"  scale="0.01 0.01 0.01"></a-entity>
+      <a-entity gltf-model="#craftsman-model" position="0 0 2.22" scale="0.05 0.05 0.05"></a-entity>
+      <a-entity id="camera-rig" 
+                smooth-scroll-path="scrollableElement: #text;
+                                    triggerRadius: 0.25;
+                                    curve: #track1; 
+                                    rotate: true; smoothRotation: true; 
+                                    debugTriggers: true">
+        <a-entity rotation="0 180 0">
+          <a-entity camera></a-entity>
+        </a-entity>
+     </a-entity>
+    </a-scene>
+    <div id="text">
+        <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin blandit aliquam nunc, eu feugiat sapien eleifend nec. Mauris pulvinar dictum ante at accumsan. Ut faucibus eleifend tortor, at aliquet lectus hendrerit nec. In leo ligula, consequat id accumsan et, rutrum id velit. Suspendisse lobortis viverra libero, rutrum auctor velit condimentum ac. Ut hendrerit nibh et pharetra feugiat. Cras facilisis turpis sit amet justo lacinia, vitae elementum sapien ultricies.
+        
+        Aliquam ut commodo dui. Mauris justo metus, fringilla id mattis ac, tempor sed dolor. Nunc gravida urna ac posuere dignissim. Nullam id sodales lectus. Donec ipsum mauris, vestibulum dignissim venenatis non, tincidunt sed lorem. Integer tempus, eros nec molestie volutpat, nunc lorem malesuada eros, ac luctus turpis ex in lectus. Morbi porta venenatis mi a aliquet.
+        
+        Aenean quam felis, molestie vehicula libero vitae, dictum facilisis sem. Nulla euismod egestas libero, gravida suscipit dolor efficitur vel. Vivamus feugiat dui ac sodales rutrum. Etiam a turpis scelerisque, aliquam neque non, faucibus augue. Aliquam nec augue porttitor, interdum ligula sed, luctus velit. Vivamus ac blandit arcu. Proin orci felis, aliquam eu risus sed, faucibus elementum velit.
+        
+        Nam sed faucibus magna, id placerat augue. Etiam tortor orci, imperdiet in laoreet nec, lobortis ut justo. Vivamus nisl lorem, scelerisque vitae ullamcorper ut, ornare vestibulum mauris. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Nam dapibus convallis massa vitae faucibus. Nam in lacinia ante. Etiam eu pellentesque dolor.
+        
+        Nam molestie velit volutpat sapien vestibulum, et lobortis ante facilisis. In rutrum id ipsum nec vulputate. Fusce nec imperdiet libero, in auctor sem. Nunc eget feugiat felis. Morbi convallis nec nulla eu faucibus. Curabitur quis nisl semper, tincidunt odio et, volutpat sem. Ut sed blandit lectus, quis ornare quam. Nullam lorem nibh, ultrices tempus hendrerit eget, egestas ac est. Nullam finibus pharetra lacus, id tincidunt purus congue nec. Nulla facilisi. Nulla id est et justo accumsan auctor id eu nisi. Integer et ante eros. Vivamus sed mi fringilla, pellentesque odio vel, hendrerit velit. Mauris gravida a risus et molestie.
+        
+        Aliquam mattis dolor ut turpis aliquet, eget aliquam turpis lobortis. Nam condimentum purus in orci ultricies interdum sed vitae libero. Pellentesque pretium lacinia massa. Suspendisse potenti. Cras posuere ultrices urna, sit amet aliquam arcu. Praesent lacus tortor, placerat ut turpis nec, semper rutrum felis. Curabitur eleifend erat non enim faucibus, quis aliquam arcu vulputate. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae;
+        
+        Integer at nisi non ex accumsan pharetra. Fusce rutrum nisi quis dolor pretium lobortis. Ut euismod tincidunt sem sed venenatis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Duis non tincidunt mi. Donec id rhoncus sem. Interdum et malesuada fames ac ante ipsum primis in faucibus. Vestibulum eleifend, leo eu pellentesque euismod, lectus eros egestas lacus, ut lacinia est magna maximus lacus. Aliquam lobortis, odio a dapibus luctus, tellus quam euismod risus, vel porttitor eros ligula ut nisl. Nulla magna tortor, suscipit in finibus dignissim, sagittis id sapien. Praesent finibus feugiat facilisis. Fusce convallis auctor magna porta sodales. Cras in porttitor felis. Sed imperdiet orci a urna fermentum rhoncus. Duis iaculis, quam non tincidunt pharetra, nunc dui ullamcorper elit, quis ornare metus lorem non risus. Donec ultricies aliquet dignissim.
+        
+        Nullam posuere at dui et rutrum. Nam faucibus auctor vulputate. Fusce vel maximus metus. Quisque in ipsum posuere, mollis risus nec, imperdiet turpis. Maecenas semper sem laoreet erat imperdiet, id convallis magna dictum. Vestibulum porttitor pellentesque ligula ut facilisis. Quisque pellentesque bibendum pretium. Vestibulum posuere lacinia ligula non imperdiet. Cras posuere maximus iaculis. Fusce pharetra, purus nec pulvinar sagittis, risus augue aliquet odio, a vehicula nulla felis id dolor.
+        
+        Aliquam ut arcu neque. Sed vitae turpis nisl. Duis in nulla facilisis eros facilisis blandit. Pellentesque mattis odio nunc, et posuere risus tempor blandit. Nulla orci est, ornare ut lacinia a, interdum non magna. Sed elementum commodo quam ac interdum. Suspendisse in neque tortor. Aenean tincidunt condimentum diam id aliquet. Aliquam eu diam vitae mi eleifend consequat nec nec ipsum. Mauris ut risus dapibus, molestie diam vel, faucibus nisl. Pellentesque vitae nunc id mauris interdum iaculis quis in est. Sed tellus nunc, dignissim nec lacus et, fringilla blandit lacus. Nunc ac velit justo. Morbi et eleifend quam, non euismod odio. Donec aliquet purus velit, vitae tempus felis facilisis id. Phasellus pretium sapien vel massa posuere ultrices.
+        
+        Mauris bibendum odio ac mi vestibulum, gravida ultrices ipsum porttitor. Aliquam tincidunt bibendum est id semper. Sed pellentesque, leo nec faucibus finibus, sem eros sagittis nulla, et maximus mi felis eu magna. Pellentesque felis quam, efficitur eget suscipit interdum, laoreet id nunc. Nulla scelerisque consequat venenatis. Donec quis lorem ultricies, posuere leo ut, sodales diam. Aliquam quis dolor eu eros sodales eleifend. Nunc elementum lobortis libero a gravida. Etiam rhoncus lorem vel imperdiet vestibulum. Aenean in ipsum sit amet odio iaculis consectetur. Vivamus augue nibh, fringilla vel vehicula ut, aliquam ut lectus. Proin cursus dictum hendrerit. Quisque porttitor tortor quis dui tristique molestie sit amet nec lacus. Aenean varius at arcu eu hendrerit. Phasellus hendrerit sem odio, et ullamcorper lectus aliquam eu.
+        
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec faucibus elit facilisis, eleifend enim commodo, suscipit risus. Morbi viverra vestibulum elit, ut sodales risus. Nam ultrices sit amet lorem ac molestie. Nunc lorem odio, vulputate et tellus ac, luctus finibus mauris. Aliquam et lectus nibh. Pellentesque porta aliquam dolor, non ornare justo gravida non. Quisque pulvinar rutrum sem vel pellentesque. Morbi tempor, purus finibus mollis venenatis, nibh purus faucibus tellus, sit amet feugiat massa est a ante. Morbi non tempor magna.
+        
+        Aliquam sed condimentum nunc. Nulla iaculis sem sed dolor interdum pulvinar. Praesent quis mi nunc. Etiam mattis elit eget auctor pellentesque. Fusce hendrerit ipsum magna, ac maximus mi vestibulum nec. Donec tempus ipsum nec porta blandit. Ut feugiat elit vitae sem lacinia laoreet. Integer ultricies diam in tempus sodales. Aliquam nec cursus felis.
+        
+        Quisque a mauris ipsum. Praesent nec massa sit amet risus dictum ullamcorper sit amet ut nunc. Duis ipsum odio, malesuada vitae tellus sed, luctus bibendum magna. Phasellus in mattis massa. Pellentesque commodo fermentum mi a dignissim. Vestibulum pharetra arcu massa, in venenatis lorem vestibulum vel. Sed non enim facilisis, tempor lacus at, dignissim justo. Quisque sollicitudin, enim quis hendrerit aliquet, nibh mi suscipit massa, quis faucibus purus risus vitae ex. Mauris finibus nisi risus, vitae placerat odio lacinia vitae. Quisque pretium nunc vel faucibus efficitur. Sed non dignissim ex, eu placerat sem. Suspendisse faucibus laoreet quam eget convallis. Integer aliquam nibh nisi, at ultrices sapien pharetra eget. Aliquam eget pulvinar lectus. Donec ut scelerisque velit.
+        
+        Cras id mauris diam. Donec libero risus, porta at faucibus sit amet, eleifend ac justo. Nulla pulvinar diam at lacus fringilla, eget sodales dui posuere. Integer in velit rutrum, iaculis mi ut, tempor nulla. Morbi hendrerit dictum consectetur. Maecenas non ex ac neque gravida consequat. Aliquam et ligula vel libero pharetra porttitor. In ut dolor et ex vehicula faucibus. Nullam pulvinar nunc sit amet eros auctor, eu venenatis dui tincidunt. Nulla vitae condimentum arcu. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Donec gravida diam vitae lacus varius, sit amet laoreet ex ullamcorper.
+        
+        Phasellus semper ligula ipsum, a condimentum justo porttitor egestas. In sodales nunc id mauris sagittis faucibus. Donec mattis nisi eget dui porta, ac ullamcorper felis facilisis. Nulla nec suscipit lacus. Phasellus et ipsum a lectus ultrices malesuada et non ligula. Nam elit nibh, ultrices finibus lectus id, pellentesque consectetur diam. Curabitur nec tristique risus.
+        
+        Pellentesque eget rhoncus neque, eu ullamcorper libero. Quisque quis pretium nisl. Donec bibendum consectetur ipsum, at ultricies purus gravida in. Praesent sed cursus erat. Etiam eleifend dignissim lectus, quis finibus nulla accumsan et. Vivamus in massa tempor, malesuada sapien a, ultrices ipsum. Praesent pellentesque sodales lectus, a lobortis tortor pretium ut. Quisque pharetra erat eget libero pharetra blandit. Praesent vitae enim mi. Aliquam gravida nibh porta, porttitor ligula nec, commodo est.
+        
+        Sed at augue mi. Sed ut lobortis metus, at tempus tellus. Duis non risus posuere, iaculis nisl sit amet, facilisis erat. Integer ultricies felis sed dolor commodo suscipit. Suspendisse aliquam egestas posuere. Quisque nec iaculis lacus. Aenean euismod massa in rhoncus varius.
+        
+        Vivamus nec purus facilisis dui tristique malesuada nec vel neque. Mauris sem quam, egestas non sagittis in, convallis sit amet orci. Donec sollicitudin sit amet neque mollis consectetur. Morbi ultricies eu sapien vitae tristique. Mauris vel dolor ligula. Quisque imperdiet faucibus nisl, nec ornare orci pellentesque non. Donec erat lectus, pretium quis sem sed, finibus pretium sem. Etiam facilisis vitae risus at cursus. Morbi volutpat vulputate sem, vel gravida felis rhoncus malesuada. Duis sem leo, scelerisque in bibendum vel, sollicitudin et ante. Nullam suscipit odio at pretium feugiat. Donec id semper mauris. Vestibulum a pulvinar libero. Phasellus in justo sit amet dolor fringilla sagittis iaculis non dui.
+        
+        Donec vel tortor maximus, tincidunt dui luctus, eleifend ligula. Nullam cursus viverra est, eu fermentum mi dignissim euismod. In nec nisi mauris. Vestibulum quis ornare mauris, pulvinar dignissim risus. Etiam ut orci turpis. Nulla imperdiet augue nec lacinia maximus. Ut dignissim lacinia ultrices. Etiam vehicula fringilla leo, quis commodo mi pretium maximus. Pellentesque vitae nunc lacus. Morbi blandit mi a arcu mollis, nec volutpat tortor malesuada. Nulla ultricies eros ut congue dictum. Pellentesque sollicitudin ut lacus quis dignissim. Vivamus nec orci in ex pharetra pellentesque non et nisl. Phasellus feugiat, nulla vel scelerisque facilisis, velit odio pellentesque quam, non pretium ligula nunc quis lorem. Aliquam ullamcorper non neque id varius. Sed ornare sollicitudin tristique.
+        
+        Nunc tempus accumsan nisi, in fringilla diam condimentum vel. Curabitur feugiat scelerisque porta. Proin vel congue velit. Nam eu auctor ipsum, fermentum feugiat nunc. Aenean mattis nibh sit amet dapibus aliquet. Suspendisse ut turpis mollis, porta lacus sit amet, ultricies erat. Maecenas vitae consectetur ipsum. Proin congue eros mauris, a facilisis purus feugiat sit amet. 
+        </p>
+        </div>
+
+  </body>
