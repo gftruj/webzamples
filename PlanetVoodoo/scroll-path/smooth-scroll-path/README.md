@@ -2,7 +2,7 @@
 <a href="https://planetvoodoo.org/"> <img src="../../media/planet-voodoo.png" height="200" /></a>
 <hr>
 
-### scroll-path component
+### smooth-scroll-path component
 ![scroll-path](assets/showoff.gif "scroll-path")
 
 Based on the <a href="https://github.com/protyze/aframe-alongpath-component">`along-path` component</a> by Jan Azzati.
