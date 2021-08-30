@@ -8,8 +8,8 @@
 Based on the <a href="https://github.com/protyze/aframe-alongpath-component">`along-path` component</a> by Jan Azzati.
 
 Major changes include customizing the curve type between points, and using the <a href="https://idiotwu.github.io/smooth-scrollbar/">smooth-scrollbar</a>.
-![scroll-path](assets/showoff.jpg "scroll-path")
+![scroll-path](assets/showoff.png "scroll-path")
 
 ### Example
 
-Check it out [here](https://gftruj.github.io/webzamples/PlanetVoodoo/scroll-path/smooth-scroll-path).
+Check it out [here](https://gftruj.github.io/webzamples/PlanetVoodoo/scroll-path/smooth-scroll-path). 
