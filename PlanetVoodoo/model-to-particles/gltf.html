@@ -1,0 +1,48 @@
+<html>
+<head>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://gftruj.github.io/webzamples/PlanetVoodoo/model-to-particles/lib/animationmixer.js"></script>
+    <script src="particle-model-full.js"></script>
+    <script src="stormtrooper.js"></script>
+
+    <style>
+        #info {
+            position: fixed;
+            z-index: 1000;
+            text-align: center;
+            width: 100%;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="info">
+        <p>Drone by <a href="https://sketchfab.com/3d-models/mech-drone-8d06874aac5246c59edb4adbe3606e0e">Willy Decarpentrie</a>
+        <a href="https://creativecommons.org/licenses/by/4.0/">(CC)</a><br>
+        Stormtrooper by <a href="https://sketchfab.com/strykerdoesgames">StrykerDoesAnimationis </a>
+        <a href="https://creativecommons.org/licenses/by/4.0/">(CC)</a><br>
+        Source code <a href="https://github.com/gftruj/webzamples/tree/master/PlanetVoodoo/model-to-particles/">here</a>
+    </p>
+    </div>
+    <a-scene stats>
+        <a-assets>
+            <a-asset-item id="mech-model" src="https://gftruj.github.io/webzamples/PlanetVoodoo/model-to-particles/assets/mech_drone/scene.gltf"></a-asset-item>
+            <a-asset-item id="stormtrooper-model" src="https://gftruj.github.io/webzamples/PlanetVoodoo/model-to-particles/assets/stormtrooper/stormtrooper.dae"></a-asset-item>
+        </a-assets>
+
+        <!-- Indexed geometries geometries -->
+        <a-text color="black" position="-2 3.2 -8" value=".gltf models with indexed geometry"></a-text>
+        <a-entity position="-2 0.5 -8" scale="0.005 0.005 0.005" rotation="0 180 0" gltf-model="#mech-model"
+            animation-mixer></a-entity>
+        </a-entity>
+        <a-entity position="-0 0.5 -8" scale="0.005 0.005 0.005" rotation="0 180 0"
+        particle-model="src: #mech-model; scatter: true; scattercount: 5000 " animation-mixer>
+        </a-entity>
+        <a-entity position="2 0.5 -8" scale="0.005 0.005 0.005" rotation="0 180 0"
+        particle-model="src: #mech-model; " animation-mixer>
+        </a-entity>
+ <a-sky color="green"></a-sky>
+    </a-scene>
+</body>
+</html>
