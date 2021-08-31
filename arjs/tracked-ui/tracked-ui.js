@@ -1,4 +1,3 @@
-// the CORE tracking component
 AFRAME.registerComponent("tracked-ui", {
 	schema: {
 		element: {default: ""},
