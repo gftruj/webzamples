@@ -4,12 +4,10 @@
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
   <!-- we import arjs version without NFT but with marker + location based support -->
   <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+  <script src="./tracked-ui.js"></script>
   <script>
-    // the CORE tracking component
-    AFRAME.registerComponent("tracked-ui", {
+    AFRAME.registerComponent("ui-logic", {
         init: function() {
-            // references
-            this.uiDiv = document.querySelector("#UI")
             const rangebtn = document.querySelector("#rangeicon")
             const coinbtn = document.querySelector("#coinicon")
             const rangemodel = document.getElementById("range")
@@ -28,26 +26,6 @@
             coinbtn.addEventListener("click", e => {
                 notifyEntities("showmarket")
             })
-
-            // THREE.Vector3 helper. 
-            this.vector = new THREE.Vector3();
-        },
-        tick: function() {
-            if (!this.uiDiv) return;
-            const cam = this.el.sceneEl.camera
-
-            // show the UI only if the marker is visible
-            this.uiDiv.style.display = this.el.object3D.visible ? "block" : "none"
-
-            // project the current marker position
-            this.vector.copy(this.el.object3D.position).project(cam);
-            // the vector is now normalized, so we need to adjust it to the dimensions
-            this.vector.x = ( this.vector.x + 1) * window.innerWidth / 2;
-            this.vector.y = - ( this.vector.y - 1) * window.innerHeight / 2;
-            this.vector.z = 0;
-            // apply the vector to the style
-            this.uiDiv.style.left = this.vector.x + 'px';
-            this.uiDiv.style.top = (this.vector.y + 200) + 'px';
         }
     })
 
@@ -98,7 +76,7 @@
             <a-asset-item id="market-model" src="assets/market/scene.gltf"></a-asset-item>
             <a-asset-item id="range-model" src="assets/range/scene.gltf"></a-asset-item>
         </a-assets>
-        <a-marker smooth="true" preset="hiro" tracked-ui>
+        <a-marker smooth="true" preset="hiro" tracked-ui="element: #UI; offset: 0 200" ui-logic>
             <a-entity id="market" scale="0.05 0.05 0.05" gltf-model="#market-model" linear-encoding
             animation__show="property: scale; to:0.05 0.05 0.05; dur: 250; startEvents: showmarket"
             animation__hide="property: scale; to:0.0001 0.0001 0.0001; dur: 100; startEvents: showrange"
