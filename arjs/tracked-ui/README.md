@@ -1,4 +1,16 @@
-HTML div following a hiro marker.
+## tracked-ui
+
+Place the component on the marker element, and provide a html element which should follow the marker!
+
+### usage 
+    
+      <script src="https://gftruj.github.io/webzamples/arjs/tracked-ui/tracked-ui.js"></script>
+      <div id="UI"></div>
+      <a-scene>
+         <!-- element: html element selector, offset: x,y offset in pixels -->
+         <a-marker tracked-ui="element: #UI; offset: 0 200"></a-marker>
+
+### example
 
 Check it out [here](https://gftruj.github.io/webzamples/arjs/tracked-ui/)<br><br>
 <img src="assets/screen.jpg" alt="screen" width="200"/>
