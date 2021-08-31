@@ -29,10 +29,40 @@ The component is used with models with both indexed and non-indexed geometries i
 
 ![stormtroopers](./../media/stormtroopers.gif "stormtroopers")
 
+### particle-model
 
-#### todo
-- pre-compute geometries ( FPS vs Memory usage).
-- throttle tick
-- particle density limits
-- ignore vertices that are closer than `d`
-- scatter instead of mapping vertices to points
+Loads the model, creates its own skinned mesh, and uses it instead.
+
+#### Usage
+
+1. Import the script, 
+2. add the component,
+3. point to the model asset
+
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://gftruj.github.io/webzamples/PlanetVoodoo/model-to-particles/lib/animationmixer.js"></script>
+    <script src="particle-model-full.js"></script>
+    <a-scene>
+        <a-assets>
+          <a-asset-item id="stormtrooper-model" src="https://gftruj.github.io/webzamples/PlanetVoodoo/model-to-particles/assets/stormtrooper/stormtrooper.dae"></a-asset-item>
+        </a-assets>
+       <a-entity position="-2 0 -8" particle-model="src: #stormtrooper-model; scatter: true" scale="0.8 0.8 0.8" animation-mixer></a-entity>
+    </a-scene>
+
+**Properties**
+
+| name          | description    | default  |
+| ------------- |:-------------: | -----:|
+| src           | asset selector |  "" |
+| scatter       | whether the points should be scattered       |  false |
+| scatterCount  | particle count                               |  5000 |
+| color         | particle color |  0xff0000 |
+
+Emits the `model-loaded` like other loaders - which can be used by other components, like the `animation-mixer`.
+        
+#### Example
+
+[gltf models](https://gftruj.github.io/webzamples/PlanetVoodoo/model-to-particles/gltf.html), and [collada models](https://gftruj.github.io/webzamples/PlanetVoodoo/model-to-particles/collada.html):
+
+![stormtroopers](./assets/trooper.gif "stormtroopers")
+Left to right - scattered points, points at vertices positions, original model.
