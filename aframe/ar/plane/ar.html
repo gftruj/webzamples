@@ -1,0 +1,139 @@
+<html>
+
+<head>
+    <script
+        src="https://cdn.jsdelivr.net/gh/aframevr/aframe@8137d646647f5ca16e1bac7d03b587994c813496/dist/aframe-master.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.min.js"></script>
+    <script src="https://gftruj.github.io/webzamples/PlanetVoodoo/scroll-path/aframe-curve-component.js"></script>
+    <script src="https://gftruj.github.io/webzamples/PlanetVoodoo/scroll-path/scroll-path.js"></script>
+
+    <script src="ar-shadow-helper.js"></script>
+    <script src="ar-ui.js"></script>
+
+    <link rel="stylesheet" href="styles.css">
+    <script>
+        AFRAME.registerComponent("arcursor", {
+            init: function () {
+
+                this.el.sceneEl.addEventListener('ar-hit-test-select', e => {
+                    this.ready = true;
+
+                    const raycaster = new THREE.Raycaster();
+                    const mouse = new THREE.Vector2();
+
+                    document.body.addEventListener("click", e => {
+                        const camera = this.el.sceneEl.camera;
+                        raycaster.ray.origin.setFromMatrixPosition(this.mtx);
+                        raycaster.ray.direction.set(0, 0, - 1).transformDirection(this.mtx);
+
+                        // calculate objects intersecting the picking ray
+                        const intersects = raycaster.intersectObjects(this.el.sceneEl.object3D.children);
+
+                        for (let i = 0; i < intersects.length; i++) {
+                            //if (intersects[i].object.el) console.log(intersects[i])
+                        }
+                    })
+                })
+
+                this.mtx = new THREE.Matrix4();
+            },
+            tick: function () {
+                if (!this.ready) return;
+                const scene = this.el.sceneEl;
+                const frame = scene.frame;
+                const renderer = scene.renderer;
+
+                var refSpace = renderer.xr.getReferenceSpace();
+                var xrViewerPose = frame.getViewerPose(refSpace);
+                var view = xrViewerPose.views[0]
+
+                this.mtx.fromArray(view.transform.matrix)
+            }
+        })
+
+        AFRAME.registerComponent("flight-logic", {
+            init: function() {
+                const model = document.getElementById("plane")
+                model.addEventListener("model-loaded", e => {
+                    this.plane = model.getObject3D("mesh")
+                })
+                const targetpos = new THREE.Vector3(0,0,0);
+                const planepos = new THREE.Vector3(0,0,0);
+
+                var firstIgnore = true; // hacky 'dont fly to the button' workaround
+                this.el.sceneEl.addEventListener('ar-hit-test-select', e => {
+                    if (!this.el.sceneEl.components["ar-ui"].flightmode) return;
+                    if (firstIgnore) {
+                        firstIgnore = !firstIgnore
+                        return;
+                    }
+                    this.el.object3D.getWorldPosition(targetpos)  
+                    planepos.copy(model.getObject3D("mesh").position)
+
+                    plane.object3D.worldToLocal(targetpos);
+                    targetpos.y = planepos.y;
+                })
+
+                this.targetpos = targetpos;
+                this.planepos = planepos;
+                this.dummy = new THREE.Object3D();
+            }, tick: function() {
+                if (this.targetpos.distanceTo(this.planepos) < 0.01) return;
+
+                this.plane.position.lerp(this.targetpos, 0.05)
+                this.dummy.position.copy(this.planepos);
+                this.dummy.lookAt(this.targetpos)
+                this.plane.quaternion.slerp(this.dummy.quaternion, 0.35)
+            }
+        })
+
+    </script>
+</head>
+
+<body>
+    <a-scene stats webxr="overlayElement:#dom-overlay;" background="directionalLight:#dirlight;color:skyblue;"
+        ar-hit-test="target:#my-objects;type:footprint;footprintDepth:0.2;" shadow="type: pcfsoft"
+        gltf-model="dracoDecoderPath: https://cdn.jsdelivr.net/npm/three@0.129.0/examples/js/libs/draco/gltf/;" 
+        arcursor
+        ar-ui>
+
+        <a-assets>
+            <a-asset-item id="plane-model" src="./assets/plane/scene.gltf"></a-asset-item>
+            <a-asset-item id="plane-noanim-model" src="./assets/plane/plane-without-animation.glb"></a-asset-item>
+        </a-assets>
+
+            <a-curve id="track">
+                <a-curve-point id="firstPoint" position="0 0 0"></a-curve-point>
+                <a-curve-point id="orientationalPoint" position="0 0 0"></a-curve-point>
+                <a-curve-point id="lastPoint" position="0 0 0"></a-curve-point>
+            </a-curve>
+
+            <a-draw-curve curveref="#track" material="shader: line; color: blue;" visible="false"></a-draw-curve>
+
+
+            <a-light id="dirlight" auto-shadow-cam intensity="0.7" light="castShadow:true;type:directional"
+                position="10 10 10"></a-light>
+            <a-entity hide-on-enter-ar environment="lighting:none;shadow:true;"></a-entity>
+
+            <!-- This plane is only visible in AR and follows the given target to provide it with shadows.-->
+            <a-entity material="shader:shadow;" visible="false" geometry="primitive:shadow-plane;"
+                shadow="cast:false;receive:true;" ar-shadow-helper="target:#my-objects;light:#dirlight;"></a-entity>
+
+            <!-- This is hidden when the user first enters ar but becomes visible when the user can place it -->
+            <a-entity hide-on-enter-ar shadow id="my-objects" scale="0.2 0.2 0.2" position="0.2 0 -0.4">
+                <a-entity id='plane' position="0 2 0" gltf-model="#plane-model" animation-mixer></a-entity>
+            </a-entity>
+
+            <a-entity hide-on-enter-ar shadow id="point" scale="0.2 0.2 0.2" position="0.2 0 -0.4">
+                <a-sphere scale="0.1 0.1 0.1" material="transparent: true; opacity: 0.25" flight-logic></a-sphere>
+            </a-entity>
+
+        </a-scene>
+        <div id="dom-overlay">
+            <div id="dom-overlay-message">Enter AR to start.</div>
+            <button class="button hidden disabled">flight mode</button>
+            <p></p>
+        </div>
+</body>
+
+</html>
