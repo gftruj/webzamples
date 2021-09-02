@@ -23,15 +23,17 @@
 
                     document.body.addEventListener("click", e => {
                         const camera = this.el.sceneEl.camera;
-                        raycaster.ray.origin.setFromMatrixPosition(this.mtx);
-                        raycaster.ray.direction.set(0, 0, - 1).transformDirection(this.mtx);
+                        
+                        /* Raycasting stuff "in front" of the camera failed try */
+                        //raycaster.ray.origin.setFromMatrixPosition(this.mtx);
+                        //raycaster.ray.direction.set(0, 0, - 1).transformDirection(this.mtx);
 
                         // calculate objects intersecting the picking ray
-                        const intersects = raycaster.intersectObjects(this.el.sceneEl.object3D.children);
+                        //const intersects = raycaster.intersectObjects(this.el.sceneEl.object3D.children);
 
-                        for (let i = 0; i < intersects.length; i++) {
+                        //for (let i = 0; i < intersects.length; i++) {
                             //if (intersects[i].object.el) console.log(intersects[i])
-                        }
+                        //}
                     })
                 })
 
@@ -48,9 +50,11 @@
                 var view = xrViewerPose.views[0]
 
                 this.mtx.fromArray(view.transform.matrix)
+                // try raycasting with a new camera with this matrix and the viewerpose projection matrix?
             }
         })
 
+        // this would probably look better with splines
         AFRAME.registerComponent("flight-logic", {
             init: function() {
                 const model = document.getElementById("plane")
