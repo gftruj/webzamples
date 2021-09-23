@@ -1,0 +1,99 @@
+<html>
+  <head>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="aframe-stereo-component.js"></script>
+    <style>
+      #ui {
+        position: fixed;
+        z-index: 100;
+        bottom: 50px;
+      }
+      #info {
+        position: fixed;
+        z-index: 1000;
+        text-align: center;
+        width: 100%;
+        margin: 0 auto;
+      }
+    </style>
+    <script>
+    AFRAME.registerComponent("gallery-controller", {
+      init: function() {
+        const eyes = document.querySelectorAll("[stereo]");
+        const images = document.querySelectorAll(".ui");
+
+        const handleVrMode = e => {
+          if (!this.el.sceneEl.is('vr-mode') &&AFRAME.utils.device.isMobile ()) {
+            this.el.sceneEl.enterVR();
+          }
+        }
+
+        var newImage = "";
+        images.forEach(img => {
+          img.addEventListener("click", evt => {
+            handleVrMode()
+            newImage = evt.target.getAttribute("src");
+            eyes.forEach(eye => {
+              eye.emit("swap")
+            })
+          }, false)
+        })
+
+        eyes.forEach(eye => {
+          eye.addEventListener("animationcomplete__fadeout", evt => {
+            eye.setAttribute("material", "src", newImage);
+            eye.emit("show");
+          })
+          
+          eye.addEventListener("animationcomplete__fadein", evt => {
+            interactable = true;
+          })
+        })
+      }
+    })
+    </script>
+  </head>
+  <body>
+    <div id="info">
+      <p>Look down at the images.<br>Click them to enter VR / change the image<br>
+      Source code <a href="https://github.com/gftruj/webzamples/tree/master/aframe/stereoscopic/">here</a>
+  </p>
+  </div>
+    <a-scene vr-mode-ui="enabled: false" raycaster="objects: .ui">
+      <a-assets>
+        <img          id="synagogue"      src="assets/Stereoscopic_postcard_of_the_Geneva_synagogue.jpg">
+        <img          id="charles_street" src="assets/Charles_Street_Mall,_Boston_Common,_by_Soule,_John_P.,_1827-1904_3.jpg">
+        <img          id="college"        src="assets/772_College_Street,_(Johnston_Street_then)_Fleming_D._Tinsley_house,_razed_1963,_circa_1870s_-_DPLA_-_3eea4545c6311e132e30b88adc4a8b2c.jpg">
+      </a-assets>
+      <a-entity camera look-controls position="0 1.6 0" stereocam="eye:left;">
+          <a-entity cursor="fuse: false"
+          position="0 0 -0.3"
+          geometry="primitive: ring; radiusInner: 0.002; radiusOuter: 0.003"
+          material="color: #9916F5; shader: flat">
+        </a-entity>
+      </a-entity>
+      <!-- in VR mode, the first box is displayed only in the left eye, the second one in the right eye -->
+      <a-entity gallery-controller>
+        <a-plane
+          material="repeat: 0.5 1"
+          position="0 1.6 -.25"
+          stereo="eye:left"
+          animation__fadeout="property: material.opacity; from: 1.0; to: 0.01; dur: 250; startEvents: swap"
+          animation__fadein="property: material.opacity; from: 0.01; to: 1.0; dur: 250; startEvents: show"
+        ></a-plane>
+        <a-plane
+          material="repeat: 0.5 1; offset: 0.5 0"
+          position="0 1.6 -.25"
+          stereo="eye: right"
+          animation__fadeout="property: material.opacity; from: 1.0; to: 0.01; dur: 250; startEvents: swap"
+          animation__fadein="property: material.opacity; from: 0.01; to: 1.0; dur: 250; startEvents: show"
+        ></a-plane>
+      </a-entity>
+
+      <a-image src="#synagogue"       class="ui" scale="0.4 0.2 0.5" position="-0.5 1 0"  rotation="-70 0 0"></a-image>
+      <a-image src="#charles_street"  class="ui" scale="0.4 0.2 0.5" position="0 1 0"     rotation="-70 0 0"></a-image>
+      <a-image src="#college"         class="ui" scale="0.4 0.2 0.5" position="0.5 1 0"   rotation="-70 0 0"></a-image>
+      <a-plane color="black" position="0 1 -0.001" rotation="-70 0 0" scale="1.5 0.3 1"></a-plane>
+    </a-scene>
+  </body>
+</html>
