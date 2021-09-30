@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+<!-- we import arjs version without NFT but with marker + location based support -->
+<script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+<script src="https://gftruj.github.io/webzamples/arjs/tracked-ui/tracked-ui.js"></script>
+<script>
+    AFRAME.registerComponent("ui-logic", {
+        init: function () {
+            const video_element = document.querySelector("[material]")
+            const ui = document.querySelector("#UI")
+            ui.addEventListener("click", e => {
+                video_element.emit("reposition")
+            })
+        }
+    })
+
+    // position yourself at the marker position
+    AFRAME.registerComponent('video-logic', {
+        init: function () {
+            const marker_element = document.querySelector("a-marker");
+            const vid = document.querySelector("#vid")
+            vid.pause()
+
+            const offset = new THREE.Vector3(0, 0.5, 0)
+            this.el.addEventListener("reposition", evt => {
+                this.el.object3D.position.copy(marker_element.object3D.position)
+                this.el.object3D.rotation.copy(marker_element.object3D.rotation)
+            })
+
+            marker_element.addEventListener("markerFound", evt => {
+                if (vid.paused) {
+                    setTimeout(evt => {
+                        this.el.emit("reposition")
+                        vid.play();
+                    }, 500)
+                }
+            })
+        }
+    });
+</script>
+
+<body style="margin : 0px; overflow: hidden;">
+    <!-- info + CREDITS -->
+    <div style='position: fixed; width:100%; text-align: center; z-index: 1; left: 0;
+        right: 0; background-color: rgba(75, 2, 59, 0.363);'>
+        <h3>video stay-on-screen</h3>
+        works with a hiro marker<br>
+        Video (c) copyright 2008, Blender Foundation / www.bigbuckbunny.org
+        <br>
+        Source code <a href="https://github.com/gftruj/webzamples/tree/master/arjs/stay-on-screen.html">here</a>
+    </div>
+
+
+    <!-- UI -->
+    <div id="UI" style="position: fixed; z-index: 1000; display: none;">
+        <div style="margin-left: -48px;border:1px solid black; background-color: rgba(75, 2, 59, 0.363);">
+            <p>REPOSITION VIDEO</p>
+        </div>
+    </div>
+
+
+    <!-- SCENE -->
+    <a-scene embedded arjs renderer="logarithmicDepthBuffer: true" vr-mode-ui="enabled: false">
+        <a-assets>
+            <video id="vid" src="assets/video/trailer_400p.ogg" loop="true" crossorigin>
+        </a-assets>
+
+        <a-box material="src: #vid; opacity: 0.5; transparent: true" video-logic></a-box>
+        <a-marker smooth="true" preset="hiro" ui-logic tracked-ui="element: #UI; offset: 0 200">
+        </a-marker>
+        <a-entity camera></a-entity>
+    </a-scene>
+</body>
+
+</html>
