@@ -1,0 +1,3 @@
+      "author": "stageweight (https://sketchfab.com/stageweight)",
+      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+      "source": "https://sketchfab.com/models/16be6e9528c743b190a4b2ecb91dbce9",
