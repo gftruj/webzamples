@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+<script>
+    // register component
+    AFRAME.registerComponent("foo", {
+        // init callback
+        init: function () {
+            const root_object = this.el.object3D; // underlying threejs object
+            const plane_element = document.getElementById("cover"); // the plane element
+
+            // create once and reuse
+            var direction_vector = new THREE.Vector3();
+            var position_vector = new THREE.Vector3();
+            var world_pos = new THREE.Vector3();
+
+            // function binds
+            const makeRed = this.changeColor.bind(this, "red");
+            const makeBlue = this.changeColor.bind(this, "blue");
+            const makeYellow = this.changeColor.bind(this, "yellow");
+
+            this.el.addEventListener("mouseenter", makeRed)
+            this.el.addEventListener("mouseleave", makeBlue)
+
+            // change internal 'selected' state when pressed / released
+            this.el.addEventListener("mousedown", e => {
+                makeYellow();
+                this.selected = true;
+            })
+
+            this.el.addEventListener("mouseup", e => {
+                makeRed();
+                this.selected = false;
+            })
+
+            this.el.sceneEl.addEventListener("mousemove", evt => {
+                if (!this.selected) return; 
+                // react only when the element is selected
+                const camera = this.el.sceneEl.camera; // threejs camera
+                const camera_rig = camera.el.object3D; // aframe's rig wrapper
+
+                /* mouse to world position */
+                // normalize position from -1 to 1
+                const x = (evt.clientX / window.innerWidth) * 2 - 1;
+                const y = -(evt.clientY / window.innerHeight) * 2 + 1;
+                direction_vector.set(x, y, 0);
+                // move the camera towards the unprojected vector to get the position
+                direction_vector.unproject(camera);
+                var dir = direction_vector.sub(camera_rig.position).normalize();
+                var distance = (root_object.getWorldPosition(world_pos).z - camera_rig.position.z) / dir.z;
+                position_vector.copy(camera_rig.position).add(dir.multiplyScalar(distance));
+                // the sphere and plane are nested - calculate the local coords
+                position_vector = root_object.parent.worldToLocal(position_vector); 
+
+                // update the first vertex in the position array
+                const plane_mesh = plane_element.getObject3D("mesh")
+                position_vector.toArray(plane_mesh.geometry.attributes.position.array)
+                plane_mesh.geometry.attributes.position.needsUpdate = true;
+                
+                // update the sphere position
+                root_object.position.copy(position_vector);
+            })
+        },
+        changeColor: function (color) {
+            this.el.setAttribute("color", color)
+        }
+    })
+
+</script>
+
+<body>
+    <!-- info  -->
+    <div style='position: fixed; width:100%; text-align: center; z-index: 1; left: 0;
+        right: 0; background-color: rgba(75, 2, 59, 0.363);'>
+        <h3>move_vertex</h3>
+        Press the sphere and move it around, to manipulate the plane's vertex<br>
+        Source code <a href="https://github.com/gftruj/webzamples/tree/master/aframe/move_vertex.html">here</a>
+    </div>
+
+    <a-scene cursor="rayOrigin: mouse" raycaster="objects: a-sphere">
+        <a-entity position="0 1.6 -2">
+            <a-sphere scale="0.075 0.075 0.075" position="-0.5 0.5 0" color="blue" foo></a-sphere>
+            <a-plane id="cover" color="green" material="side: double"></a-plane>
+        </a-entity>
+        <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
+        <a-entity camera position="0 1.6 0.1"></a-entity>
+    </a-scene>
+</body>
+
+</html>
