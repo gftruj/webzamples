@@ -1,0 +1,135 @@
+<script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+<script src="https://animejs.com/lib/anime.min.js"></script>
+<script>
+
+    AFRAME.registerComponent("text-splitter", {
+        init: function () {
+            const el = this.el;
+            const letter_elements = this.letter_elements = []
+
+            // wait until the text component tells us that it's ready
+            this.el.addEventListener("object3dset", function objectset(evt) {
+                el.removeEventListener("object3dset", objectset); // react only once
+
+                const mesh = el.getObject3D("text") // grab the mesh
+                const geometry = mesh.geometry // grab the text geometry
+
+                // wait until the visibleGlyphs are set
+                const idx = setInterval(evt => {
+                    if (!geometry.visibleGlyphs) return;
+                    clearInterval(idx);
+
+                    // we want data.height, data.yoffset and position from each glyph
+                    const glyphs = geometry.visibleGlyphs
+
+                    // do as many loops as there are <entity - glyph> pairs
+                    const textData = el.getAttribute("text"); // original configuration
+                    var text = textData.value.replace(/\s+/, "") // get rid of spaces
+
+                    const letter_pos = new THREE.Vector3();
+                    for (var i = 0; i < glyphs.length; i++) {
+                        const letter_element = document.createElement("a-entity");
+
+                        // use the positions, heights, and offsets of the glyphs
+                        letter_pos.set(glyphs[i].position[0], glyphs[i].position[1], 0);
+                        letter_pos.y += (glyphs[i].data.height + glyphs[i].data.yoffset) / 2;
+
+                        // convert the letter local position to world
+                        mesh.localToWorld(letter_pos)
+
+                        // convert the world position to the <a-text> position
+                        el.object3D.worldToLocal(letter_pos)
+
+                        // apply the text and position to the wrappers
+                        const node = document.createElement("a-entity")
+                        node.setAttribute("position", letter_pos)
+
+                        node.setAttribute('text', {
+                            value: text[i],
+                            anchor: textData.align, // a-text binding
+                            width: textData.width, // a-text binding
+                            color: textData.color // original color
+                        })
+                        el.appendChild(node)
+                        letter_elements.push(node);
+                    }
+                    // remove the original text
+                    el.removeAttribute("text")
+                    setTimeout(evt => el.emit("text-split", { elements: letter_elements }), 0) // no idea why its not instant
+                }, 100)
+            })
+        }
+    })
+
+    AFRAME.registerComponent("text-timeline", {
+        init: function () {
+            this.el.addEventListener("text-split", evt => {
+                const letter_elements = this.el.children;
+                const timeline = anime.timeline({
+                    easing: 'spring(1, 80, 10, 0)',
+                    direction: 'alternate',
+                    loop: true,
+                    duration: 250
+                }, '+=50');
+
+                // keep the original positions so that we can use an offset position. 
+                // might as well use a wrapper object
+                const original_pos = [];
+                for (let element of letter_elements) {
+                    original_pos.push(element.object3D.position.clone())
+                };
+
+                // make last letters move left - right
+                timeline.add({
+                    targets: letter_elements[0].object3D.position,
+                    x: original_pos[0].x - 0.25
+                })
+                for (var i = 1; i < letter_elements.length - 1; i++) {
+                    // alternate top-down
+                    const yOffset = i % 2 ? 0.25 : -0.25;
+
+                    timeline.add({
+                        targets: letter_elements[i].object3D.position,
+                        y: yOffset
+                    }, i * 100)
+                }
+                timeline.add({
+                    targets: letter_elements[letter_elements.length - 1].object3D.position,
+                    x: original_pos[letter_elements.length - 1].x + 0.25,
+                    duration: 250
+                }, (letter_elements.length - 1) * 100)
+            })
+            /*
+            var letters = [];
+
+            var tl = anime.timeline({
+                easing: 'spring(1, 80, 10, 0)',
+                direction: 'alternate',
+                duration: 250,
+                loop: true
+            });
+
+            tl.add({
+                targets: mesh.position,
+                y: 1,
+            })
+                .add({
+                    targets: mesh2.position,
+                    y: -1,
+                })
+
+            const el = this.el;*/
+
+        }
+    })
+</script>
+<a-scene foo>
+    <a-text position="-0.5 1.6 -2" value="Hello World!" text-splitter text-timeline></a-text>
+
+    <a-box position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
+    <a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E"></a-sphere>
+    <a-cylinder position="1 0.75 -3" radius="0.5" height="1.5" color="#FFC65D"></a-cylinder>
+    <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
+    <a-sky color="#ECECEC"></a-sky>
+    <a-entity camera position="0 1.6 0"></a-entity>
+</a-scene>
