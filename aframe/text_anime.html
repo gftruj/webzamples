@@ -70,7 +70,9 @@
                     direction: 'alternate',
                     loop: true,
                     duration: 250
-                }, '+=50');
+                });
+                const position_offset = 0.25;
+                const time_offset = 100;
 
                 // keep the original positions so that we can use an offset position. 
                 // might as well use a wrapper object
@@ -82,47 +84,36 @@
                 // make last letters move left - right
                 timeline.add({
                     targets: letter_elements[0].object3D.position,
-                    x: original_pos[0].x - 0.25
+                    x: original_pos[0].x - position_offset
                 })
                 for (var i = 1; i < letter_elements.length - 1; i++) {
                     // alternate top-down
-                    const yOffset = i % 2 ? 0.25 : -0.25;
+                    const yOffset = i % 2 ? position_offset : -position_offset;
 
                     timeline.add({
                         targets: letter_elements[i].object3D.position,
                         y: yOffset
-                    }, i * 100)
+                    }, i * time_offset)
                 }
                 timeline.add({
                     targets: letter_elements[letter_elements.length - 1].object3D.position,
-                    x: original_pos[letter_elements.length - 1].x + 0.25,
+                    x: original_pos[letter_elements.length - 1].x + position_offset,
                     duration: 250
-                }, (letter_elements.length - 1) * 100)
+                }, (letter_elements.length - 1) * time_offset)
             })
-            /*
-            var letters = [];
-
-            var tl = anime.timeline({
-                easing: 'spring(1, 80, 10, 0)',
-                direction: 'alternate',
-                duration: 250,
-                loop: true
-            });
-
-            tl.add({
-                targets: mesh.position,
-                y: 1,
-            })
-                .add({
-                    targets: mesh2.position,
-                    y: -1,
-                })
-
-            const el = this.el;*/
-
         }
     })
 </script>
+<div style='position: fixed; width:100%; text-align: center; z-index: 1; left: 0;
+right: 0; background-color: rgba(75, 2, 59, 0.363);'>
+    <h3>splitting text + anime.js</h3>
+    Components:<br>
+    <b>text-splitter</b> splits the a-text into entities with single letters<br>
+    <b>text-timeline</b> sets up an anime.js timeline for each letter
+    <br>
+    Source code <a href="https://github.com/gftruj/webzamples/tree/master/aframe/text_anime.html">here</a>
+</div>
+
 <a-scene foo>
     <a-text position="-0.5 1.6 -2" value="Hello World!" text-splitter text-timeline></a-text>
 
@@ -131,5 +122,4 @@
     <a-cylinder position="1 0.75 -3" radius="0.5" height="1.5" color="#FFC65D"></a-cylinder>
     <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
     <a-sky color="#ECECEC"></a-sky>
-    <a-entity camera position="0 1.6 0"></a-entity>
 </a-scene>
