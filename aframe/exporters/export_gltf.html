@@ -1,0 +1,96 @@
+<script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+<script src="https://threejs.org/examples/js/exporters/GLTFExporter.js"></script>
+<script>
+
+    AFRAME.registerComponent("gltf-exporter", {
+        init: function () {
+            const self = this;
+            const link = document.createElement( 'a' );
+			link.style.display = 'none';
+			document.body.appendChild( link ); // Firefox workaround, see #6594
+            this.save = this.save.bind(this, link)
+
+            const gltfExporter = new THREE.GLTFExporter();
+            this.el.addEventListener("export", () => {
+                const mesh = this.el.getObject3D("mesh");
+
+                const options = {
+                    trs: true,
+                    onlyVisible: true,
+                    truncateDrawRange: false,
+                    binary: true,
+                    maxTextureSize: Infinity
+                };
+
+                gltfExporter.parse(
+                    mesh,
+                    function (result) {
+                        if (result instanceof ArrayBuffer) {
+                            self.save(new Blob([result], { type: 'application/octet-stream' }), 'scene.glb');
+                        } else {
+                            const output = JSON.stringify(result, null, 2);
+                            self.save(new Blob([output], { type: 'text/plain' }), 'scene.gltf');
+                        }
+                    },
+                    function (error) {
+                        console.log('An error happened during parsing', error);
+                    },
+                    options
+                );
+            })
+        },
+        save: function (link, blob, filename) {
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            link.click();
+            // URL.revokeObjectURL( url ); breaks Firefox...
+        }
+    })
+
+    AFRAME.registerComponent("randomize-vertices", {
+        init: function () {
+            this.el.addEventListener("scramble", () => {
+                const mesh = this.el.getObject3D("mesh");
+                const geometry = mesh.geometry;
+                const verticesArray = geometry.attributes.position.array;
+                for (var i = 0; i < verticesArray.length / 3; i++) {
+                    verticesArray[i * 3 + 2] = Math.random() / 2;
+                }
+                geometry.attributes.position.needsUpdate = true;
+            })
+        }
+    })
+
+    AFRAME.registerComponent("btns-controller", {
+        init: function () {
+            const exportBtn = document.getElementById("exportBtn");
+            const scrambleBtn = document.getElementById("scrambleBtn");
+            const plane = document.querySelector("a-plane");
+            exportBtn.addEventListener("click", evt => { plane.emit("export") })
+
+            var colorIdx = 1;
+            const colorArray = ["blue", "green", "red"]
+            scrambleBtn.addEventListener("click", evt => {
+                plane.emit("scramble")
+                plane.setAttribute("color", colorArray[colorIdx++])
+                colorIdx = colorIdx >= colorArray.length ? 0 : colorIdx;
+                console.log(colorIdx)
+            })
+        }
+    })
+</script>
+<div style='position: fixed; width:100%; text-align: center; z-index: 1; left: 0;
+right: 0; background-color: rgba(75, 2, 59, 0.363);'>
+    <h3>gltf exporting</h3>
+    Components:<br>
+    <b>gltf-exporter</b> exports a gltf <br>
+    <b>randomize-vertices</b> change the plane vertices.
+    <br>
+    <button id="exportBtn">Export</button><button id="scrambleBtn">scramble</button>
+    <br>
+    Source code <a href="https://github.com/gftruj/webzamples/tree/master/aframe/exporters/export_gltf.html">here</a>
+</div>
+<a-scene btns-controller>
+    <a-plane position="0 0.5 -5" color="blue" height="5" width="5" rotation="-90 0 0" segments-height="16"
+        segments-width="16" randomize-vertices gltf-exporter></a-plane>
+</a-scene>
