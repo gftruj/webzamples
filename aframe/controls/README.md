@@ -2,7 +2,7 @@
 
 Saw multiple questions about moving with thumbsticks in VR 
 (like [this](https://stackoverflow.com/questions/71131300/cant-move-camera-in-a-frame-with-oculus-quest-2), 
-or [this](https://stackoverflow.com/questions/70970650/how-can-i-control-a-frame-movement-with-oculus-quests-trackpad)) so I thought this is a good opportunity to re-use 99% 
+or [this](https://stackoverflow.com/questions/70970650/how-can-i-control-a-frame-movement-with-oculus-quests-trackpad)) so I thought this is a good opportunity to re-use most 
 of the [wasd-controls](https://aframe.io/docs/1.3.0/components/wasd-controls.html) and use the input from the thumbsticks
 
 ### example
