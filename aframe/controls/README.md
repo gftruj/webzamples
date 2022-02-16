@@ -39,3 +39,7 @@ Exactly the same as the [wasd-controls](https://aframe.io/docs/1.3.0/components/
 | fly          | Whether or not movement is restricted to the entity's initial plane.     | false         |
 | wsAxis       | Axis that the vertical values act upon.                                  | z             |
 | wsInverted   | Whether the axis that the vertical axis should be inverted.              | false         |
+
+### See You around
+
+If you like it feel free to use it. If you think it COULD be useful - feel free to file an issue with an idea.
