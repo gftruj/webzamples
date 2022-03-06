@@ -1,0 +1,20 @@
+<script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
+<script src="https://raw.githack.com/AR-js-org/AR.js/dev/aframe/build/aframe-ar.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.min.js"></script>
+
+<body style="margin : 0px; overflow: hidden;">
+  <div style='position: fixed; top: 10px; width: 100%; text-align: center; z-index: 1; color: grey'>
+    Model by <a href="https://sketchfab.com/3d-models/mech-drone-8d06874aac5246c59edb4adbe3606e0e">Willy Decarpentrie</a><br>
+    Source code <a href="https://github.com/gftruj/webzamples/tree/master/ar/arjs.html">here</a><br>
+    Works with a hiro marker.
+  </div>
+  <a-scene embedded arjs renderer="logarithmicDepthBuffer: true">
+    <a-assets>
+      <a-asset-item id="model" src="https://gftruj.github.io/webzamples/aframe/assets/models/mech_drone/scene.gltf"></a-asset-item>
+    </a-assets>
+    <a-marker preset="hiro">
+      <a-entity scale="0.004 0.004 0.004" rotation="0 180 0" gltf-model="#model" animation-mixer></a-entity>
+    </a-marker>
+    <a-entity camera></a-entity>
+  </a-scene>
+</body>

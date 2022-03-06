@@ -1,0 +1,63 @@
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.4/dist/mindar-image.prod.js"></script>
+    <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.4/dist/mindar-image-aframe.prod.js"></script>
+    <script>
+        AFRAME.registerComponent("video-controller", {
+            init: function () {
+                const target = document.getElementById("target");
+                const btn = document.querySelector("button");
+                const video = document.getElementById("video");
+
+                // detect target found
+                target.addEventListener("targetFound", event => {
+                    console.log("target found");
+                    this.found = true;
+                    video.play();
+                });
+                // detect target lost
+                target.addEventListener("targetLost", event => {
+                    console.log("target lost");
+                    this.found = false
+                    video.pause();
+                });
+                // detect click event
+                btn.addEventListener("click", event => {
+                    console.log("btn click");
+                    if (this.found)
+                        video.play();
+                });
+            }
+        })
+
+    </script>
+</head>
+
+<body>
+    <div style='position: fixed; top: 10px; width: 100%; text-align: center; z-index: 1; color: grey'>
+        Video - <a href="https://en.wikipedia.org/wiki/Sintel"> Sintel</a> trailer<br>
+        Works with the example <a href="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.4/examples/image-tracking/assets/card-example/card.png">card</a><br>
+        <button>Play video</button> - if the plane is black on mobile.
+    </div>
+    <a-scene
+        mindar-image="imageTargetSrc: https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.4/examples/image-tracking/assets/card-example/card.mind;"
+        color-space="sRGB" renderer="colorManagement: true" vr-mode-ui="enabled: false"
+        device-orientation-permission-ui="enabled: false" cursor="rayOrigin: mouse;"
+        raycaster="objects: .clickable">
+        <a-assets>
+            <video id="video" src="https://gftruj.github.io/webzamples/aframe/assets/videos/sintel_trailer-480p.mp4" preload>
+            </video>
+        </a-assets>
+
+        <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+        <a-entity id="target" mindar-image-target="targetIndex: 0">
+            <a-plane class="clickable" material="src: #video; opacity: 0.5; transparent: true" video-controller>
+            </a-plane>
+        </a-entity>
+    </a-scene>
+</body>
+
+</html>
