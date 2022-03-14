@@ -9,7 +9,7 @@ ar.js
 - [static model (clipping)](https://gftruj.github.io/webzamples/ar/island_arjsclipping.html) ([source](island_arjsclipping.html))
 - [static model (logarithmicDepthBuffer)](https://gftruj.github.io/webzamples/ar/island_arjs.html) ([source](island_arjs.html))
 - [animated model](https://gftruj.github.io/webzamples/ar/animated_arjs.html) ([source](animated_arjs.html))
-
+- [text looking at camera](https://gftruj.github.io/webzamples/ar/lookatcamera_arjs.html)([source](lookatcamera_arjs.html))
 <a href="https://upload.wikimedia.org/wikipedia/commons/4/48/Hiro_marker_ARjs.png">Hiro marker</a>
 
 mindar
