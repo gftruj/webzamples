@@ -1,0 +1,11 @@
+Model Information:
+* title:	Warhammer 40k - Space Marine Stormtalon Gunship
+* source:	https://sketchfab.com/3d-models/warhammer-40k-space-marine-stormtalon-gunship-f3fb70e7628048b99b635d4e4cd13e7b
+* author:	tnnv (https://sketchfab.com/tnnv)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Warhammer 40k - Space Marine Stormtalon Gunship" (https://sketchfab.com/3d-models/warhammer-40k-space-marine-stormtalon-gunship-f3fb70e7628048b99b635d4e4cd13e7b) by tnnv (https://sketchfab.com/tnnv) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

@@ -1,0 +1,781 @@
+{
+  "accessors": [
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 7396,
+      "max": [
+        2.5302319526672363,
+        4.915407657623291,
+        2.819749355316162
+      ],
+      "min": [
+        -2.5302319526672363,
+        -4.916172981262207,
+        -2.7574400901794434
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 88752,
+      "componentType": 5126,
+      "count": 7396,
+      "max": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "min": [
+        -1.0,
+        -1.0,
+        -1.0
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5126,
+      "count": 7396,
+      "max": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "min": [
+        -1.0,
+        -1.0,
+        -0.9999995231628418,
+        -1.0
+      ],
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 7396,
+      "max": [
+        0.9904639720916748,
+        0.9931519627571106
+      ],
+      "min": [
+        0.00424213707447052,
+        0.00424213707447052
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "componentType": 5125,
+      "count": 28527,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 177504,
+      "componentType": 5126,
+      "count": 2029,
+      "max": [
+        3.2375004291534424,
+        2.650913953781128,
+        1.4072728157043457
+      ],
+      "min": [
+        0.17373204231262207,
+        -1.5295084714889526,
+        -1.4594746828079224
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 201852,
+      "componentType": 5126,
+      "count": 2029,
+      "max": [
+        1.0,
+        0.9996497631072998,
+        0.9996799230575562
+      ],
+      "min": [
+        -1.0,
+        -0.9996790885925293,
+        -0.9996057748794556
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "byteOffset": 118336,
+      "componentType": 5126,
+      "count": 2029,
+      "max": [
+        1.0,
+        0.9996898174285889,
+        0.9984692931175232,
+        1.0
+      ],
+      "min": [
+        -0.9999305605888367,
+        -0.9997732043266296,
+        -0.9977962374687195,
+        1.0
+      ],
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 59168,
+      "componentType": 5126,
+      "count": 2029,
+      "max": [
+        0.9957578182220459,
+        0.9939461350440979
+      ],
+      "min": [
+        0.00424213707447052,
+        0.00424213707447052
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 114108,
+      "componentType": 5125,
+      "count": 8574,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 226200,
+      "componentType": 5126,
+      "count": 102,
+      "max": [
+        0.26088881492614746,
+        0.6671549677848816,
+        0.6671553254127502
+      ],
+      "min": [
+        -0.3690464496612549,
+        -0.6671550869941711,
+        -0.6671550869941711
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 227424,
+      "componentType": 5126,
+      "count": 102,
+      "max": [
+        0.3939119279384613,
+        1.0,
+        1.0
+      ],
+      "min": [
+        -0.8505388498306274,
+        -1.0,
+        -1.0
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "byteOffset": 150800,
+      "componentType": 5126,
+      "count": 102,
+      "max": [
+        -0.4137713313102722,
+        0.848048985004425,
+        0.7033201456069946,
+        1.0
+      ],
+      "min": [
+        -0.9998388290405273,
+        -0.8645495176315308,
+        -0.8462557792663574,
+        1.0
+      ],
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 75400,
+      "componentType": 5126,
+      "count": 102,
+      "max": [
+        0.6933060884475708,
+        0.5105531811714172
+      ],
+      "min": [
+        0.63056880235672,
+        0.27632972598075867
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 148404,
+      "componentType": 5125,
+      "count": 480,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 228648,
+      "componentType": 5126,
+      "count": 2029,
+      "max": [
+        -0.17373204231262207,
+        2.6158502101898193,
+        1.419454574584961
+      ],
+      "min": [
+        -3.2375006675720215,
+        -1.4467790126800537,
+        -1.512873888015747
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 252996,
+      "componentType": 5126,
+      "count": 2029,
+      "max": [
+        1.0,
+        0.9947255253791809,
+        0.9997552633285522
+      ],
+      "min": [
+        -1.0,
+        -0.9993849992752075,
+        -0.9994981288909912
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "byteOffset": 152432,
+      "componentType": 5126,
+      "count": 2029,
+      "max": [
+        0.9999308586120605,
+        0.9994111061096191,
+        0.9965339303016663,
+        -1.0
+      ],
+      "min": [
+        -1.0,
+        -0.9999573826789856,
+        -0.9940508008003235,
+        -1.0
+      ],
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 76216,
+      "componentType": 5126,
+      "count": 2029,
+      "max": [
+        0.9957578182220459,
+        0.9939461350440979
+      ],
+      "min": [
+        0.00424213707447052,
+        0.00424213707447052
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 150324,
+      "componentType": 5125,
+      "count": 8574,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 277344,
+      "componentType": 5126,
+      "count": 102,
+      "max": [
+        0.3690464496612549,
+        0.6671549677848816,
+        0.6671553254127502
+      ],
+      "min": [
+        -0.26088881492614746,
+        -0.6671550869941711,
+        -0.6671550869941711
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 278568,
+      "componentType": 5126,
+      "count": 102,
+      "max": [
+        0.8505388498306274,
+        1.0,
+        1.0
+      ],
+      "min": [
+        -0.3939119279384613,
+        -1.0,
+        -1.0
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "byteOffset": 184896,
+      "componentType": 5126,
+      "count": 102,
+      "max": [
+        0.9998388290405273,
+        0.8480488657951355,
+        0.7091403007507324,
+        -1.0
+      ],
+      "min": [
+        0.41377127170562744,
+        -0.8646633625030518,
+        -0.8462557792663574,
+        -1.0
+      ],
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 92448,
+      "componentType": 5126,
+      "count": 102,
+      "max": [
+        0.6933060884475708,
+        0.5105531811714172
+      ],
+      "min": [
+        0.63056880235672,
+        0.27632972598075867
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 184620,
+      "componentType": 5125,
+      "count": 480,
+      "type": "SCALAR"
+    }
+  ],
+  "asset": {
+    "extras": {
+      "author": "tnnv (https://sketchfab.com/tnnv)",
+      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+      "source": "https://sketchfab.com/3d-models/warhammer-40k-space-marine-stormtalon-gunship-f3fb70e7628048b99b635d4e4cd13e7b",
+      "title": "Warhammer 40k - Space Marine Stormtalon Gunship"
+    },
+    "generator": "Sketchfab-12.66.0",
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 186540,
+      "name": "floatBufferViews",
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteLength": 93264,
+      "byteOffset": 186540,
+      "byteStride": 8,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 279792,
+      "byteOffset": 279804,
+      "byteStride": 12,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 186528,
+      "byteOffset": 559596,
+      "byteStride": 16,
+      "name": "floatBufferViews",
+      "target": 34962
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 746124,
+      "uri": "scene.bin"
+    }
+  ],
+  "images": [
+    {
+      "uri": "textures/M_StormTalon_baseColor.png"
+    },
+    {
+      "uri": "textures/M_StormTalon_metallicRoughness.png"
+    },
+    {
+      "uri": "textures/M_StormTalon_emissive.png"
+    },
+    {
+      "uri": "textures/M_StormTalon_normal.png"
+    }
+  ],
+  "materials": [
+    {
+      "emissiveFactor": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emissiveTexture": {
+        "index": 2
+      },
+      "name": "M_StormTalon",
+      "normalTexture": {
+        "index": 3
+      },
+      "occlusionTexture": {
+        "index": 1
+      },
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 0
+        },
+        "metallicRoughnessTexture": {
+          "index": 1
+        }
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "StormTalonGame_M_StormTalon_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 1,
+            "POSITION": 0,
+            "TANGENT": 2,
+            "TEXCOORD_0": 3
+          },
+          "indices": 4,
+          "material": 0,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "StormTalonGame.001_M_StormTalon_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 6,
+            "POSITION": 5,
+            "TANGENT": 7,
+            "TEXCOORD_0": 8
+          },
+          "indices": 9,
+          "material": 0,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "StormTalonGame.002_M_StormTalon_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 11,
+            "POSITION": 10,
+            "TANGENT": 12,
+            "TEXCOORD_0": 13
+          },
+          "indices": 14,
+          "material": 0,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "StormTalonGame.003_M_StormTalon_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 16,
+            "POSITION": 15,
+            "TANGENT": 17,
+            "TEXCOORD_0": 18
+          },
+          "indices": 19,
+          "material": 0,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "StormTalonGame.004_M_StormTalon_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 21,
+            "POSITION": 20,
+            "TANGENT": 22,
+            "TEXCOORD_0": 23
+          },
+          "indices": 24,
+          "material": 0,
+          "mode": 4
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "children": [
+        1
+      ],
+      "matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        2.220446049250313e-16,
+        -1.0,
+        0.0,
+        0.0,
+        1.0,
+        2.220446049250313e-16,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "Sketchfab_model"
+    },
+    {
+      "children": [
+        2
+      ],
+      "matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        -1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "dff8717b7bdd4b58bcf1406e6c8e1b03.fbx"
+    },
+    {
+      "children": [
+        3,
+        5,
+        7,
+        9,
+        11
+      ],
+      "name": "RootNode"
+    },
+    {
+      "children": [
+        4
+      ],
+      "matrix": [
+        100.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -1.629206793918314e-05,
+        -99.99999999999868,
+        0.0,
+        0.0,
+        99.99999999999868,
+        -1.629206793918314e-05,
+        0.0,
+        0.0,
+        276.542724609375,
+        0.0,
+        1.0
+      ],
+      "name": "StormTalonGame"
+    },
+    {
+      "mesh": 0,
+      "name": "StormTalonGame_M_StormTalon_0"
+    },
+    {
+      "children": [
+        6
+      ],
+      "matrix": [
+        100.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -1.629206793918314e-05,
+        -99.99999999999868,
+        0.0,
+        0.0,
+        99.99999999999868,
+        -1.629206793918314e-05,
+        0.0,
+        132.21279907226563,
+        331.8956298828125,
+        8.227224349975586,
+        1.0
+      ],
+      "name": "StormTalonGame.001"
+    },
+    {
+      "mesh": 1,
+      "name": "StormTalonGame.001_M_StormTalon_0"
+    },
+    {
+      "children": [
+        8
+      ],
+      "matrix": [
+        100.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -1.629206793918314e-05,
+        -99.99999999999868,
+        0.0,
+        0.0,
+        99.99999999999868,
+        -1.629206793918314e-05,
+        0.0,
+        132.21279907226563,
+        331.8956298828125,
+        8.227224349975586,
+        1.0
+      ],
+      "name": "StormTalonGame.002"
+    },
+    {
+      "mesh": 2,
+      "name": "StormTalonGame.002_M_StormTalon_0"
+    },
+    {
+      "children": [
+        10
+      ],
+      "matrix": [
+        100.0,
+        0.0,
+        0.0,
+        0.0,
+        -0.0,
+        -1.629206793918314e-05,
+        -99.99999999999868,
+        0.0,
+        0.0,
+        99.99999999999868,
+        -1.629206793918314e-05,
+        0.0,
+        -132.21279907226563,
+        331.8956298828125,
+        8.227224349975586,
+        1.0
+      ],
+      "name": "StormTalonGame.003"
+    },
+    {
+      "mesh": 3,
+      "name": "StormTalonGame.003_M_StormTalon_0"
+    },
+    {
+      "children": [
+        12
+      ],
+      "matrix": [
+        100.0,
+        0.0,
+        0.0,
+        0.0,
+        -0.0,
+        -1.629206793918314e-05,
+        -99.99999999999868,
+        0.0,
+        0.0,
+        99.99999999999868,
+        -1.629206793918314e-05,
+        0.0,
+        -132.21279907226563,
+        331.8956298828125,
+        8.227224349975586,
+        1.0
+      ],
+      "name": "StormTalonGame.004"
+    },
+    {
+      "mesh": 4,
+      "name": "StormTalonGame.004_M_StormTalon_0"
+    }
+  ],
+  "samplers": [
+    {
+      "magFilter": 9729,
+      "minFilter": 9987,
+      "wrapS": 10497,
+      "wrapT": 10497
+    }
+  ],
+  "scene": 0,
+  "scenes": [
+    {
+      "name": "Sketchfab_Scene",
+      "nodes": [
+        0
+      ]
+    }
+  ],
+  "textures": [
+    {
+      "sampler": 0,
+      "source": 0
+    },
+    {
+      "sampler": 0,
+      "source": 1
+    },
+    {
+      "sampler": 0,
+      "source": 2
+    },
+    {
+      "sampler": 0,
+      "source": 3
+    }
+  ]
+}
