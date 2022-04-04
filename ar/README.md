@@ -11,6 +11,7 @@ ar.js
 - [animated model](https://gftruj.github.io/webzamples/ar/animated_arjs.html) ([source](animated_arjs.html))
 - [zoom and rotation on mobile](https://gftruj.github.io/webzamples/ar/arjs_rotate_zoom.html) ([source](arjs_rotate_zoom.html))
 - [text looking at camera](https://gftruj.github.io/webzamples/ar/lookatcamera_arjs.html)([source](lookatcamera_arjs.html))
+- [location based spheres, and spline](https://gftruj.github.io/webzamples/ar/arjs_location_based.html)([source](arjs_location_based.html))
 
 <a href="https://upload.wikimedia.org/wikipedia/commons/4/48/Hiro_marker_ARjs.png">Hiro marker</a>
 

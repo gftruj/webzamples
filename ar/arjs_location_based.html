@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>GeoAR.js demo</title>
+    <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-look-at-component@0.8.0/dist/aframe-look-at-component.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
+    <script>
+        function shiftPositionBy({ latitude, longitude }, dx, dy) {
+            const r_earth = 6378 * 1000;
+            const new_latitude = latitude + (dx / r_earth) * (180 / Math.PI);
+            const new_longitude = longitude + (dy / r_earth) * (180 / Math.PI) / Math.cos(latitude * Math.PI / 180);
+            return {
+                lat: new_latitude,
+                lon: new_longitude
+            }
+        }
+        AFRAME.registerComponent("relative-position", {
+            init: function () {
+                const firstObj = document.getElementById("first");
+                const secondObj = document.getElementById("second")
+
+                function success(pos) {
+                    var crd = pos.coords;
+
+                    console.log('Your current position is:');
+                    console.log(`Latitude : ${crd.latitude}`);
+                    console.log(`Longitude: ${crd.longitude}`);
+                    console.log(`More or less ${crd.accuracy} meters.`);
+                    document.getElementById("#gpsinfo").innerHTML = `Latitude : ${crd.latitude}, longitude: ${crd.longitude} (accuracy ${crd.accuracy.toFixed(2)} m.)`
+
+                    const firstCoords = shiftPositionBy(crd, -50, 25);
+                    const secondCoords = shiftPositionBy(crd, 25, 50);
+
+                    firstObj.setAttribute("gps-entity-place", {
+                        "latitude": firstCoords.lat,
+                        "longitude": firstCoords.lon
+                    })
+                    secondObj.setAttribute("gps-entity-place", {
+                        "latitude": secondCoords.lat,
+                        "longitude": secondCoords.lon
+                    })
+                }
+
+                function error(err) {
+                    console.warn(`ERROR(${err.code}): ${err.message}`);
+                }
+
+                navigator.geolocation.getCurrentPosition(success, error, {
+                    enableHighAccuracy: true,
+                    timeout: 5000,
+                    maximumAge: 0
+                })
+                this.el.sceneEl.emit("gps-ready", {})
+            }
+        })
+        AFRAME.registerComponent("arc", {
+            init: function () {
+                const firstObj = document.getElementById("first");
+                const secondObj = document.getElementById("second")
+                const firstPos = new THREE.Vector3();
+                const secondPos = new THREE.Vector3();
+                const el = this.el
+                // gps-entity-place-added fire too early?
+                // gps-entity-place-update-positon doesnt fire at all
+                const idx = setInterval(() => {
+                    firstPos.copy(firstObj.object3D.position)
+                    middle = firstPos.clone();
+                    secondPos.copy(secondObj.object3D.position)
+
+                    const distance = firstPos.distanceTo(secondPos)
+                    if (!distance) return;
+                    console.log("anchors ready")
+                    clearInterval(idx);
+                    middle.multiplyScalar(-1).add(secondPos).multiplyScalar(1 / 2)
+                    middle.y = 75;
+
+                    const curve = new THREE.CatmullRomCurve3([
+                        secondPos,
+                        middle,
+                        firstPos
+                    ]);
+
+                    const geometry = new THREE.TubeGeometry( curve, 20, 2, 8, false);
+                    const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+                    const mesh = new THREE.Mesh( geometry, material );
+                    el.object3D.add(mesh)
+                    const line = new THREE.Line(geometry, material);
+                }, 500)
+
+            }
+        })
+        AFRAME.registerComponent("tunnel", {
+            init: function () {
+                const firstObj = document.getElementById("first");
+                const secondObj = document.getElementById("second")
+                const firstPos = new THREE.Vector3();
+                const secondPos = new THREE.Vector3();
+                const el = this.el
+                const cylinder = this.el.querySelector("a-cylinder")
+
+                const idx = setInterval(() => {
+                    firstPos.copy(firstObj.object3D.position)
+                    secondPos.copy(secondObj.object3D.position)
+
+                    const distance = firstPos.distanceTo(secondPos)
+                    if (!distance) return;
+                    console.log("anchors ready")
+                    clearInterval(idx);
+
+                    const middle = firstPos.multiplyScalar(-1).add(secondPos).multiplyScalar(1 / 2)
+
+                    cylinder.setAttribute("height", distance)
+                    el.object3D.lookAt(firstPos)
+                    el.object3D.position.copy(middle).add(firstObj.object3D.position)
+                }, 500)
+            }
+        })
+    </script>
+</head>
+
+<body>
+    <div style='top: 10px;text-align: center; z-index: 100; color: wheat; position: absolute'>
+        Source code <a href="https://github.com/gftruj/webzamples/tree/master/ar">here</a><br>
+        <p id="#gpsinfo"></p>
+        a-frame spheres, cylinder, and a THREE.js generated arc. <br>
+    </div>
+    <a-scene vr-mode-ui="enabled: false" arjs="sourceType: webcam; videoTexture: true; debugUIEnabled: false;"
+        relative-position arc>
+        <a-entity id="first">
+            <a-sphere scale="5 5 5" color="blue"></a-sphere>
+        </a-entity>
+        <a-entity id="tunnel" tunnel>
+            <a-cylinder color="red" radius="4" rotation="0 90 -90"></a-cylinder>
+        </a-entity>
+        <a-entity id="second">
+            <a-sphere scale="5 5 5" color="green"></a-sphere>
+        </a-entity>
+        <a-camera gps-camera rotation-reader> </a-camera>
+    </a-scene>
+</body>
+
+</html>
