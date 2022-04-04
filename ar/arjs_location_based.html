@@ -45,16 +45,15 @@
                     })
                 }
 
-                function error(err) {
-                    console.warn(`ERROR(${err.code}): ${err.message}`);
-                }
-
-                navigator.geolocation.getCurrentPosition(success, error, {
-                    enableHighAccuracy: true,
-                    timeout: 5000,
-                    maximumAge: 0
-                })
-                this.el.sceneEl.emit("gps-ready", {})
+                navigator.geolocation.getCurrentPosition(success,
+                    (err) => {
+                        console.warn(`ERROR(${err.code}): ${err.message}`);
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 5000,
+                        maximumAge: 0
+                    })
             }
         })
         AFRAME.registerComponent("arc", {
@@ -84,9 +83,9 @@
                         firstPos
                     ]);
 
-                    const geometry = new THREE.TubeGeometry( curve, 20, 2, 8, false);
-                    const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-                    const mesh = new THREE.Mesh( geometry, material );
+                    const geometry = new THREE.TubeGeometry(curve, 20, 2, 8, false);
+                    const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+                    const mesh = new THREE.Mesh(geometry, material);
                     el.object3D.add(mesh)
                     const line = new THREE.Line(geometry, material);
                 }, 500)
@@ -123,7 +122,7 @@
 </head>
 
 <body>
-    <div style='top: 10px;text-align: center; z-index: 100; color: wheat; position: absolute'>
+    <div style='top: 10px; text-align: center; z-index: 100; color: wheat; position: absolute'>
         Source code <a href="https://github.com/gftruj/webzamples/tree/master/ar">here</a><br>
         <p id="#gpsinfo"></p>
         a-frame spheres, cylinder, and a THREE.js generated arc. <br>
