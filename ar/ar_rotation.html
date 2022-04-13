@@ -1,0 +1,162 @@
+<html>
+
+<head>
+  <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@0d23f9b21c33ab6821046ce95835492cb84996c5/dist/aframe-master.min.js"></script>
+  <script src="https://hammerjs.github.io/dist/hammer.min.js"></script>
+  <script>
+
+    AFRAME.registerComponent("model-controller", {
+      init: function () {
+        this.el.sceneEl.addEventListener("mode-change", evt => {
+          this.enabled = !evt.detail.positioning
+        })
+        this.enabled = true;
+
+        // grab the model reference
+        document.querySelector("[gltf-model]").addEventListener("model-loaded", evt => {
+          this.mesh = evt.detail.model
+        })
+        // hammerjs input helper
+        const hammertime = new Hammer(document.body);
+
+        // scale
+        // scale is tricky, because it resets
+        var currentScale = 1;
+        hammertime.get('pinch').set({ enable: true });
+        hammertime.on("pinchstart", (ev) => {
+          currentScale = this.mesh.scale.x;
+        })
+        hammertime.on("pinchmove", (ev) => {
+          console.log("woop")
+          if (!this.enabled) return;
+          this.mesh.scale.multiplyScalar(0).addScalar(ev.scale * currentScale);
+        });
+
+        // rotation
+        // pan left/right for rotation
+        this.isPanning = false;
+        hammertime.on("panleft", () => {
+          if (!this.enabled) return;
+          this.isPanning = true
+          this.mesh.rotation.y -= 4 * Math.PI / 360;
+        })
+
+        hammertime.on("panright", () => {
+          if (!this.enabled) return;
+          this.isPanning = true
+          this.mesh.rotation.y += 4 * Math.PI / 360;
+        })
+        hammertime.on("panend", () => this.isPanning = false)
+        hammertime.on("pancancel", () => this.isPanning = false)
+
+        hammertime.on("swipeleft", ({ velocity }) => {
+          if (!this.enabled) return;
+          this.swipeVelocity = velocity
+        })
+        hammertime.on("swiperight", ({ velocity }) => {
+          if (!this.enabled) return;
+          this.swipeVelocity = velocity
+        })
+      },
+      tick: function () {
+        if (!(this.modelVisible && this.swipeVelocity && !this.isPanning)) return;
+        this.mesh.rotation.y += this.swipeVelocity * 4 * Math.PI / 360;
+        this.swipeVelocity *= 0.93;
+        if (Math.abs(this.swipeVelocity) <= 0.1) this.swipeVelocity = 0;
+      }
+    })
+
+    AFRAME.registerComponent("controller", {
+      init: function () {
+        const sceneEl = this.el.sceneEl;
+        const objects = document.querySelector("#objects")
+        const overlay = document.querySelector("#overlay")
+        const message = overlay.querySelector("#arstatus")
+        const btn     = overlay.querySelector("button")
+
+        var positionState = true;
+        var firstPosition = true;
+        function toggleMode() {
+          positionState = !positionState;
+          btn.innerHTML = positionState ? "Position-mode" : "Rotation/zoom-mode"
+          sceneEl.emit("mode-change", {"positioning": positionState});
+          sceneEl.setAttribute("ar-hit-test", "enabled", positionState)
+        }
+        btn.addEventListener("click", toggleMode)
+
+        btn.addEventListener('beforexrselect', e => {
+          e.preventDefault();
+        });
+        
+        message.textContent = 'Idle...';
+        sceneEl.addEventListener('enter-vr', function () {
+          if (this.is('ar-mode')) {
+            message.textContent = 'Idle...';
+            this.addEventListener('ar-hit-test-start', function () {
+              message.innerHTML = `Scanning environment, finding surface.`
+            }, { once: true });
+            this.addEventListener('ar-hit-test-achieved', function () {
+              message.innerHTML = `Select the location to place the furniture. By tapping on the screen or selecting with your controller.`
+            }, { once: true });
+            this.addEventListener('ar-hit-test-select', function () {
+              if (firstPosition) {
+                objects.setAttribute("visible", "true")
+                btn.removeAttribute("hidden")
+                toggleMode();
+              }
+              firstPosition = false;
+              message.textContent = 'Object placed!';
+            }, { once: true });
+          }
+        });
+      }
+    })
+
+    AFRAME.registerComponent('follow-shadow', {
+      schema: { type: 'selector' },
+      init() { 
+        this.el.object3D.renderOrder = -1; 
+        this.el.sceneEl.addEventListener('enter-vr', evt => {
+          this.vrMode = true;
+        })
+      },
+      tick() {
+        if (this.data && this.vrMode) {
+          this.el.object3D.position.copy(this.data.object3D.position);
+          this.el.object3D.position.y -= 0.001; // stop z-fighting
+        }
+      }
+    });
+  </script>
+</head>
+
+<body>
+  <div id="overlay" style='position: fixed; top: 10%!important; width: 100%; text-align: center; z-index: 1; color: grey'>
+    Model by <a
+      href="https://sketchfab.com/3d-models/space-fighter-e766136d4871441289d37d44a4bbcd3b">Comrade1280</a><br>
+    Source code <a href="https://github.com/gftruj/webzamples/tree/master/ar">here</a><br>
+    AR status:
+    <p id="arstatus"></p>
+    <button style="z-index: 10; height: 3em" type="button" hidden>Position-mode</button>
+  </div>
+  <a-scene foo renderer="physicallyCorrectLights: true; colorManagement:true; exposure: 1; toneMapping:ACESFilmic;"
+    controller ar-hit-test="target: #objects; type:map;footprintDepth:0.2;" webxr="overlayElement:#overlay"
+    reflection="directionalLight: #real-light" model-controller>
+    <a-assets>
+      <a-asset-item id="model" src="assets/spacefighter/scene.gltf"></a-asset-item>
+    </a-assets>
+
+    <a-light id="real-light" type="directional" position="1 1 1" intensity="0.5"></a-light>
+
+    <a-entity id="objects" scale="0.2 0.2 0.2" position="0 0 -1" visible="false">
+      <a-box scale="0.5 0.5 0.5" color="black"></a-box>
+      <a-entity position="0 0 0.7" scale="0.01 0.01 0.01" gltf-model="#model"></a-entity>
+    </a-entity>
+
+    <a-plane  id="shadow-plane" follow-shadow="#objects" material="shader:shadow" 
+              shadow="cast:false; receive: true" rotation="-90 0 0" width="5" height="5"></a-plane>
+    <a-camera position="0 0.4 0" wasd-controls="acceleration:10;"></a-camera>
+  </a-scene>
+</body>
+
+</html>
