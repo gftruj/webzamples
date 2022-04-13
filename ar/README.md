@@ -4,6 +4,8 @@
 
 Always try debugging with vanilla a-frame first.
 
+a-frame ar
+- [zoom and rotation on mobile](https://gftruj.github.io/webzamples/ar/ar_rotation.html) ([source](ar_rotation.html))
 
 ar.js
 - [static model (clipping)](https://gftruj.github.io/webzamples/ar/island_arjsclipping.html) ([source](island_arjsclipping.html))
