@@ -15,3 +15,5 @@ Not much to it:
 #### examples
 - [default scene](https://gftruj.github.io/webzamples/aframe/effects/examples/basic.html)
 - [bubbles with environment map](https://gftruj.github.io/webzamples/aframe/effects/examples/bubbles.html)
+
+Environment maps by [Paul Debevec](https://www.pauldebevec.com/)
