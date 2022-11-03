@@ -4,17 +4,17 @@
     AFRAME.registerComponent("enviroment-map", {
         init: function () {
             this.texture = new THREE.CubeTextureLoader().load([
-                '../../env/assets/map/posx.png', '../../env/assets/map/negx.png',
-                '../../env/assets/map/posy.png', '../../env/assets/map/negy.png',
-                '../../env/assets/map/posz.png', '../../env/assets/map/negz.png'
+                'map/posx.png', 'map/negx.png',
+                'map/posy.png', 'map/negy.png',
+                'map/posz.png', 'map/negz.png'
             ], texture => {
                 texture.generateMipmaps = false;
-            texture.minFilter = THREE.LinearFilter;
-            texture.needsUpdate = true;
+                texture.minFilter = THREE.LinearFilter;
+                texture.needsUpdate = true;
 
-                this.el.emit("envmap-loaded", {texture})
+                this.el.emit("envmap-loaded", { texture })
             });
-            
+
             this.texture.format = THREE.RGBAFormat;
             this.el.sceneEl.object3D.background = this.texture;
             this.el.sceneEl.object3D.environment = this.texture;
@@ -24,7 +24,7 @@
         init: function () {
             this.spheres = [];
             const geometry = new THREE.SphereGeometry(0.1, 32, 16);
-            const material = new THREE.MeshBasicMaterial({ color: 0xffffff});
+            const material = new THREE.MeshBasicMaterial({ color: 0xffffff });
             this.el.sceneEl.addEventListener("envmap-loaded", evt => {
                 material.envMap = evt?.detail?.texture;
             })
@@ -39,11 +39,11 @@
                 this.spheres.push(mesh);
             }
         },
-        tick: function(t, dt) {
+        tick: function (t, dt) {
             const timer = 0.0001 * Date.now();
             this.spheres.forEach((sphere, i) => {
-                sphere.position.x = 6 * Math.cos( timer + i );
-				sphere.position.y = 6 * Math.sin( timer + i * 1.1 );
+                sphere.position.x = 6 * Math.cos(timer + i);
+                sphere.position.y = 6 * Math.sin(timer + i * 1.1);
             })
         }
     })
