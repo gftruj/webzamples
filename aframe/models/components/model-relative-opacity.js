@@ -1,6 +1,6 @@
 // Save the original opacity values, and multiply them by a modifier
 AFRAME.registerComponent('model-relative-opacity', {
-    schema: { opacityFactor: { default: 1.0 } },
+    schema: { opacity: { default: 1.0 } },
     init: function () {
         this.nodeMap = {}
         this.prepareMap.bind(this)
@@ -18,7 +18,7 @@ AFRAME.registerComponent('model-relative-opacity', {
     },
     update: function () {
         this.traverseMesh(node => {
-            node.material.opacity = this.nodeMap[node.uuid] * this.data.opacityFactor
+            node.material.opacity = this.nodeMap[node.uuid] * this.data.opacity
             node.material.transparent = node.material.opacity < 1.0;
             node.material.needsUpdate = true;
         })
