@@ -5,7 +5,7 @@ Not much to it:
 #### Usage
  ```html
 <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
-<script src="../anaglyph-render-component.js"></script>
+<script src="https://gftruj.github.io/webzamples/aframe/effects/anaglyph-render-component.js"></script>
     
 <a-scene anaglyph-render="width: 1024; height: 1024">
   <a-box></a-box>
@@ -15,3 +15,5 @@ Not much to it:
 #### examples
 - [default scene](https://gftruj.github.io/webzamples/aframe/effects/examples/basic.html)
 - [bubbles with environment map](https://gftruj.github.io/webzamples/aframe/effects/examples/bubbles.html)
+
+Environment maps by [Paul Debevec](https://www.pauldebevec.com/)
