@@ -6,8 +6,8 @@ AFRAME.registerComponent('model-opacity', {
         if (!mesh) { return; }
         mesh.traverse(function (node) {
             if (node.isMesh) {
-                node.material.opacity = data.opacity;
-                node.material.transparent = data.opacity < 1.0;
+                node.material.opacity = data.opacityFactor;
+                node.material.transparent = data.opacityFactor < 1.0;
                 node.material.needsUpdate = true;
             }
         });
