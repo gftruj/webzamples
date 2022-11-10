@@ -13,70 +13,8 @@
     <!-- import the webpage's javascript file -->
     <script src="https://kit.fontawesome.com/c9500776a0.js" crossorigin="anonymous"></script>
     <script src="misc/codeBtn.js"></script>
-    <script>
-        /*
-        Straightforward opacity change
-         */
-        AFRAME.registerComponent('model-opacity', {
-            schema: { opacity: { default: 0.5 } },
-            update: function () {
-                var mesh = this.el.getObject3D('mesh');
-                var data = this.data;
-                if (!mesh) { return; }
-                mesh.traverse(function (node) {
-                    if (node.isMesh) {
-                        node.material.opacity = data.opacity;
-                        node.material.transparent = data.opacity < 1.0;
-                        node.material.needsUpdate = true;
-                    }
-                });
-            }
-        });
-        
-        // Save the original opacity values, and multiply them by a modifier
-        AFRAME.registerComponent('model-relative-opacity', {
-            schema: {opacityFactor: {default: 0.5}},
-            init: function () {
-                this.nodeMap = {}
-                this.prepareMap.bind(this)
-                this.traverseMesh.bind(this)
-
-                this.el.addEventListener('model-loaded', e=> {
-                    this.prepareMap()
-                    this.update()
-                });
-            },
-            prepareMap: function() {
-                this.traverseMesh(node => {
-                    this.nodeMap[node.uuid] = node.material.opacity
-                })
-        },
-        update: function () {
-            this.traverseMesh(node => {
-                node.material.opacity = this.nodeMap[node.uuid] * this.data.opacityFactor
-                node.material.transparent = node.material.opacity < 1.0;
-                node.material.needsUpdate = true;
-            })
-        },
-        remove: function() {
-            this.traverseMesh(node => {
-                node.material.opacity = this.nodeMap[node.uuid]
-                node.material.transparent = node.material.opacity < 1.0;
-                node.material.needsUpdate = true;
-            })
-        },
-        traverseMesh: function(func) {
-            var mesh = this.el.getObject3D('mesh');
-            var data = this.data;
-            if (!mesh) { return; }
-            mesh.traverse(node => {
-                if (node.isMesh) {
-                    func(node)
-                }
-            }); 
-        }
-    });
-    </script>
+    <script src="https://gftruj.github.io/webzamples/aframe/models/components/model-opacity.js"></script>
+    <script src="https://gftruj.github.io/webzamples/aframe/models/components/model-relative-opacity.js"></script>
 </head>
 
 <body>
@@ -95,7 +33,7 @@
 
         <a-text color='black' scale='0.5 0.5 0.5' position="0.5 1.8 -2" value='Animating relative opacity'></a-text>
         <a-entity scale="0.0025 0.0025 0.0025" position="1.5 1 -2" gltf-model="#window" model-relative-opacity
-            animation='property: model-relative-opacity.opacityFactor;from: 1; to: 0; dur: 2500;loop: true; dir: alternate; startEvents: model-loaded'>
+            animation='property: model-relative-opacity.opacity;from: 1; to: 0; dur: 2500;loop: true; dir: alternate; startEvents: model-loaded'>
         </a-entity>
     </a-scene>
 
