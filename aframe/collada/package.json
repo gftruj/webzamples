@@ -8,11 +8,9 @@
     "lib": "lib"
   },
   "scripts": {
-    "build": "browserify collada-model.js -p esmify > dist/collada-model.js"
+    "build": "npx webpack"
   },
   "dependencies": {
-    "browserify": "*",
-    "esmify": "*",
     "three": "^0.149.0"
   },
   "keywords": [],
