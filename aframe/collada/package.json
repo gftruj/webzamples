@@ -12,9 +12,14 @@
   },
   "dependencies": {
     "browserify": "*",
-    "esmify": "*"
+    "esmify": "*",
+    "three": "^0.149.0"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1"
+  }
 }

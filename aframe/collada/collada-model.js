@@ -1,4 +1,4 @@
-import "./lib/ColladaLoader.js";
+import { ColladaLoader } from 'three/examples/jsm/loaders/ColladaLoader.js';
 
 export const Component = AFRAME.registerComponent('collada-model', {
   schema: {
@@ -8,8 +8,7 @@ export const Component = AFRAME.registerComponent('collada-model', {
 
   init: function () {
     this.model = null;
-    this.loader = new THREE.ColladaLoader();
-    this.loader.options.convertUpAxis = true;
+    this.loader = new ColladaLoader();
   },
 
   update: function () {
