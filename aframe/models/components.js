@@ -163,7 +163,7 @@ AFRAME.registerComponent("prevent-culling", {
       this.helper.material.dispose()
       this.helper = null
     }
-  })
+  });
 
   AFRAME.registerComponent("bbox-helper", {
     schema: {
