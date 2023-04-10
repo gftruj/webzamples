@@ -1,0 +1,25 @@
+{
+  "name": "fbx",
+  "version": "1.0.0",
+  "description": "",
+  "main": "fbx-model.js",
+  "directories": {
+    "example": "examples",
+    "lib": "lib"
+  },
+  "scripts": {
+    "build": "npx webpack"
+  },
+  "dependencies": {
+    "super-three":"^0.147.1",
+    "three":"^0.147.0",
+    "web-encoding":"^1.1.5"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "webpack":"^5.78.0",
+    "webpack-cli":"^5.0.1"
+  }
+}
