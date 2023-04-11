@@ -4,80 +4,17 @@
     <meta charset="utf-8" />
     <title>Bounding boxes</title>
     <meta name="description" content="Bounding boxes"/>
-    <!-- 
-    AFRAME MASTER
-<script src="https://rawcdn.githack.com/aframevr/aframe/227dcc35623be66a7867577ce462e7a3ac96f9ac/dist/aframe-master.js"></script>
-    
-      ALL MODELS CREDITS, AND LICENSES ARE AT THEIR LOCATIONS
-    -->
-    <script src="/webzamples/libs/aframe.1.0.4.js"></script>
-    <script src="/webzamples/libs/aframe-extras.loaders.6.1.1.js"></script>
-    <script src="/webzamples/libs/Three.ColladaLoader.js"></script>
-    <script src="https://gftruj.github.io/unnecessary.components/dist/unnecessary-components.js"></script>
-    <script src="https://kit.fontawesome.com/c9500776a0.js" crossorigin="anonymous"></script>
-    <script src="misc/codeBtn.js"></script>
-    <script>
-      AFRAME.registerComponent("skinnedbbox", {
-        schema: {
-          combine: { value: false }
-        },
-        init: function() {
-          this.sbox = new THREE.Box3();
-          this.el.sceneEl.object3D.add(
-            new THREE.Box3Helper(this.sbox, 0x00ff00)
-          );
-          this.skinnedMesh = null;
-          this.el.addEventListener("model-loaded", e => {
-            let mesh = this.el.getObject3D("mesh");
 
-            mesh.traverse(node => {
-              if (node.isSkinnedMesh) {
-                this.skinnedMesh = node;
-                node.frustumCulled = false; // not necessary for the bbox
-              }
-            });
-          });
-        },
-        tick: function() {
-          if (!this.skinnedMesh) return;
-          THREE.Box3Utils.fromSkinnedMesh(this.skinnedMesh, this.sbox);
-        }
-      });
+    <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+  <script src="/webzamples/libs/aframe-extras.loaders.6.1.1.js"></script>
+  <script src="../collada/dist/collada-model.js"></script>
+  <script src="../fbx/dist/fbx-model.js"></script>
 
-      AFRAME.registerComponent("collada-storm-trooper", {
-        init: function() {
-          var loader = new THREE.ColladaLoader();
-          this.mixer = null;
-          this.sbox = new THREE.Box3();
-          this.el.sceneEl.object3D.add(
-            new THREE.Box3Helper(this.sbox, 0x00ff00)
-          );
-          loader.load(
-            "../assets/models/stormtrooper/stormtrooper.dae",
-            collada => {
-              var animations = collada.animations;
-              var root = collada.scene;
-              var clip = animations[0];
+  <script src="./components/redbox.js"></script>
+  <script src="./components/prevent-culling.js"></script>
+  <script src="./components/skinned-mesh-bbox.js"></script>
+  <script src="./components/bbox-helper.js"></script>
 
-              this.skinnedMesh = root.getObjectByName("Stormtrooper");
-              root.traverse(function(node) {
-                if (node.isSkinnedMesh) {
-                  node.frustumCulled = false;
-                }
-              });
-              this.mixer = new THREE.AnimationMixer(root);
-              var action = this.mixer.clipAction(clip).play();
-              this.el.object3D.add(root);
-            }
-          );
-        },
-        tick: function(t, dt) {
-          if (!this.mixer) return;
-          this.mixer.update(dt / 1000);
-          THREE.Box3Utils.fromSkinnedMesh(this.skinnedMesh, this.sbox);
-        }
-      });
-    </script>
   </head>
   <body>
     <a-scene background="color: #fafafa">
@@ -88,6 +25,8 @@
         </a-asset-item>
         <a-asset-item id="articuno-model" src="../assets/models/articuno/scene.gltf" crossorigin="anonymous">
         </a-asset-item>
+        <a-asset-item id="stormtrooper" src="../assets/models/stormtrooper/stormtrooper.dae"></a-asset-item>
+        <a-asset-item id="Samba-model" src="https://threejs.org/examples/models/fbx/Samba Dancing.fbx"></a-asset-item>
       </a-assets>
       <a-text position="-2 6 -4" color='black' value="Red box - from object3D \n green box - calculated from bone transforms"></a-text>
 
@@ -101,19 +40,20 @@
   
       <a-text position="-1 -0.5 -6" color="black" value="one skinned-mesh"></a-text>
       <a-gltf-model src="#drone-model" position="0 0 -6" scale="0.015 0.015 0.015" rotation="0 180 0"
-        animation-mixer="clip: *;" skinnedbbox redbox-from-object3d prevent-culling></a-gltf-model>
+        animation-mixer="clip: *;" bbox-helper redbox-from-object3d prevent-culling></a-gltf-model>
       
       <a-text position="3 -0.5 -6" color="black" value="multiple skinned-meshes in one model\n each one has a bounding box"></a-text>
       <a-gltf-model src="#articuno-model" position="5 0 -6" scale="0.015 0.015 0.015" 
         animation-mixer="clip: *;" bbox-helper redbox-from-object3d prevent-culling></a-gltf-model>
   
-      <a-text position="8 -0.5 -6" color="black" value="skinned mesh with non-indexed geometry"></a-text>
-      <a-entity collada-storm-trooper position="10 0 -6" rotation="0 120 0" scale="0.5 0.5 0.5"
-        bbox-helper redbox-from-object3d></a-entity>
+        <a-text position="8.8 -0.5 -6" color="black" value="collada model"></a-text>
+        <a-entity position="10 0 -6" rotation="0 180 0" scale="0.5 0.5 0.5" collada-model="src: #stormtrooper"
+            animation-mixer="clip: *" redbox-from-object3d bbox-helper></a-entity>
+
+            <a-text color="black" value="FBX model" position="13 -0.5 -6"></a-text>
+            <a-entity position="14 0 -6" scale="0.01 0.01 0.01" fbx-model-loader="src: #Samba-model"
+            animation-mixer="clip: *" bbox-helper="combine: true"></a-entity>
     </a-scene>
-    <script>
-      // show-code button
-      setCodeBtnUrl("aframe/models/bounding_boxes.html");
-    </script>
+
   </body>
 </html>
