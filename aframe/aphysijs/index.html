@@ -1,0 +1,75 @@
+<html>
+
+<head>
+    <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+    <script src="./physi.js"></script>
+    <script>
+        THREE.Scene = Physijs.Scene;
+        AFRAME.registerSystem("aphysics", {
+            init: function () {
+                const scene = document.querySelector("a-scene");
+                console.log(scene)
+                console.log(scene.object3D)
+                scene.object3D.setGravity(new THREE.Vector3(0, -9, 0));
+                scene.object3D.addEventListener(
+                    'update',
+                    function () {
+                        console.log("update")
+                        scene.object3D.simulate(undefined, 1);
+                    }
+                );
+                scene.object3D.simulate(undefined, 1);
+            },
+            tick: function (t, dt) {
+                
+            }
+        })
+        AFRAME.registerComponent("physical-body", {
+            schema: {
+                shape: { default: "box" },
+                type: {default: "dynamic"},
+            },
+            init: function () {
+                this.el.addEventListener("loaded", () => {
+                    var box_geometry = new THREE.BoxGeometry(1, 1, 1)
+                    material = Physijs.createMaterial(
+                        new THREE.MeshNormalMaterial(),
+                        .6, // medium friction
+                        .3 // low restitution
+                    );
+                    box = new Physijs.BoxMesh(
+                        box_geometry,
+                        material,
+                        this.data.type === "static" ? 0 : 1
+                    );
+                    box.visible = false;
+                    box.collisions = 0;
+                    
+                    this.el.object3D.getWorldPosition(box.position);
+                    
+                    this.physicalBox = box;
+
+                    this.el.sceneEl.object3D.add(box);
+                })
+            },
+            tick: function() {
+                if (!this.physicalBox) return;
+                this.el.object3D.position.copy(this.physicalBox.position)
+            }
+        })
+    </script>
+</head>
+
+<body>
+    <a-scene aphysics>
+        <a-box position="-1 2.5 -3" rotation="0 45 0" color="#4CC3D9" physical-body></a-box>
+        <a-box position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9"  physical-body="type: static"></a-box>
+
+        <a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E"></a-sphere>
+        <a-cylinder position="1 0.75 -3" radius="0.5" height="1.5" color="#FFC65D"></a-cylinder>
+        <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
+        <a-sky color="#ECECEC"></a-sky>
+    </a-scene>
+</body>
+
+</html>
