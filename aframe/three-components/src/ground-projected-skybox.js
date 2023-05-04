@@ -15,10 +15,10 @@ export const Component = AFRAME.registerComponent("ground-projected-skybox", {
             const scene = this.el.sceneEl.object3D;
             scene.add( this.skybox );
             scene.environment = this.envMap;
+            this.skybox.scale.setScalar( this.data.scale );
         }
 
         if (diff.scale) {
-            console.log(this.data.scale)
             this.skybox.scale.setScalar( this.data.scale );
         }
     },
@@ -29,7 +29,7 @@ export const Component = AFRAME.registerComponent("ground-projected-skybox", {
         return new GroundProjectedSkybox( this.envMap );
     },
     cleanup() {
-        const scene = this.el.sceneEl.scene;
+        const scene = this.el.sceneEl.object3D;
         if (this.skybox) {
             scene.remove(this.skybox);
         }
