@@ -3,7 +3,7 @@
 <hr>
 
 ### smooth-scroll-path component
-![scroll-path](assets/showoff.gif "scroll-path")
+![scroll-path](https://user-images.githubusercontent.com/17348360/236679581-9a3c398f-436b-41be-9913-a5d820348a75.gif)
 
 Based on the <a href="https://github.com/protyze/aframe-alongpath-component">`along-path` component</a> by Jan Azzati.
 
