@@ -11,10 +11,6 @@ The component should behave in a similar manner, but is controlled with the mous
 Minor *aframe-curve* changes include working with a line with more than 2 points.
 Minor *along-path* changes include smooth rotation changes, trigger debugging, ofc working with a mousewheel, or touch events.
 
-### Example
-
-Check it out [here](https://gftruj.github.io/webzamples/PlanetVoodoo/scroll-path).
-
 ### Usage
 
     <script src="https://rawgit.com/aframevr/aframe/master/dist/aframe-master.min.js"></script>
