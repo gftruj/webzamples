@@ -64,5 +64,5 @@ Emits the `model-loaded` like other loaders - which can be used by other compone
 
 [gltf models](https://gftruj.github.io/webzamples/PlanetVoodoo/model-to-particles/gltf.html), and [collada models](https://gftruj.github.io/webzamples/PlanetVoodoo/model-to-particles/collada.html):
 
-![stormtroopers](./assets/trooper.gif "stormtroopers")
+![stormtroopers](https://imgur.com/a/VJQMUM0 "stormtroopers")
 Left to right - scattered points, points at vertices positions, original model.
