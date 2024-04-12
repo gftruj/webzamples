@@ -4,11 +4,13 @@ import { GroundProjectedSkybox } from 'three/addons/objects/GroundProjectedSkybo
 export const Component = AFRAME.registerComponent("ground-projected-skybox", {
     schema: {
         envMapUrl: {default: ""},
+        envMap: {default: ""},
         scale: {default: 100},
     },
     update: async function(oldData) {
         const diff = AFRAME.utils.diff(oldData, this.data);
         if (diff.envMapUrl) {
+            console.log("new envMap:", diff.envMapUrl)
             this.cleanup();
             this.skybox = await this.createSkybox(this.data.envMapUrl);  
 
@@ -22,9 +24,15 @@ export const Component = AFRAME.registerComponent("ground-projected-skybox", {
             this.skybox.scale.setScalar( this.data.scale );
         }
     },
+    getLoader(url) {
+        if (url.match((/\.(hdr)$/i)))
+            return new RGBELoader();
+        return new THREE.TextureLoader();
+    },
     createSkybox: async function(url) {
-        const hdrLoader = new RGBELoader();
-        this.envMap = await hdrLoader.loadAsync(url);
+        const loader = this.getLoader(url);
+
+        this.envMap = await loader.loadAsync(url);
         this.envMap.mapping = THREE.EquirectangularReflectionMapping;
         return new GroundProjectedSkybox( this.envMap );
     },

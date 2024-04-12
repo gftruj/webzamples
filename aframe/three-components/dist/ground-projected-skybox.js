@@ -1,1 +1,700 @@
-(()=>{"use strict";const t=THREE;class e extends t.DataTextureLoader{constructor(e){super(e),this.type=t.HalfFloatType}parse(e){const n=function(t,e){switch(t){case 1:console.error("THREE.RGBELoader Read Error: "+(e||""));break;case 2:console.error("THREE.RGBELoader Write Error: "+(e||""));break;case 3:console.error("THREE.RGBELoader Bad File Format: "+(e||""));break;default:console.error("THREE.RGBELoader: Error: "+(e||""))}return-1},r=function(t,e,n){e=e||1024;let r=t.pos,a=-1,o=0,i="",s=String.fromCharCode.apply(null,new Uint16Array(t.subarray(r,r+128)));for(;0>(a=s.indexOf("\n"))&&o<e&&r<t.byteLength;)i+=s,o+=s.length,r+=128,s+=String.fromCharCode.apply(null,new Uint16Array(t.subarray(r,r+128)));return-1<a&&(!1!==n&&(t.pos+=o+a+1),i+s.slice(0,a))},a=function(t,e,n,r){const a=t[e+3],o=Math.pow(2,a-128)/255;n[r+0]=t[e+0]*o,n[r+1]=t[e+1]*o,n[r+2]=t[e+2]*o,n[r+3]=1},o=function(e,n,r,a){const o=e[n+3],i=Math.pow(2,o-128)/255;r[a+0]=t.DataUtils.toHalfFloat(Math.min(e[n+0]*i,65504)),r[a+1]=t.DataUtils.toHalfFloat(Math.min(e[n+1]*i,65504)),r[a+2]=t.DataUtils.toHalfFloat(Math.min(e[n+2]*i,65504)),r[a+3]=t.DataUtils.toHalfFloat(1)},i=new Uint8Array(e);i.pos=0;const s=function(t){const e=/^\s*GAMMA\s*=\s*(\d+(\.\d+)?)\s*$/,a=/^\s*EXPOSURE\s*=\s*(\d+(\.\d+)?)\s*$/,o=/^\s*FORMAT=(\S+)\s*$/,i=/^\s*\-Y\s+(\d+)\s+\+X\s+(\d+)\s*$/,s={valid:0,string:"",comments:"",programtype:"RGBE",format:"",gamma:1,exposure:1,width:0,height:0};let c,l;if(t.pos>=t.byteLength||!(c=r(t)))return n(1,"no header found");if(!(l=c.match(/^#\?(\S+)/)))return n(3,"bad initial token");for(s.valid|=1,s.programtype=l[1],s.string+=c+"\n";c=r(t),!1!==c;)if(s.string+=c+"\n","#"!==c.charAt(0)){if((l=c.match(e))&&(s.gamma=parseFloat(l[1])),(l=c.match(a))&&(s.exposure=parseFloat(l[1])),(l=c.match(o))&&(s.valid|=2,s.format=l[1]),(l=c.match(i))&&(s.valid|=4,s.height=parseInt(l[1],10),s.width=parseInt(l[2],10)),2&s.valid&&4&s.valid)break}else s.comments+=c+"\n";return 2&s.valid?4&s.valid?s:n(3,"missing image size specifier"):n(3,"missing format specifier")}(i);if(-1!==s){const e=s.width,r=s.height,c=function(t,e,r){const a=e;if(a<8||a>32767||2!==t[0]||2!==t[1]||128&t[2])return new Uint8Array(t);if(a!==(t[2]<<8|t[3]))return n(3,"wrong scanline width");const o=new Uint8Array(4*e*r);if(!o.length)return n(4,"unable to allocate buffer space");let i=0,s=0;const c=4*a,l=new Uint8Array(4),d=new Uint8Array(c);let u=r;for(;u>0&&s<t.byteLength;){if(s+4>t.byteLength)return n(1);if(l[0]=t[s++],l[1]=t[s++],l[2]=t[s++],l[3]=t[s++],2!=l[0]||2!=l[1]||(l[2]<<8|l[3])!=a)return n(3,"bad rgbe scanline format");let e,r=0;for(;r<c&&s<t.byteLength;){e=t[s++];const a=e>128;if(a&&(e-=128),0===e||r+e>c)return n(3,"bad scanline data");if(a){const n=t[s++];for(let t=0;t<e;t++)d[r++]=n}else d.set(t.subarray(s,s+e),r),r+=e,s+=e}const h=a;for(let t=0;t<h;t++){let e=0;o[i]=d[t+e],e+=a,o[i+1]=d[t+e],e+=a,o[i+2]=d[t+e],e+=a,o[i+3]=d[t+e],i+=4}u--}return o}(i.subarray(i.pos),e,r);if(-1!==c){let n,i,l;switch(this.type){case t.FloatType:l=c.length/4;const e=new Float32Array(4*l);for(let t=0;t<l;t++)a(c,4*t,e,4*t);n=e,i=t.FloatType;break;case t.HalfFloatType:l=c.length/4;const r=new Uint16Array(4*l);for(let t=0;t<l;t++)o(c,4*t,r,4*t);n=r,i=t.HalfFloatType;break;default:console.error("THREE.RGBELoader: unsupported type: ",this.type)}return{width:e,height:r,data:n,header:s.string,gamma:s.gamma,exposure:s.exposure,type:i}}}return null}setDataType(t){return this.type=t,this}load(e,n,r,a){return super.load(e,(function(e,r){switch(e.type){case t.FloatType:case t.HalfFloatType:e.colorSpace=t.LinearSRGBColorSpace,e.minFilter=t.LinearFilter,e.magFilter=t.LinearFilter,e.generateMipmaps=!1,e.flipY=!0}n&&n(e,r)}),r,a)}}class n extends t.Mesh{constructor(e,n={}){const r=[e.isCubeTexture?"#define ENVMAP_TYPE_CUBE":""].join("\n")+"\n\n\t\t\t\tvarying vec3 vWorldPosition;\n\n\t\t\t\tuniform float radius;\n\t\t\t\tuniform float height;\n\t\t\t\tuniform float angle;\n\n\t\t\t\t#ifdef ENVMAP_TYPE_CUBE\n\n\t\t\t\t\tuniform samplerCube map;\n\n\t\t\t\t#else\n\n\t\t\t\t\tuniform sampler2D map;\n\n\t\t\t\t#endif\n\n\t\t\t\t// From: https://www.shadertoy.com/view/4tsBD7\n\t\t\t\tfloat diskIntersectWithBackFaceCulling( vec3 ro, vec3 rd, vec3 c, vec3 n, float r ) \n\t\t\t\t{\n\n\t\t\t\t\tfloat d = dot ( rd, n );\n\n\t\t\t\t\tif( d > 0.0 ) { return 1e6; }\n\n\t\t\t\t\tvec3 o = ro - c;\n\t\t\t\t\tfloat t = - dot( n, o ) / d;\n\t\t\t\t\tvec3 q = o + rd * t;\n\n\t\t\t\t\treturn ( dot( q, q ) < r * r ) ? t : 1e6;\n\n\t\t\t\t}\n\n\t\t\t\t// From: https://www.iquilezles.org/www/articles/intersectors/intersectors.htm\n\t\t\t\tfloat sphereIntersect( vec3 ro, vec3 rd, vec3 ce, float ra ) {\n\n\t\t\t\t\tvec3 oc = ro - ce;\n\t\t\t\t\tfloat b = dot( oc, rd );\n\t\t\t\t\tfloat c = dot( oc, oc ) - ra * ra;\n\t\t\t\t\tfloat h = b * b - c;\n\n\t\t\t\t\tif( h < 0.0 ) { return -1.0; }\n\n\t\t\t\t\th = sqrt( h );\n\n\t\t\t\t\treturn - b + h;\n\n\t\t\t\t}\n\n\t\t\t\tvec3 project() {\n\n\t\t\t\t\tvec3 p = normalize( vWorldPosition );\n\t\t\t\t\tvec3 camPos = cameraPosition;\n\t\t\t\t\tcamPos.y -= height;\n\n\t\t\t\t\tfloat intersection = sphereIntersect( camPos, p, vec3( 0.0 ), radius );\n\t\t\t\t\tif( intersection > 0.0 ) {\n\n\t\t\t\t\t\tvec3 h = vec3( 0.0, - height, 0.0 );\n\t\t\t\t\t\tfloat intersection2 = diskIntersectWithBackFaceCulling( camPos, p, h, vec3( 0.0, 1.0, 0.0 ), radius );\n\t\t\t\t\t\tp = ( camPos + min( intersection, intersection2 ) * p ) / radius;\n\n\t\t\t\t\t} else {\n\n\t\t\t\t\t\tp = vec3( 0.0, 1.0, 0.0 );\n\n\t\t\t\t\t}\n\n\t\t\t\t\treturn p;\n\n\t\t\t\t}\n\n\t\t\t\t#include <common>\n\n\t\t\t\tvoid main() {\n\n\t\t\t\t\tvec3 projectedWorldPosition = project();\n\n\t\t\t\t\t#ifdef ENVMAP_TYPE_CUBE\n\n\t\t\t\t\t\tvec3 outcolor = textureCube( map, projectedWorldPosition ).rgb;\n\n\t\t\t\t\t#else\n\n\t\t\t\t\t\tvec3 direction = normalize( projectedWorldPosition );\n\t\t\t\t\t\tvec2 uv = equirectUv( direction );\n\t\t\t\t\t\tvec3 outcolor = texture2D( map, uv ).rgb;\n\n\t\t\t\t\t#endif\n\n\t\t\t\t\tgl_FragColor = vec4( outcolor, 1.0 );\n\n\t\t\t\t\t#include <tonemapping_fragment>\n\t\t\t\t\t#include <encodings_fragment>\n\n\t\t\t\t}\n\t\t\t\t",a={map:{value:e},height:{value:n.height||15},radius:{value:n.radius||100}};super(new t.IcosahedronGeometry(1,16),new t.ShaderMaterial({uniforms:a,fragmentShader:r,vertexShader:"\n\t\t\tvarying vec3 vWorldPosition;\n\n\t\t\tvoid main() {\n\n\t\t\t\tvec4 worldPosition = ( modelMatrix * vec4( position, 1.0 ) );\n\t\t\t\tvWorldPosition = worldPosition.xyz;\n\n\t\t\t\tgl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );\n\n\t\t\t}\n\t\t\t",side:t.DoubleSide}))}set radius(t){this.material.uniforms.radius.value=t}get radius(){return this.material.uniforms.radius.value}set height(t){this.material.uniforms.height.value=t}get height(){return this.material.uniforms.height.value}}AFRAME.registerComponent("ground-projected-skybox",{schema:{envMapUrl:{default:""},scale:{default:100}},update:async function(t){const e=AFRAME.utils.diff(t,this.data);if(e.envMapUrl){this.cleanup(),this.skybox=await this.createSkybox(this.data.envMapUrl);const t=this.el.sceneEl.object3D;t.add(this.skybox),t.environment=this.envMap,this.skybox.scale.setScalar(this.data.scale)}e.scale&&this.skybox.scale.setScalar(this.data.scale)},createSkybox:async function(t){const r=new e;return this.envMap=await r.loadAsync(t),this.envMap.mapping=THREE.EquirectangularReflectionMapping,new n(this.envMap)},cleanup(){const t=this.el.sceneEl.object3D;this.skybox&&t.remove(this.skybox),this.envMap&&(t.environment=null,this.envMap.dispose())},remove:function(){this.cleanup()}})})();
+/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+var __webpack_exports__ = {};
+
+// UNUSED EXPORTS: Component
+
+;// CONCATENATED MODULE: external "THREE"
+const external_THREE_namespaceObject = THREE;
+;// CONCATENATED MODULE: ./node_modules/three/examples/jsm/loaders/RGBELoader.js
+
+
+// https://github.com/mrdoob/three.js/issues/5552
+// http://en.wikipedia.org/wiki/RGBE_image_format
+
+class RGBELoader extends external_THREE_namespaceObject.DataTextureLoader {
+
+	constructor( manager ) {
+
+		super( manager );
+
+		this.type = external_THREE_namespaceObject.HalfFloatType;
+
+	}
+
+	// adapted from http://www.graphics.cornell.edu/~bjw/rgbe.html
+
+	parse( buffer ) {
+
+		const
+			/* return codes for rgbe routines */
+			//RGBE_RETURN_SUCCESS = 0,
+			RGBE_RETURN_FAILURE = - 1,
+
+			/* default error routine.  change this to change error handling */
+			rgbe_read_error = 1,
+			rgbe_write_error = 2,
+			rgbe_format_error = 3,
+			rgbe_memory_error = 4,
+			rgbe_error = function ( rgbe_error_code, msg ) {
+
+				switch ( rgbe_error_code ) {
+
+					case rgbe_read_error: console.error( 'THREE.RGBELoader Read Error: ' + ( msg || '' ) );
+						break;
+					case rgbe_write_error: console.error( 'THREE.RGBELoader Write Error: ' + ( msg || '' ) );
+						break;
+					case rgbe_format_error: console.error( 'THREE.RGBELoader Bad File Format: ' + ( msg || '' ) );
+						break;
+					default:
+					case rgbe_memory_error: console.error( 'THREE.RGBELoader: Error: ' + ( msg || '' ) );
+
+				}
+
+				return RGBE_RETURN_FAILURE;
+
+			},
+
+			/* offsets to red, green, and blue components in a data (float) pixel */
+			//RGBE_DATA_RED = 0,
+			//RGBE_DATA_GREEN = 1,
+			//RGBE_DATA_BLUE = 2,
+
+			/* number of floats per pixel, use 4 since stored in rgba image format */
+			//RGBE_DATA_SIZE = 4,
+
+			/* flags indicating which fields in an rgbe_header_info are valid */
+			RGBE_VALID_PROGRAMTYPE = 1,
+			RGBE_VALID_FORMAT = 2,
+			RGBE_VALID_DIMENSIONS = 4,
+
+			NEWLINE = '\n',
+
+			fgets = function ( buffer, lineLimit, consume ) {
+
+				const chunkSize = 128;
+
+				lineLimit = ! lineLimit ? 1024 : lineLimit;
+				let p = buffer.pos,
+					i = - 1, len = 0, s = '',
+					chunk = String.fromCharCode.apply( null, new Uint16Array( buffer.subarray( p, p + chunkSize ) ) );
+
+				while ( ( 0 > ( i = chunk.indexOf( NEWLINE ) ) ) && ( len < lineLimit ) && ( p < buffer.byteLength ) ) {
+
+					s += chunk; len += chunk.length;
+					p += chunkSize;
+					chunk += String.fromCharCode.apply( null, new Uint16Array( buffer.subarray( p, p + chunkSize ) ) );
+
+				}
+
+				if ( - 1 < i ) {
+
+					/*for (i=l-1; i>=0; i--) {
+						byteCode = m.charCodeAt(i);
+						if (byteCode > 0x7f && byteCode <= 0x7ff) byteLen++;
+						else if (byteCode > 0x7ff && byteCode <= 0xffff) byteLen += 2;
+						if (byteCode >= 0xDC00 && byteCode <= 0xDFFF) i--; //trail surrogate
+					}*/
+					if ( false !== consume ) buffer.pos += len + i + 1;
+					return s + chunk.slice( 0, i );
+
+				}
+
+				return false;
+
+			},
+
+			/* minimal header reading.  modify if you want to parse more information */
+			RGBE_ReadHeader = function ( buffer ) {
+
+
+				// regexes to parse header info fields
+				const magic_token_re = /^#\?(\S+)/,
+					gamma_re = /^\s*GAMMA\s*=\s*(\d+(\.\d+)?)\s*$/,
+					exposure_re = /^\s*EXPOSURE\s*=\s*(\d+(\.\d+)?)\s*$/,
+					format_re = /^\s*FORMAT=(\S+)\s*$/,
+					dimensions_re = /^\s*\-Y\s+(\d+)\s+\+X\s+(\d+)\s*$/,
+
+					// RGBE format header struct
+					header = {
+
+						valid: 0, /* indicate which fields are valid */
+
+						string: '', /* the actual header string */
+
+						comments: '', /* comments found in header */
+
+						programtype: 'RGBE', /* listed at beginning of file to identify it after "#?". defaults to "RGBE" */
+
+						format: '', /* RGBE format, default 32-bit_rle_rgbe */
+
+						gamma: 1.0, /* image has already been gamma corrected with given gamma. defaults to 1.0 (no correction) */
+
+						exposure: 1.0, /* a value of 1.0 in an image corresponds to <exposure> watts/steradian/m^2. defaults to 1.0 */
+
+						width: 0, height: 0 /* image dimensions, width/height */
+
+					};
+
+				let line, match;
+
+				if ( buffer.pos >= buffer.byteLength || ! ( line = fgets( buffer ) ) ) {
+
+					return rgbe_error( rgbe_read_error, 'no header found' );
+
+				}
+
+				/* if you want to require the magic token then uncomment the next line */
+				if ( ! ( match = line.match( magic_token_re ) ) ) {
+
+					return rgbe_error( rgbe_format_error, 'bad initial token' );
+
+				}
+
+				header.valid |= RGBE_VALID_PROGRAMTYPE;
+				header.programtype = match[ 1 ];
+				header.string += line + '\n';
+
+				while ( true ) {
+
+					line = fgets( buffer );
+					if ( false === line ) break;
+					header.string += line + '\n';
+
+					if ( '#' === line.charAt( 0 ) ) {
+
+						header.comments += line + '\n';
+						continue; // comment line
+
+					}
+
+					if ( match = line.match( gamma_re ) ) {
+
+						header.gamma = parseFloat( match[ 1 ] );
+
+					}
+
+					if ( match = line.match( exposure_re ) ) {
+
+						header.exposure = parseFloat( match[ 1 ] );
+
+					}
+
+					if ( match = line.match( format_re ) ) {
+
+						header.valid |= RGBE_VALID_FORMAT;
+						header.format = match[ 1 ];//'32-bit_rle_rgbe';
+
+					}
+
+					if ( match = line.match( dimensions_re ) ) {
+
+						header.valid |= RGBE_VALID_DIMENSIONS;
+						header.height = parseInt( match[ 1 ], 10 );
+						header.width = parseInt( match[ 2 ], 10 );
+
+					}
+
+					if ( ( header.valid & RGBE_VALID_FORMAT ) && ( header.valid & RGBE_VALID_DIMENSIONS ) ) break;
+
+				}
+
+				if ( ! ( header.valid & RGBE_VALID_FORMAT ) ) {
+
+					return rgbe_error( rgbe_format_error, 'missing format specifier' );
+
+				}
+
+				if ( ! ( header.valid & RGBE_VALID_DIMENSIONS ) ) {
+
+					return rgbe_error( rgbe_format_error, 'missing image size specifier' );
+
+				}
+
+				return header;
+
+			},
+
+			RGBE_ReadPixels_RLE = function ( buffer, w, h ) {
+
+				const scanline_width = w;
+
+				if (
+					// run length encoding is not allowed so read flat
+					( ( scanline_width < 8 ) || ( scanline_width > 0x7fff ) ) ||
+					// this file is not run length encoded
+					( ( 2 !== buffer[ 0 ] ) || ( 2 !== buffer[ 1 ] ) || ( buffer[ 2 ] & 0x80 ) )
+				) {
+
+					// return the flat buffer
+					return new Uint8Array( buffer );
+
+				}
+
+				if ( scanline_width !== ( ( buffer[ 2 ] << 8 ) | buffer[ 3 ] ) ) {
+
+					return rgbe_error( rgbe_format_error, 'wrong scanline width' );
+
+				}
+
+				const data_rgba = new Uint8Array( 4 * w * h );
+
+				if ( ! data_rgba.length ) {
+
+					return rgbe_error( rgbe_memory_error, 'unable to allocate buffer space' );
+
+				}
+
+				let offset = 0, pos = 0;
+
+				const ptr_end = 4 * scanline_width;
+				const rgbeStart = new Uint8Array( 4 );
+				const scanline_buffer = new Uint8Array( ptr_end );
+				let num_scanlines = h;
+
+				// read in each successive scanline
+				while ( ( num_scanlines > 0 ) && ( pos < buffer.byteLength ) ) {
+
+					if ( pos + 4 > buffer.byteLength ) {
+
+						return rgbe_error( rgbe_read_error );
+
+					}
+
+					rgbeStart[ 0 ] = buffer[ pos ++ ];
+					rgbeStart[ 1 ] = buffer[ pos ++ ];
+					rgbeStart[ 2 ] = buffer[ pos ++ ];
+					rgbeStart[ 3 ] = buffer[ pos ++ ];
+
+					if ( ( 2 != rgbeStart[ 0 ] ) || ( 2 != rgbeStart[ 1 ] ) || ( ( ( rgbeStart[ 2 ] << 8 ) | rgbeStart[ 3 ] ) != scanline_width ) ) {
+
+						return rgbe_error( rgbe_format_error, 'bad rgbe scanline format' );
+
+					}
+
+					// read each of the four channels for the scanline into the buffer
+					// first red, then green, then blue, then exponent
+					let ptr = 0, count;
+
+					while ( ( ptr < ptr_end ) && ( pos < buffer.byteLength ) ) {
+
+						count = buffer[ pos ++ ];
+						const isEncodedRun = count > 128;
+						if ( isEncodedRun ) count -= 128;
+
+						if ( ( 0 === count ) || ( ptr + count > ptr_end ) ) {
+
+							return rgbe_error( rgbe_format_error, 'bad scanline data' );
+
+						}
+
+						if ( isEncodedRun ) {
+
+							// a (encoded) run of the same value
+							const byteValue = buffer[ pos ++ ];
+							for ( let i = 0; i < count; i ++ ) {
+
+								scanline_buffer[ ptr ++ ] = byteValue;
+
+							}
+							//ptr += count;
+
+						} else {
+
+							// a literal-run
+							scanline_buffer.set( buffer.subarray( pos, pos + count ), ptr );
+							ptr += count; pos += count;
+
+						}
+
+					}
+
+
+					// now convert data from buffer into rgba
+					// first red, then green, then blue, then exponent (alpha)
+					const l = scanline_width; //scanline_buffer.byteLength;
+					for ( let i = 0; i < l; i ++ ) {
+
+						let off = 0;
+						data_rgba[ offset ] = scanline_buffer[ i + off ];
+						off += scanline_width; //1;
+						data_rgba[ offset + 1 ] = scanline_buffer[ i + off ];
+						off += scanline_width; //1;
+						data_rgba[ offset + 2 ] = scanline_buffer[ i + off ];
+						off += scanline_width; //1;
+						data_rgba[ offset + 3 ] = scanline_buffer[ i + off ];
+						offset += 4;
+
+					}
+
+					num_scanlines --;
+
+				}
+
+				return data_rgba;
+
+			};
+
+		const RGBEByteToRGBFloat = function ( sourceArray, sourceOffset, destArray, destOffset ) {
+
+			const e = sourceArray[ sourceOffset + 3 ];
+			const scale = Math.pow( 2.0, e - 128.0 ) / 255.0;
+
+			destArray[ destOffset + 0 ] = sourceArray[ sourceOffset + 0 ] * scale;
+			destArray[ destOffset + 1 ] = sourceArray[ sourceOffset + 1 ] * scale;
+			destArray[ destOffset + 2 ] = sourceArray[ sourceOffset + 2 ] * scale;
+			destArray[ destOffset + 3 ] = 1;
+
+		};
+
+		const RGBEByteToRGBHalf = function ( sourceArray, sourceOffset, destArray, destOffset ) {
+
+			const e = sourceArray[ sourceOffset + 3 ];
+			const scale = Math.pow( 2.0, e - 128.0 ) / 255.0;
+
+			// clamping to 65504, the maximum representable value in float16
+			destArray[ destOffset + 0 ] = external_THREE_namespaceObject.DataUtils.toHalfFloat( Math.min( sourceArray[ sourceOffset + 0 ] * scale, 65504 ) );
+			destArray[ destOffset + 1 ] = external_THREE_namespaceObject.DataUtils.toHalfFloat( Math.min( sourceArray[ sourceOffset + 1 ] * scale, 65504 ) );
+			destArray[ destOffset + 2 ] = external_THREE_namespaceObject.DataUtils.toHalfFloat( Math.min( sourceArray[ sourceOffset + 2 ] * scale, 65504 ) );
+			destArray[ destOffset + 3 ] = external_THREE_namespaceObject.DataUtils.toHalfFloat( 1 );
+
+		};
+
+		const byteArray = new Uint8Array( buffer );
+		byteArray.pos = 0;
+		const rgbe_header_info = RGBE_ReadHeader( byteArray );
+
+		if ( RGBE_RETURN_FAILURE !== rgbe_header_info ) {
+
+			const w = rgbe_header_info.width,
+				h = rgbe_header_info.height,
+				image_rgba_data = RGBE_ReadPixels_RLE( byteArray.subarray( byteArray.pos ), w, h );
+
+			if ( RGBE_RETURN_FAILURE !== image_rgba_data ) {
+
+				let data, type;
+				let numElements;
+
+				switch ( this.type ) {
+
+					case external_THREE_namespaceObject.FloatType:
+
+						numElements = image_rgba_data.length / 4;
+						const floatArray = new Float32Array( numElements * 4 );
+
+						for ( let j = 0; j < numElements; j ++ ) {
+
+							RGBEByteToRGBFloat( image_rgba_data, j * 4, floatArray, j * 4 );
+
+						}
+
+						data = floatArray;
+						type = external_THREE_namespaceObject.FloatType;
+						break;
+
+					case external_THREE_namespaceObject.HalfFloatType:
+
+						numElements = image_rgba_data.length / 4;
+						const halfArray = new Uint16Array( numElements * 4 );
+
+						for ( let j = 0; j < numElements; j ++ ) {
+
+							RGBEByteToRGBHalf( image_rgba_data, j * 4, halfArray, j * 4 );
+
+						}
+
+						data = halfArray;
+						type = external_THREE_namespaceObject.HalfFloatType;
+						break;
+
+					default:
+
+						console.error( 'THREE.RGBELoader: unsupported type: ', this.type );
+						break;
+
+				}
+
+				return {
+					width: w, height: h,
+					data: data,
+					header: rgbe_header_info.string,
+					gamma: rgbe_header_info.gamma,
+					exposure: rgbe_header_info.exposure,
+					type: type
+				};
+
+			}
+
+		}
+
+		return null;
+
+	}
+
+	setDataType( value ) {
+
+		this.type = value;
+		return this;
+
+	}
+
+	load( url, onLoad, onProgress, onError ) {
+
+		function onLoadCallback( texture, texData ) {
+
+			switch ( texture.type ) {
+
+				case external_THREE_namespaceObject.FloatType:
+				case external_THREE_namespaceObject.HalfFloatType:
+
+					texture.colorSpace = external_THREE_namespaceObject.LinearSRGBColorSpace;
+					texture.minFilter = external_THREE_namespaceObject.LinearFilter;
+					texture.magFilter = external_THREE_namespaceObject.LinearFilter;
+					texture.generateMipmaps = false;
+					texture.flipY = true;
+
+					break;
+
+			}
+
+			if ( onLoad ) onLoad( texture, texData );
+
+		}
+
+		return super.load( url, onLoadCallback, onProgress, onError );
+
+	}
+
+}
+
+
+
+;// CONCATENATED MODULE: ./node_modules/three/examples/jsm/objects/GroundProjectedSkybox.js
+
+
+/**
+ * Ground projected env map adapted from @react-three/drei.
+ * https://github.com/pmndrs/drei/blob/master/src/core/Environment.tsx
+ */
+class GroundProjectedSkybox extends external_THREE_namespaceObject.Mesh {
+
+	constructor( texture, options = {} ) {
+
+		const isCubeMap = texture.isCubeTexture;
+
+		const defines = [
+			isCubeMap ? '#define ENVMAP_TYPE_CUBE' : ''
+		];
+
+		const vertexShader = /* glsl */ `
+			varying vec3 vWorldPosition;
+
+			void main() {
+
+				vec4 worldPosition = ( modelMatrix * vec4( position, 1.0 ) );
+				vWorldPosition = worldPosition.xyz;
+
+				gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+
+			}
+			`;
+		const fragmentShader = defines.join( '\n' ) + /* glsl */ `
+
+				varying vec3 vWorldPosition;
+
+				uniform float radius;
+				uniform float height;
+				uniform float angle;
+
+				#ifdef ENVMAP_TYPE_CUBE
+
+					uniform samplerCube map;
+
+				#else
+
+					uniform sampler2D map;
+
+				#endif
+
+				// From: https://www.shadertoy.com/view/4tsBD7
+				float diskIntersectWithBackFaceCulling( vec3 ro, vec3 rd, vec3 c, vec3 n, float r ) 
+				{
+
+					float d = dot ( rd, n );
+
+					if( d > 0.0 ) { return 1e6; }
+
+					vec3 o = ro - c;
+					float t = - dot( n, o ) / d;
+					vec3 q = o + rd * t;
+
+					return ( dot( q, q ) < r * r ) ? t : 1e6;
+
+				}
+
+				// From: https://www.iquilezles.org/www/articles/intersectors/intersectors.htm
+				float sphereIntersect( vec3 ro, vec3 rd, vec3 ce, float ra ) {
+
+					vec3 oc = ro - ce;
+					float b = dot( oc, rd );
+					float c = dot( oc, oc ) - ra * ra;
+					float h = b * b - c;
+
+					if( h < 0.0 ) { return -1.0; }
+
+					h = sqrt( h );
+
+					return - b + h;
+
+				}
+
+				vec3 project() {
+
+					vec3 p = normalize( vWorldPosition );
+					vec3 camPos = cameraPosition;
+					camPos.y -= height;
+
+					float intersection = sphereIntersect( camPos, p, vec3( 0.0 ), radius );
+					if( intersection > 0.0 ) {
+
+						vec3 h = vec3( 0.0, - height, 0.0 );
+						float intersection2 = diskIntersectWithBackFaceCulling( camPos, p, h, vec3( 0.0, 1.0, 0.0 ), radius );
+						p = ( camPos + min( intersection, intersection2 ) * p ) / radius;
+
+					} else {
+
+						p = vec3( 0.0, 1.0, 0.0 );
+
+					}
+
+					return p;
+
+				}
+
+				#include <common>
+
+				void main() {
+
+					vec3 projectedWorldPosition = project();
+
+					#ifdef ENVMAP_TYPE_CUBE
+
+						vec3 outcolor = textureCube( map, projectedWorldPosition ).rgb;
+
+					#else
+
+						vec3 direction = normalize( projectedWorldPosition );
+						vec2 uv = equirectUv( direction );
+						vec3 outcolor = texture2D( map, uv ).rgb;
+
+					#endif
+
+					gl_FragColor = vec4( outcolor, 1.0 );
+
+					#include <tonemapping_fragment>
+					#include <encodings_fragment>
+
+				}
+				`;
+
+		const uniforms = {
+			map: { value: texture },
+			height: { value: options.height || 15 },
+			radius: { value: options.radius || 100 },
+		};
+
+		const geometry = new external_THREE_namespaceObject.IcosahedronGeometry( 1, 16 );
+		const material = new external_THREE_namespaceObject.ShaderMaterial( {
+			uniforms,
+			fragmentShader,
+			vertexShader,
+			side: external_THREE_namespaceObject.DoubleSide,
+		} );
+
+		super( geometry, material );
+
+	}
+
+	set radius( radius ) {
+
+		this.material.uniforms.radius.value = radius;
+
+	}
+
+	get radius() {
+
+		return this.material.uniforms.radius.value;
+
+	}
+
+	set height( height ) {
+
+		this.material.uniforms.height.value = height;
+
+	}
+
+	get height() {
+
+		return this.material.uniforms.height.value;
+
+	}
+
+}
+
+
+
+;// CONCATENATED MODULE: ./src/ground-projected-skybox.js
+
+
+
+const Component = AFRAME.registerComponent("ground-projected-skybox", {
+    schema: {
+        envMapUrl: {default: ""},
+        envMap: {default: ""},
+        scale: {default: 100},
+    },
+    update: async function(oldData) {
+        const diff = AFRAME.utils.diff(oldData, this.data);
+        if (diff.envMapUrl) {
+            console.log("new envMap:", diff.envMapUrl)
+            this.cleanup();
+            this.skybox = await this.createSkybox(this.data.envMapUrl);  
+
+            const scene = this.el.sceneEl.object3D;
+            scene.add( this.skybox );
+            scene.environment = this.envMap;
+            this.skybox.scale.setScalar( this.data.scale );
+        }
+
+        if (diff.scale) {
+            this.skybox.scale.setScalar( this.data.scale );
+        }
+    },
+    getLoader(url) {
+        if (url.match((/\.(hdr)$/i)))
+            return new RGBELoader();
+        return new THREE.TextureLoader();
+    },
+    createSkybox: async function(url) {
+        const loader = this.getLoader(url);
+
+        this.envMap = await loader.loadAsync(url);
+        this.envMap.mapping = THREE.EquirectangularReflectionMapping;
+        return new GroundProjectedSkybox( this.envMap );
+    },
+    cleanup() {
+        const scene = this.el.sceneEl.object3D;
+        if (this.skybox) {
+            scene.remove(this.skybox);
+        }
+        if (this.envMap) {
+            scene.environment = null;
+            this.envMap.dispose();
+        }
+    },
+    remove: function() {
+        this.cleanup();
+    }
+})
+/******/ })()
+;
